@@ -1,0 +1,71 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+    
+    <mat-form-field class="example-full-width col-12 float-left">
+      <mat-label class="font-comp">Título</mat-label>
+      <input matInput maxlength="50" class="col-l font-comp" formControlName="tituloControl" required>
+    </mat-form-field>
+
+    <mat-form-field class="col-12 float-left" appearance="fill">
+      <mat-label class="font-comp">Tipo</mat-label>
+      <mat-select class="font-comp" formControlName="tipoControl">
+        <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+        <mat-option *ngFor="let option of lstserv.lTipoProd" [value]="option.nIntCodigo" (click)="customerOnChange(option, 1)">
+          {{ option.cIntDescripcion.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width col-12 float-left font-comp">
+      <mat-select placeholder="Seleccione país" formControlName="paisControl">
+        <mat-select-filter 
+          [placeholder]="'Búsqueda de país'" 
+          [displayMember]="'cIntDescripcion'" 
+          [array]="lstserv.lpaisNac" 
+          (filteredReturn)="lstserv.filterpais = $event" 
+          class="font-comp">
+        </mat-select-filter>
+        
+        <mat-option [value]="0" (click)="customerOnChange(null, 3)" class="font-comp">Seleccione...</mat-option>
+        <mat-option *ngFor="let item of lstserv.filterpais" [value]="item.nIntCodigo" (click)="customerOnChange(item, 3)" class="font-comp">
+          {{ item.cIntDescripcion.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="col-12 float-left" appearance="fill">
+      <mat-label class="font-comp">Participación</mat-label>
+      <mat-select formControlName="participacionControl">
+        <mat-option [value]="0">Seleccione...</mat-option>
+        <mat-option [value]="1">AUTOR</mat-option>
+        <mat-option [value]="2">COAUTOR</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width col-12 float-left">
+      <mat-label class="font-comp">N° Resolución</mat-label>
+      <input matInput maxlength="50" class="col-l font-comp" formControlName="nroResolucionControl" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="col-12 float-left">
+      <mat-label class="font-comp">Fecha</mat-label>
+      <input class="font-comp col-12" [min]="fecha_minima" matInput [matDatepicker]="dpFecha" [formControl]="dateFecha" [max]="today" readonly />
+      <mat-datepicker-toggle matSuffix [for]="dpFecha"></mat-datepicker-toggle>
+      <mat-datepicker #dpFecha disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="col-12 float-left subir-2" appearance="standard">
+      <mat-label>Adjuntar archivo (png, jpg, jpeg, pdf)</mat-label>
+      <ngx-mat-file-input class="file-input" (change)="fileProgress($event)" [accept]="'image/png, image/jpeg, application/pdf'"></ngx-mat-file-input>
+      <mat-icon matSuffix>insert_photo</mat-icon>
+      <small *ngIf="erradjunto" class="form-text text-muted msj-chk small-msj"><i class="far fa-check-circle"></i> Se cargó imágen.</small>
+    </mat-form-field>
+
+  </form>
+</div>
+
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button type="button" class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)">Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+</div>

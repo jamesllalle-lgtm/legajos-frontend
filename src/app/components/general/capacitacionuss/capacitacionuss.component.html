@@ -1,0 +1,37 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+
+      <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp">Tema capacitación</mat-label>
+        <input matInput name="nombrecap" maxlength="100" value="" class="col-l font-comp" formControlName="nombreCapacitacionControl" required >
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp">Horas Lectivas</mat-label>
+        <input matInput name="horas" maxlength="4" value="" class="col-l font-comp" formControlName="horasControl" required appNumeros>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-12 float-left">
+        <mat-label class="font-comp">Fecha Inicio</mat-label>
+        <!-- [min]="datepast" -->
+        <input class="font-comp col-12" matInput [matDatepicker]="dpFechaI"  [formControl]="dateFechaInicio"   readonly />
+        <mat-datepicker-toggle matSuffix [for]="dpFechaI"></mat-datepicker-toggle>
+        <mat-datepicker #dpFechaI disabled="false"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="col-12 float-left">
+        <mat-label class="font-comp">Fecha Fin</mat-label>
+        <!-- [min]="datepast" -->
+        <input class="font-comp col-12" matInput [matDatepicker]="dpFechaF"  [formControl]="dateFechaFin"   readonly />
+        <mat-datepicker-toggle matSuffix [for]="dpFechaF"></mat-datepicker-toggle>
+        <mat-datepicker #dpFechaF disabled="false"></mat-datepicker>
+      </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+

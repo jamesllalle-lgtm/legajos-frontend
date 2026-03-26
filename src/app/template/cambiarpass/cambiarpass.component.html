@@ -1,0 +1,34 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form class="example-form col-12 float-left">
+    <mat-form-field class="example-full-width col-12" >
+      <mat-label class="font-comp">Contraseña actual</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" placeholder="**********" value="" class="col-l font-comp">
+      <button class="btn-pass" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field class="example-full-width col-12" >
+      <mat-label class="font-comp">Contraseña nueva</mat-label>
+      <input matInput [type]="hiden ? 'password' : 'text'" placeholder="**********" value="" class="col-l font-comp">
+      <button class="btn-pass" mat-icon-button matSuffix (click)="hiden = !hiden" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hiden">
+        <mat-icon>{{hiden ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field class="example-full-width col-12" >
+      <mat-label class="font-comp">Confirmar contraseña nueva</mat-label>
+      <input matInput [type]="hidec ? 'password' : 'text'" placeholder="**********" value="" class="col-l font-comp">
+      <button class="btn-pass" mat-icon-button matSuffix (click)="hidec = !hidec" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidec">
+        <mat-icon>{{hidec ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+  </form>
+  <div mat-dialog-actions class="example-full-width apbtn col-12 float-left">
+    <button class="btn btn-sm btn-primary btn-uq" mat-button [mat-dialog-close]="" >Aceptar</button>
+    <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+    <!-- cdkFocusInitial ->FOCUS -->
+  </div>
+</div>
+
+
+

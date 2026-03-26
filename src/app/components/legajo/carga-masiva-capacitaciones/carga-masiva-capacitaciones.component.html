@@ -1,0 +1,252 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule
+      class="divtitle"
+      [title]="title"
+      [route]="route"
+    ></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button
+        [banctrl]="[true, true, true, false, true, true]"
+        [opcion]="1007"
+        [modulo]="modulo"
+      ></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <div class="card card0 border-0 mx-5">
+        <form
+          [formGroup]="FormGroup"
+          class="example-form col-12 float-left"
+          enctype="multipart/form-data"
+        >
+          <mat-form-field
+            class="example-full-width float-left col-12 font-comp"
+          >
+            <mat-select
+              placeholder="Seleccione país"
+              formControlName="paisControl"
+              cdkFocusInitial
+            >
+              <mat-select-filter
+                [placeholder]="'Búsqueda de país'"
+                [displayMember]="'cIntDescripcion'"
+                [array]="lstserv.lpaisNac"
+                (filteredReturn)="lstserv.filterpais = $event"
+                class="font-comp"
+              ></mat-select-filter>
+              <mat-option
+                *ngFor="let item of lstserv.filterpais"
+                [value]="item.nIntCodigo"
+                (click)="universidadOnChange(item)"
+                class="font-comp"
+              >
+                {{ item.cIntDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width float-left col-12">
+            <mat-label class="font-comp">Institución</mat-label>
+            <input
+              (ngModelChange)="handleModelChange($event, 1)"
+              name="institucion"
+              type="text"
+              [matAutocomplete]="auto"
+              matInput
+              [formControl]="myControl"
+              class="font-comp"
+              appLetras
+            />
+
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option.cPerNombre.toUpperCase()"
+                (click)="customerOnChange(option, 1)"
+                [displayWith]="displayFn"
+                class="font-comp"
+              >
+                {{ option.cPerNombre.toUpperCase() }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field
+            *ngIf="regCapacitacion.cLegCapInstitucion == clmdserv.codigonoinst"
+            class="example-full-width"
+            class="col-12 float-left"
+          >
+            <mat-label class="font-comp">Nombre de institución</mat-label>
+            <input
+              matInput
+              name="otra"
+              maxlength="100"
+              value=""
+              class="col-l font-comp"
+              formControlName="otraControl"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field class="col-12 float-left" appearance="fill">
+            <mat-label class="font-comp">Tipo</mat-label>
+            <mat-select
+              name="tipoproy_for"
+              class="font-comp"
+              formControlName="tipocapControl"
+            >
+              <mat-option [value]="0" (click)="customerOnChange(null, 2)">
+                Seleccione...
+              </mat-option>
+              <mat-option
+                *ngFor="let option of lstserv.lTipoCap"
+                [value]="option.nConValor"
+                (click)="customerOnChange(option, 2)"
+              >
+                {{ option.cConDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width" class="col-12 float-left">
+            <mat-label class="font-comp">Nombre capacitación</mat-label>
+            <input
+              matInput
+              name="nombrecap"
+              maxlength="100"
+              value=""
+              class="col-l font-comp"
+              formControlName="nombreCapacitacionControl"
+              required
+            />
+          </mat-form-field>
+
+          <mat-form-field class="col-3 float-left" appearance="fill">
+            <mat-label class="font-comp">
+              {{ data.docente ? 'Especialidad' : 'Tipo duración' }}
+            </mat-label>
+            <mat-select
+              name="tipoproy_for"
+              class="font-comp"
+              formControlName="especialidadControl"
+            >
+              <mat-option [value]="0" (click)="customerOnChange(null, 3)">
+                Seleccione...
+              </mat-option>
+              <mat-option
+                *ngFor="let option of lstserv.lEspecialidadCap"
+                [value]="option.nConValor"
+                (click)="customerOnChange(option, 3)"
+              >
+                {{ option.cConDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width" class="col-3 float-left">
+            <mat-label class="font-comp">
+              {{ data.docente ? 'Horas Lectivas' : 'Cantidad' }}
+            </mat-label>
+            <input
+              matInput
+              name="horas"
+              maxlength="4"
+              value=""
+              class="col-l font-comp"
+              formControlName="horasControl"
+              required
+              appNumeros
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="col-3 float-left">
+            <mat-label class="font-comp">Fecha Inicio</mat-label>
+            <!-- [min]="datepast" -->
+            <input
+              class="font-comp col-12"
+              [min]="fecha_minima"
+              matInput
+              [matDatepicker]="dpFechaI"
+              [formControl]="dateFechaInicio"
+              [max]="today"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="dpFechaI"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #dpFechaI disabled="false"></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="col-3 float-left">
+            <mat-label class="font-comp">Fecha Fin</mat-label>
+            <!-- [min]="datepast" -->
+            <input
+              class="font-comp col-12"
+              matInput
+              [matDatepicker]="dpFechaF"
+              [formControl]="dateFechaFin"
+              [max]="today"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="dpFechaF"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #dpFechaF disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="col-12 float-left" appearance="standard">
+            <mat-label>Adjuntar archivo(pdf)</mat-label>
+            <ngx-mat-file-input
+              class="file-input"
+              placeholder="Adjuntar archivo(pdf)"
+              [multiple]="true"
+              (change)="fileProgress($event)"
+              [accept]="'image/png, image/jpeg, application/pdf'"
+            ></ngx-mat-file-input>
+            <mat-icon matSuffix>folder</mat-icon>
+            <small
+              *ngIf="erradjunto"
+              id="adjuntoHelp"
+              class="form-text text-success msj-chk small-msj"
+            >
+              <i class="far fa-check-circle"></i>
+              {{ mensajeCargaMasiva }}
+            </small>
+            <small
+              *ngIf="errcodigo"
+              id="adjuntoHelp"
+              class="form-text text-danger msj-chk small-msj"
+            >
+              <i class="fas fa-exclamation-circle"></i>
+              {{ mensajeCargaMasiva }}
+            </small>
+          </mat-form-field>
+        </form>
+
+        <div mat-dialog-actions class="apbtn col-12 float-left">
+          <!-- <button
+            class="btn btn-sm btn-primary btn-uq"
+            mat-button
+            (click)="guardar($event)"
+          >
+            Aceptar
+          </button>
+          <button
+            class="btn btn-sm btn-default btn-uq"
+            mat-button
+            (click)="configserv.onNoClickDialog(dialogRef)"
+          >
+            Cancelar
+          </button> -->
+          <!-- cdkFocusInitial ->FOCUS -->
+        </div>
+        <app-mensaje></app-mensaje>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav">
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>

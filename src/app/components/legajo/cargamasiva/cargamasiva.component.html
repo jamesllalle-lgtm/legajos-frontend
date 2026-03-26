@@ -1,0 +1,258 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule
+      class="divtitle"
+      [title]="title"
+      [route]="route"
+    ></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button
+        [banctrl]="[true, true, true, false, true, true]"
+        [opcion]="1006"
+        [modulo]="modulo"
+      ></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <div class="card card0 border-0 mx-5">
+        <form
+          [formGroup]="FormGroup"
+          class="example-form col-12 float-left"
+          enctype="multipart/form-data"
+        >
+          <mat-label class="font-comp">
+            <h2>CARGA MASIVA DE PARTICIPACIÓN A EVENTOS</h2>
+            <h5><b>IMPORTANTE:</b></h5>
+            <ul>
+              <li>
+                Los archivos deben tener como nombre el código de los
+                participantes a registrar.
+              </li>
+              <li>Se cargarán PDF, e Imágenes.</li>
+              <li>
+                *Internacional : Se considera cuando en el mismo certificado lo
+                declara
+              </li>
+              <li>*Nacional : cualquier evento realizado dentro de su país</li>
+            </ul>
+          </mat-label>
+
+          <mat-form-field
+            class="example-full-width float-left col-12 font-comp"
+          >
+            <mat-select
+              placeholder="Seleccione país"
+              formControlName="paisControl"
+              cdkFocusInitial
+            >
+              <mat-select-filter
+                [placeholder]="'Búsqueda de país'"
+                [displayMember]="'cIntDescripcion'"
+                [array]="lstserv.lpaisNac"
+                (filteredReturn)="lstserv.filterpais = $event"
+                class="font-comp"
+              ></mat-select-filter>
+              <mat-option
+                *ngFor="let item of lstserv.filterpais"
+                [value]="item.nIntCodigo"
+                (click)="universidadOnChange(item)"
+                class="font-comp"
+              >
+                {{ item.cIntDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width float-left col-12">
+            <mat-label class="font-comp">Institución</mat-label>
+            <input
+              (ngModelChange)="handleModelChange($event, 1)"
+              name="institucion"
+              type="text"
+              [matAutocomplete]="auto"
+              matInput
+              [formControl]="myControl"
+              class="font-comp"
+              appLetras
+            />
+
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option.cPerNombre.toUpperCase()"
+                (click)="customerOnChange(option, 1)"
+                [displayWith]="displayFn"
+                class="font-comp"
+              >
+                {{ option.cPerNombre.toUpperCase() }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field
+            *ngIf="regParticipacion.cLegParInstitucion == clmdserv.codigonoinst"
+            class="example-full-width"
+            class="col-12 float-left"
+          >
+            <mat-label class="font-comp">Nombre de institución</mat-label>
+            <input
+              matInput
+              name="otra"
+              maxlength="100"
+              value=""
+              class="col-l font-comp"
+              formControlName="otraControl"
+              required
+            />
+          </mat-form-field>
+
+          <mat-form-field class="col-12 float-left" appearance="fill">
+            <mat-label class="font-comp">Rol</mat-label>
+            <mat-select
+              name="regimended_for"
+              class="font-comp"
+              formControlName="rolControl"
+            >
+              <mat-option [value]="0" (click)="customerOnChange(null, 2)">
+                Seleccione...
+              </mat-option>
+              <mat-option
+                *ngFor="let option of lstserv.lRolPart"
+                [value]="option.nIntCodigo"
+                (click)="customerOnChange(option, 2)"
+              >
+                {{ option.cIntDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="col-12 float-left" appearance="fill">
+            <mat-label class="font-comp">Ámbito</mat-label>
+            <mat-select
+              name="regimended_for"
+              class="font-comp"
+              formControlName="ambitoControl"
+            >
+              <mat-option [value]="0" (click)="customerOnChange(null, 3)">
+                Seleccione...
+              </mat-option>
+              <mat-option
+                *ngFor="let option of lstserv.lAmbitoPart"
+                [value]="option.nIntCodigo"
+                (click)="customerOnChange(option, 3)"
+              >
+                {{ option.cIntDescripcion.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width" class="col-12 float-left">
+            <mat-label class="font-comp">Nombre evento</mat-label>
+            <input
+              matInput
+              name="direccion"
+              maxlength="250"
+              value=""
+              class="col-l font-comp"
+              formControlName="nombreEventoControl"
+              required
+            />
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            class="col-sm-12 col-sx-12 col-md-12 col-lg-4 col-xl-4 float-left"
+          >
+            <mat-label class="font-comp">Fecha Inicio</mat-label>
+            <!-- [min]="datepast" -->
+            <input
+              class="font-comp col-12"
+              [min]="fecha_minima"
+              matInput
+              [matDatepicker]="dpFecha"
+              [formControl]="dateFecha"
+              [max]="today"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="dpFecha"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #dpFecha disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            class="col-sm-12 col-sx-12 col-md-12 col-lg-4 col-xl-4 float-left"
+          >
+            <mat-label class="font-comp">Fecha Fin</mat-label>
+            <!-- [min]="datepast" -->
+            <input
+              class="font-comp col-12"
+              [min]="fecha_minima"
+              matInput
+              [matDatepicker]="dpFechaFin"
+              [formControl]="dateFechaFin"
+              [max]="today"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="dpFechaFin"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #dpFechaFin disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field
+            class="example-full-width"
+            class="col-sm-12 col-sx-12 col-md-12 col-lg-4 col-xl-4 float-left"
+          >
+            <mat-label class="font-comp">Horas Lectivas</mat-label>
+            <input
+              matInput
+              name="horas"
+              maxlength="4"
+              value=""
+              class="col-l font-comp"
+              formControlName="horasControl"
+              required
+              appNumeros
+            />
+          </mat-form-field>
+
+          <mat-form-field class="col-12 float-left" appearance="standard">
+            <mat-label>Adjuntar archivo(pdf)</mat-label>
+            <ngx-mat-file-input
+              class="file-input"
+              placeholder="Adjuntar archivo(pdf)"
+              [multiple]="true"
+              (change)="fileProgress($event)"
+              [accept]="'image/png, image/jpeg, application/pdf'"
+            ></ngx-mat-file-input>
+            <mat-icon matSuffix>folder</mat-icon>
+            <small
+              *ngIf="erradjunto"
+              id="adjuntoHelp"
+              class="form-text text-success msj-chk small-msj"
+            >
+              <i class="far fa-check-circle"></i>
+              {{ mensajeCargaMasiva }}
+            </small>
+            <small
+              *ngIf="errcodigo"
+              id="adjuntoHelp"
+              class="form-text text-danger msj-chk small-msj"
+            >
+              <i class="fas fa-exclamation-circle"></i>
+              {{ mensajeCargaMasiva }}
+            </small>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav">
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>

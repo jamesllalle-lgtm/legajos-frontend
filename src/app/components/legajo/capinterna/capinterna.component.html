@@ -1,0 +1,38 @@
+
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Capacitaciones</mat-label>
+        <mat-select name="capacitacion_for" class="font-comp" formControlName="capacitacionControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lCapacitacionesUSS" [value]="option.nCapCodigo" (click)="customerOnChange(option, 1)">
+            {{ option.cCapTema.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span *ngIf="regLegCapacitacionInterna.nCapCodigo > 0"  class="col-12 float-left font-comp com-span">Fecha: {{ regLegCapacitacionInterna.vCapacitacionUSS.dCapFechaInicio | date:'dd/MM/yyyy' }} - {{ regLegCapacitacionInterna.vCapacitacionUSS.dCapFechaFin | date:'dd/MM/yyyy' }} | Horas: {{ regLegCapacitacionInterna.vCapacitacionUSS.nCapHoras  }}</span>
+       <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp comentinp">Competencias a mejorar</mat-label>
+        <textarea [attr.maxLength]="500" aria-rowcount="8" name="competencia" matInput placeholder="..." class="font-comp" formControlName="competenciaControl"></textarea>
+      </mat-form-field>
+    <mat-form-field class="col-12 float-left subir-2" appearance="standard">
+      <mat-label>Adjuntar archivo(png, jpg, jpeg, pdf)</mat-label>
+      <ngx-mat-file-input class="file-input"  placeholder="Adjuntar archivo(png, jpg, jpeg, pdf)" (change)="fileProgress($event)" [accept]="'image/png, image/jpeg,application/pdf'"></ngx-mat-file-input>
+      <mat-icon matSuffix>insert_photo</mat-icon>
+      <small *ngIf="erradjunto"  id="adjuntoHelp" class="form-text text-muted msj-chk small-msj" ><i class="far fa-check-circle"></i> Se cargó imágen.</small>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+
+
+
+
+

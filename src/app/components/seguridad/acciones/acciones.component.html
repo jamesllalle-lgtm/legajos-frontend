@@ -1,0 +1,131 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule
+      class="divtitle"
+      [title]="title"
+      [route]="route"
+    ></app-titlemodule>
+    <div
+      class="example-container container-fluid float-left col-12 col-qpad divtop"
+    >
+      <div class="row container-fluid">
+        <div class="col-3">
+          <table
+            mat-table
+            [dataSource]="personaAcciones"
+            class="table table-hover"
+          >
+            <ng-container matColumnDef="persona">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <div class="centerheader">
+                  USUARIOS LEGAJOS CON PERMISOS :
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    class="text-success"
+                    (click)="anadirUsuario()"
+                  >
+                    Agregar
+                    <mat-icon>
+                      add_circle
+                    </mat-icon>
+                  </button>
+                </div>
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                (dblclick)="buscarPermisos(element)"
+              >
+                {{ element.cPerApellido }} {{ element.cPerNombre }}
+              </td>
+            </ng-container>
+
+            <!-- -------------------------- -->
+
+            <mat-paginator
+              [length]="100"
+              [pageSize]="5"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              aria-label="Select page"
+            ></mat-paginator>
+            <tr mat-header-row *matHeaderRowDef="columndefs"></tr>
+            <tr mat-row *matRowDef="let row; columns: columndefs"></tr>
+          </table>
+        </div>
+
+        <div class="col-9">
+          <div class="col-12">
+            <h1>
+              <b>NOMBRES:</b>
+              {{ name }}
+            </h1>
+            <!-- <h3>
+              <b>USUARIO:</b>
+              {{ nameUser }}
+            </h3> -->
+            <hr />
+            <!-- *ngIf="name" ------------------------------- -->
+            <div>
+              <section class="example-section" *ngFor="let item of permisosLeg">
+                <span class="example-list-section">
+                  <input
+                    type="checkbox"
+                    class="example-margin"
+                    value="item.cIntJerarquia"
+                    [disabled]="bloqueado"
+                    [(ngModel)]="item.selected"
+                  />
+                  {{ item.cTarModDescripcion }}
+                </span>
+              </section>
+            </div>
+            <hr />
+            <div class="col-12">
+              <button
+                class="btn btn-success btn-sm mx-1"
+                [disabled]="!name"
+                (click)="registrarPermisos()"
+              >
+                Guardar
+              </button>
+              <button mat-button class="btn btn-danger btn-sm mx-1">
+                Cancelar
+              </button>
+            </div>
+          </div>
+          <!--  -->
+          <!-- <section class="example-section" *ngFor="let item of permisosLeg">
+            <span class="example-list-section">
+              [indeterminate]="someComplete()"
+              (change)="setAll($event.checked)"
+              <mat-checkbox
+                class="example-margin"
+                [checked]="allComplete"
+                [color]="'primary'"
+              >
+                {{ item.cIntDescripcion }}
+              </mat-checkbox>
+            </span>
+            <span class="example-list-section">
+              <ul>
+                <li *ngFor="let subtask of item.submenu">
+                  <mat-checkbox [(ngModel)]="subtask.completed">
+                    (ngModelChange)="updateAllComplete()"
+                    {{ subtask.cIntDescripcion }}
+                  </mat-checkbox>
+                </li>
+              </ul>
+            </span>
+          </section> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav">
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>

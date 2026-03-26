@@ -1,0 +1,70 @@
+<div class="container-fluid col-lg-7 col-md-10 col-sm-8 col-10 px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto fondo-screen">
+    <!-- <div class="d-lg-none d-md-none d-sm-block d-block col-12">
+      <div class="d-flex col-12 secc-one"> <img src="assets/images/USS-logotipo.svg" class="logo"> </div>
+      <div class="d-flex col-12 secc-one">
+        <p>Carretera a Pimentel Km. 5 / Teléf. (074) - 481610</p>
+        <p>Informes: Teléf. 481619 - 481621 - Chiclayo</p></div>
+    </div> -->
+    <div class="card card0 border-0">
+        <div class="d-flex altdiv imglog">
+            <!-- <div class="d-lg-block d-md-block d-sm-none d-none col-lg-6 col-md-6 imgsec">
+                <div class="card1 pb-5  col-12">
+                    <div class="secc title" style="text-align: center;color: #FFF !important;">
+
+                        <h2>SISTEMA DE LEGAJO USS </h2>
+                        <p>Docente - Administrativo</p>
+                    </div>
+                    <div class="secc" style="text-align: center;">
+                        <img src="assets/images/USS-logotipo.svg" class="logo responsive">
+                    </div>
+                    <div class="secc-two">
+                        <p>Carretera a Pimentel Km. 5 / Teléf. (074) - 481610</p>
+                        <p>Informes: Teléf. 481619 - 481621 - Chiclayo</p>
+                    </div>
+                   
+                </div>
+            </div> -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 seslog">
+                <div class="mb-4 px-3 title">
+                    <h6 class="mb-0 mr-4 mt-2" style="text-align: center;">ROLES</h6>
+                </div>
+                <div class="card2 border-0 px-4 form-input-white">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Perfil con el que desea ingresar:</mat-label>
+                        <mat-select [(ngModel)]='rol'>
+                            <mat-option *ngFor="let rol of roles" [value]="rol.value">
+                                {{rol.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- [(ngModel)] = 'usuario' /// [(ngModel)] = 'password' -->
+
+
+                    <!--  (resolved)="$event && login($event)" -->
+                    <div class="row mb-3 px-3 col-r"> <button mat-raised-button class="btn btn-blue text-center"
+                            [disabled]="segserv.disload" (click)="continuar()">
+                            <mat-icon *ngIf="segserv.disload">
+                                <mat-spinner diameter="20">
+                                </mat-spinner>
+                            </mat-icon>
+                            <b *ngIf="!segserv.disload"> Continuar </b>
+                        </button> </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-blue py-4 footlog">
+            <div class="row px-3"> <small class="col-lg-9 col-md-9 col-12 cpy">Copyright &copy; {{ anio }} | Todos los
+                    derechos reservados.</small>
+                <div class="social-contact ml-4 ml-sm-auto col-lg-3 col-md-3 col-12"> webmaster@uss.edu.pe </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+<app-mensaje></app-mensaje>
+<ngx-spinner></ngx-spinner>

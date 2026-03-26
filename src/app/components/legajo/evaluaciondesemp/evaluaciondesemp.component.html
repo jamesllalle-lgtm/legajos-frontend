@@ -1,0 +1,67 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-select placeholder="Seleccione cargo" formControlName="cargoControl" cdkFocusInitial>
+        <mat-select-filter [placeholder]="'Búsqueda de cargo'" [displayMember]="'cIntDescripcion'" [array]="lstserv.lCargoCont" (filteredReturn)="lstserv.filtercargo =$event" class="font-comp"></mat-select-filter>
+        <mat-option *ngFor="let item of lstserv.filtercargo" [value]="item.nIntCodigo" (click)="customerOnChange(item, 1)" class="font-comp">
+          {{item.cIntDescripcion.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-select placeholder="Seleccione área" formControlName="areaControl" cdkFocusInitial>
+        <mat-select-filter [placeholder]="'Búsqueda de área'" [displayMember]="'cIntDescripcion'" [array]="lstserv.lAreaCont" (filteredReturn)="lstserv.filterarea =$event" class="font-comp"></mat-select-filter>
+        <mat-option *ngFor="let item of lstserv.filterarea" [value]="item.nIntCodigo" (click)="customerOnChange(item, 2)" class="font-comp">
+          {{item.cIntDescripcion.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+      <mat-form-field *ngIf="data.admin" class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Año</mat-label>
+        <mat-select name="cargo_for" class="font-comp" formControlName="anioControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 4)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lAnio" [value]="option.nConValor" (click)="customerOnChange(option, 4)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="!data.admin" class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Semestre</mat-label>
+        <mat-select name="area_for" class="font-comp" formControlName="semestreControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 5)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lSemestre" [value]="option.nConValor" (click)="customerOnChange(option, 5)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp comentinp">Puntaje</mat-label>
+        <input matInput name="puntaje" maxlength="10" value="" class="col-l font-comp" formControlName="puntajeControl" required appDecimales />
+      </mat-form-field>
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Nivel</mat-label>
+        <mat-select name="area_for" class="font-comp" formControlName="nivelControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 3)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lNivelEval" [value]="option.nConValor" (click)="customerOnChange(option, 3)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    <mat-form-field class="col-12 float-left subir-2" appearance="standard">
+      <mat-label>Adjuntar evaluación de desempeño(formato PDF)</mat-label>
+      <ngx-mat-file-input class="file-input"  placeholder="Adjuntar evaluación de desempeño(formato PDF)" (change)="fileProgress($event)" [accept]="'application/pdf'"></ngx-mat-file-input>
+      <mat-icon matSuffix>file_present</mat-icon>
+      <small *ngIf="erradjunto"  id="adjuntoHelp" class="form-text text-muted msj-chk small-msj" ><i class="far fa-check-circle"></i> Se cargó evaluación de desempeño.</small>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+

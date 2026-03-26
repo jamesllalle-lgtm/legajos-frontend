@@ -1,0 +1,50 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Resolución</mat-label>
+        <mat-select name="cargo_for" class="font-comp" formControlName="resolucionControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lTResolucion" [value]="option.nConValor" (click)="customerOnChange(option, 1)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Tipo resolución</mat-label>
+        <mat-select name="tipo_for" class="font-comp" formControlName="tipoControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 2)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lfTipoResolucion" [value]="option.nConValor" (click)="customerOnChange(option, 2)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="col-12 float-left">
+        <mat-label class="font-comp">Fecha Resolución</mat-label>
+        <!-- [min]="datepast" -->
+        <input class="font-comp col-12" matInput [matDatepicker]="dpFechaI"  [formControl]="dateFecha"   [max]="today" readonly />
+        <mat-datepicker-toggle matSuffix [for]="dpFechaI"></mat-datepicker-toggle>
+        <mat-datepicker #dpFechaI disabled="false"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp">N° Resolución</mat-label>
+        <input matInput name="nroResolucion" maxlength="50" value="" class="col-l font-comp" formControlName="nroResolucionControl" required >
+      </mat-form-field>
+      <mat-form-field class="example-full-width" class="col-12 float-left">
+        <mat-label class="font-comp comentinp">Resuelve</mat-label>
+        <textarea [attr.maxLength]="500" name="resuelve" matInput placeholder="..." class="font-comp" formControlName="resuelveControl"></textarea>
+      </mat-form-field>
+    <mat-form-field class="col-12 float-left subir-2" appearance="standard">
+      <mat-label>Adjuntar resolución(formato PDF)</mat-label>
+      <ngx-mat-file-input class="file-input"  placeholder="Adjuntar resolución(formato PDF)" (change)="fileProgress($event)" [accept]="'application/pdf'"></ngx-mat-file-input>
+      <mat-icon matSuffix>file_present</mat-icon>
+      <small *ngIf="erradjunto"  id="adjuntoHelp" class="form-text text-muted msj-chk small-msj" ><i class="far fa-check-circle"></i> Se cargó contrato.</small>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>

@@ -1,0 +1,43 @@
+<mat-card class="my-10">
+    <mat-card-title>
+        <h2>
+            <center>{{ message }}</center>
+        </h2>
+    </mat-card-title>
+
+    <mat-card-content>
+        <mat-form-field class="col-12 float-left" appearance="fill" style="margin-top: 10px;">
+            <mat-label class="font-comp">Periodo</mat-label>
+            <!-- (ngModelChange)="selrubro()" -->
+            <mat-select name="cPrdNombre" class="font-comp" [(ngModel)]="configservc.cPrdNombre">
+                <mat-option *ngFor="let option of listserv.lPeriodo" [value]="option.cPrdDescripcion"
+                    (click)="comboOnChangePer(option.cPrdDescripcion)">
+                    {{ option.cPrdDescripcion.toUpperCase() }}
+                </mat-option>
+
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 float-left" appearance="fill" style="margin-top: 10px;">
+            <mat-label class="font-comp">Escuelas Profesionales</mat-label>
+            <!-- (ngModelChange)="selrubro()" -->
+            <mat-select name="nUniOrgCodigo" class="font-comp" [(ngModel)]="configservc.nUniOrgCodigo">
+                <mat-option *ngFor="let option of listserv.escuelas" [value]="option.nUniOrgCodigo"
+                    (click)="comboOnChangeEscuela(option.nUniOrgCodigo)">
+                    {{ option.cUniOrgNombre.toUpperCase() }}
+                </mat-option>
+
+            </mat-select>
+        </mat-form-field>
+
+
+    </mat-card-content>
+
+
+    <mat-card-actions>
+        <mat-progress-bar mode="indeterminate" *ngIf="generando"></mat-progress-bar>
+        <button mat-button (click)="exportLegajos()" class="btn btn-sm btn-primary btn-uqx"> <i
+                class="fa fa-solid fa-file-zipper"></i>Aceptar</button>
+        <button mat-button (click)="onClickCerrar()" class="btn btn-sm btn-default btn-uq">Cerrar</button>
+    </mat-card-actions>
+</mat-card>

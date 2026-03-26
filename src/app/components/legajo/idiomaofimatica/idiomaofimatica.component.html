@@ -1,0 +1,56 @@
+
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">{{ tipoidof }}</mat-label>
+        <mat-select name="regimended_for" class="font-comp" formControlName="idiomaofimControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lIdiof" [value]="option.nConValor" (click)="customerOnChange(option, 1)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="data.tipo" class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Habilidad</mat-label>
+        <mat-select name="tipo_for" class="font-comp" formControlName="tipoControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of listOfim" [value]="option.nConValor" (click)="customerOnChange(option, 3)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-12 float-left" appearance="fill">
+        <mat-label class="font-comp">Nivel</mat-label>
+        <mat-select name="categoriadoc_for" class="font-comp" formControlName="nivelControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 2)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lnivel" [value]="option.nConValor" (click)="customerOnChange(option, 2)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="col-12 float-left">
+        <mat-label class="font-comp">Fecha Certificación</mat-label>
+        <!-- [min]="datepast" -->
+        <input class="font-comp col-12" matInput [matDatepicker]="dpcert"  [formControl]="dateFecCert"   [max]="today" readonly />
+        <mat-datepicker-toggle matSuffix [for]="dpcert"></mat-datepicker-toggle>
+        <mat-datepicker #dpcert disabled="false"></mat-datepicker>
+      </mat-form-field>
+    <mat-form-field class="col-12 float-left subir-2" appearance="standard">
+      <mat-label>Adjuntar archivo(png, jpg, jpeg, pdf)</mat-label>
+      <ngx-mat-file-input class="file-input" placeholder="Adjuntar archivo(png, jpg, jpeg, pdf)" (change)="fileProgress($event)" [accept]="'image/png, image/jpeg, application/pdf'"></ngx-mat-file-input>
+      <mat-icon matSuffix>insert_photo</mat-icon>
+      <small *ngIf="erradjunto"  id="adjuntoHelp" class="form-text text-muted msj-chk small-msj" ><i class="far fa-check-circle"></i> Se cargó imágen.</small>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+
+
+
+

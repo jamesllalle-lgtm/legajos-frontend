@@ -1,0 +1,58 @@
+import { LegAdminitrativaCarga } from "../legajo/leg-adminitrativa-carga";
+import { LegCapacitaciones } from "../legajo/leg-capacitaciones";
+import { LegCategoriaDocente } from "../legajo/leg-categoria-docente";
+import { LegDatosGenerales } from "../legajo/leg-datos-generales";
+import { LegDocenciaUniv } from "../legajo/leg-docencia-univ";
+import { LegGradoTitulo } from "../legajo/leg-grado-titulo";
+import { LegIdiomaOfimatica } from "../legajo/leg-idioma-ofimatica";
+import { LegInvestigador } from "../legajo/leg-investigador";
+import { LegParticipacionCongSem } from "../legajo/leg-participacion-cong-sem";
+import { LegProduccionCiencia } from "../legajo/leg-produccion-ciencia";
+import { LegProfesNoDocente } from "../legajo/leg-profes-no-docente";
+import { LegProyeccionSocial } from "../legajo/leg-proyeccion-social";
+import { LegReconocimiento } from "../legajo/leg-reconocimiento";
+import { LegRegimenDedicacion } from "../legajo/leg-regimen-dedicacion";
+import { LegTesisAseJur } from "../legajo/leg-tesis-ase-jur";
+import { Persona } from "./persona";
+
+export interface PerUsuario {
+  cPerCodigo: string;
+  cPerUsuCodigo: string;
+  cPerUsuClave: string;
+  cPerUsuEstado: number;
+  cPerJuridica: string;
+  cPudFecha: Date ;
+  cPerCodigoNavigation: Persona;
+  nPerRelacion: any;
+  // legAdminitrativaCargaCUsuModificaNavigations: LegAdminitrativaCarga[];
+  // legAdminitrativaCargaCUsuRegistroNavigations: LegAdminitrativaCarga[];
+  // legCapacitacionesCUsuModificaNavigations: LegCapacitaciones[];
+  // legCapacitacionesCUsuRegistroNavigations: LegCapacitaciones[];
+  // legCategoriaDocenteCUsuModificaNavigations: LegCategoriaDocente[];
+  // legCategoriaDocenteCUsuRegistroNavigations: LegCategoriaDocente[];
+  // legDatosGeneralesCUsuModificaNavigations: LegDatosGenerales[];
+  // legDatosGeneralesCUsuRegistroNavigations: LegDatosGenerales[];
+  // legDocenciaUnivCUsuModificaNavigations: LegDocenciaUniv[];
+  // legDocenciaUnivCUsuRegistroNavigations: LegDocenciaUniv[];
+  // legGradoTituloCUsuModificaNavigations: LegGradoTitulo[];
+  // legGradoTituloCUsuRegistroNavigations: LegGradoTitulo[];
+  // legIdiomaOfimaticaCUsuModificaNavigations: LegIdiomaOfimatica[];
+  // legIdiomaOfimaticaCUsuRegistroNavigations: LegIdiomaOfimatica[];
+  // legInvestigadorCUsuModificaNavigations: LegInvestigador[];
+  // legInvestigadorCUsuRegistroNavigations: LegInvestigador[];
+  // legParticipacionCongSemCUsuModificaNavigations: LegParticipacionCongSem[];
+  // legParticipacionCongSemCUsuRegistroNavigations: LegParticipacionCongSem[];
+  // legProduccionCienciaCUsuModificaNavigations: LegProduccionCiencia[];
+  // legProduccionCienciaCUsuRegistroNavigations: LegProduccionCiencia[];
+  // legProfesNoDocenteCUsuModificaNavigations: LegProfesNoDocente[];
+  // legProfesNoDocenteCUsuRegistroNavigations: LegProfesNoDocente[];
+  // legProyeccionSocialCUsuModificaNavigations: LegProyeccionSocial[];
+  // legProyeccionSocialCUsuRegistroNavigations: LegProyeccionSocial[];
+  // legReconocimientoCUsuModificaNavigations: LegReconocimiento[];
+  // legReconocimientoCUsuRegistroNavigations: LegReconocimiento[];
+  // legRegimenDedicacionCUsuModificaNavigations: LegRegimenDedicacion[];
+  // legRegimenDedicacionCUsuRegistroNavigations: LegRegimenDedicacion[];
+  // legTesisAseJurCUsuModificaNavigations: LegTesisAseJur[];
+  // legTesisAseJurCUsuRegistroNavigations: LegTesisAseJur[];
+}
+

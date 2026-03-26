@@ -1,0 +1,113 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1004 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <table  class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="namemd col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+          <th class="col-l col-50" scope="col">AREA</th>
+          <th class="col-l col-c" scope="col">EMAIL</th>
+          <th class="col-l col-c" scope="col">TELEFONO</th>
+
+          <th class="col-l col-c" scope="col">PARTIC. EN CONG. Y SEMIN.</th>
+          <th class="col-l col-c" scope="col">FEC.REG.</th>
+          <th class="col-l col-c" scope="col">FEC.ACT</th>
+
+          <th class="col-l col-c" scope="col">CAPACITACIONES</th>
+          <th class="col-l col-c" scope="col">FEC.REG.</th>
+          <th class="col-l col-c" scope="col">FEC.ACT</th>
+
+          <th class="col-l col-c" scope="col">INVESTIGADOR</th>
+          <th class="col-l col-c" scope="col">FEC.REG.</th>
+          <th class="col-l col-c" scope="col">FEC.ACT</th>
+
+          <th class="col-l col-c" scope="col">ASESORIA Y JURADO DE TESIS</th>
+          <th class="col-l col-c" scope="col">FEC.REG.</th>
+          <th class="col-l col-c" scope="col">FEC.ACT</th>
+
+          <th class="col-l col-c" scope="col">PRODUCCION CIENTIFICA</th>
+          <th class="col-l col-c" scope="col">FEC.REG.</th>
+          <th class="col-l col-c" scope="col">FEC.ACT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+          <td  class="namemd col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cCargo.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cArea.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerEmail.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerTelefono.toUpperCase() }}</td>
+
+          <td class="col-c">{{ regist.legParticipacionCongSem > 0 ? 'SI': 'NO' }}</td>
+          <td class="col-c">{{ regist.dFechaRegistroCongSem == '1900-01-01T00:00:00' ? '' : regist.dFechaRegistroCongSem.substr(0,10) }}</td>
+          <td class="col-c">{{ regist.dFechaModificaCongSem == '1900-01-01T00:00:00' ? '' : regist.dFechaModificaCongSem.substr(0,10) }}</td>
+
+          <td class="col-c">{{ regist.legCapacitaciones > 0 ? 'SI': 'NO' }}</td>
+          <td class="col-c">{{ regist.dFechaRegistroCap == '1900-01-01T00:00:00' ? '' : regist.dFechaRegistroCap.substr(0,10) }}</td>
+          <td class="col-c">{{ regist.dFechaModificaCap == '1900-01-01T00:00:00' ? '' : regist.dFechaModificaCap.substr(0,10) }}</td>
+
+          <td class="col-c">{{ regist.legInvestigador > 0 ? 'SI': 'NO' }}</td>
+          <td class="col-c">{{ regist.dFechaRegistroInv == '1900-01-01T00:00:00' ? '' : regist.dFechaRegistroInv.substr(0,10) }}</td>
+          <td class="col-c">{{ regist.dFechaModificaInv == '1900-01-01T00:00:00' ? '' : regist.dFechaModificaInv.substr(0,10) }}</td>
+
+          <td class="col-c">{{ regist.legTesisAseJur > 0 ? 'SI': 'NO' }}</td>
+          <td class="col-c">{{ regist.dFechaRegistroTes == '1900-01-01T00:00:00' ? '' : regist.dFechaRegistroTes.substr(0,10) }}</td>
+          <td class="col-c">{{ regist.dFechaModificaTes == '1900-01-01T00:00:00' ? '' : regist.dFechaModificaTes.substr(0,10) }}</td>
+
+          <td class="col-c">{{ regist.legProduccionCiencia > 0 ? 'SI': 'NO' }}</td>
+          <td class="col-c">{{ regist.dFechaRegistroProd == '1900-01-01T00:00:00' ? '' : regist.dFechaRegistroProd.substr(0,10) }}</td>
+          <td class="col-c">{{ regist.dFechaModificaProd == '1900-01-01T00:00:00' ? '' : regist.dFechaModificaProd.substr(0,10) }}</td>
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="20">No existen registros de legajoss.</td>
+        </tr>
+        </tbody>
+
+      </table>
+
+
+    </div>
+
+    <div *ngIf="pageService.dataSource.length > 0 " class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+
+    </div>
+    <!-- <div class="container-fluid d-flex justify-content-between p-2">
+      <mat-accordion class="col-12 float-left">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Leyenda
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+            <div class="col-4 float-left">
+            <p><b>EDD:</b>Evaluación de desempeño docente. Peso = 90%</p>
+            <p><b>CD:</b> Capacitación docente. Peso = 5%</p>
+            <p><b>PC:</b> Producción científica, lectiva y de investigación. Peso = 5%</p>
+            <p><b>PROMEDIO:</b> .</p>
+            
+             </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div> -->
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>
+

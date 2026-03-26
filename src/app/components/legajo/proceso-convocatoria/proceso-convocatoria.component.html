@@ -1,0 +1,118 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title]="title"></app-titlemodule>
+  </div>
+
+  <div class="container-fluid float-left div-table divtop">
+    <div class="row" appearance="fill" style="margin-top: 10px;">
+      <!-- Periodo -->
+      <div class="col-4">
+        <mat-label class="font-comp col-4">PERIODO</mat-label>
+
+        <mat-select
+          name="cPrdNombre"
+          class="font-comp col-8"
+          placeholder="Peridos"
+          [(ngModel)]="configservc.cPrdNombre"
+        >
+          <mat-option
+            *ngFor="let option of listserv.lPeriodo"
+            [value]="option.cPrdDescripcion"
+            (click)="customerOnChange(option)"
+          >
+            {{ option.cPrdDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </div>
+      <div class="col-4">
+        <mat-label class="font-comp col-4">CONVOCATORIA</mat-label>
+
+        <mat-select
+          name="cConDescripcion"
+          class="font-comp col-8"
+          placeholder="Convocatorias"
+          [(ngModel)]="configservc.cConDescripcion"
+        >
+          <mat-option
+            *ngFor="let option of listserv.lstConvocaria"
+            [value]="option.nConCodigo"
+            (click)="customerOnChangeConvocatoria(option)"
+          >
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </div>
+
+      <div class="col-2">
+        <mat-option
+          (click)="obtenerListadoRegistroConvocatoria()"
+          class="btn btn-sm btn-primary btn-uq"
+        >
+          Buscar
+        </mat-option>
+      </div>
+      <div class="col-2">
+        <mat-option (click)="registrar()" class="btn btn-sm btn-primary btn-uq">
+          Registrar
+        </mat-option>
+      </div>
+    </div>
+    <div class="col-12" *ngIf="pageService.dataSource.length > 0">
+      <table class="table table-fixed font-comp table-style mt-5">
+        <thead>
+          <tr>
+            <th scope="col" class="col-50 col-l"></th>
+            <th scope="col" class="namemd col-l">DNI</th>
+            <th class="col-l col-50" scope="col">A. PATERNO</th>
+            <th class="col-l col-50" scope="col">A. MATERNO</th>
+            <th class="col-l col-50" scope="col">NOMBRES</th>
+            <th class="col-l col-50" scope="col">CELULAR</th>
+            <th class="col-l col-50" scope="col">CORREO</th>
+            <th class="col-l namemd" scope="col">P. CM</th>
+            <th class="col-l col-c" scope="col">P. C.</th>
+            <th class="col-l col-c" scope="col">P. E.P.</th>
+            <th class="col-l col-r" scope="col">Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let conv of pageService.dataSource; let i = index"
+            [attr.data-index]="i"
+          >
+            <td class="col-l">
+              <input
+                type="checkbox"
+                value="conv.select"
+                id="flexCheckDefault"
+                role="switch"
+                (click)="seleccionar(i, $event)"
+              />
+            </td>
+            <td class="col-l">{{ conv.dni }}</td>
+            <td class="col-l">{{ conv.apepat }}</td>
+            <td class="col-l">{{ conv.apemat }}</td>
+            <td class="col-l">{{ conv.nombres }}</td>
+            <td class="col-l">{{ conv.celular }}</td>
+            <td class="col-l">{{ conv.correo }}</td>
+            <td class="col-l">{{ conv.cPunClaModelo }}</td>
+            <td class="col-l">{{ conv.cPunCurriculo }}</td>
+            <td class="col-l">{{ conv.cPunEntPersonal }}</td>
+            <td class="col-l">{{ conv.observaciones }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    *ngIf="pageService.dataSource.length > 0"
+    class="container-fluid d-flex justify-content-between p-2"
+  >
+    <mat-paginator
+      [length]="pageService.collectionSize"
+      (page)="pageService.actualizaTabla2(pageService.dataglobal, $event)"
+      [pageSize]="pageService.pageSize"
+      [pageSizeOptions]="pageService.pageSizeOptions"
+    ></mat-paginator>
+  </div>
+</mat-drawer-container>

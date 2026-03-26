@@ -1,0 +1,57 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form class="example-form col-12 float-left" [formGroup]="FormGroup" enctype="multipart/form-data">
+
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-select placeholder="Seleccione país" formControlName="paisControl" cdkFocusInitial>
+        <mat-select-filter [placeholder]="'Búsqueda de país'" [displayMember]="'cIntDescripcion'" [array]="lstserv.lpaisNac" (filteredReturn)="lstserv.filterpais =$event" class="font-comp"></mat-select-filter>
+        <mat-option *ngFor="let item of lstserv.filterpais" [value]="item.nIntCodigo" (click)="universidadOnChange(item)" class="font-comp">
+          {{item.cIntDescripcion.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field  class="example-full-width float-left col-12" >
+      <mat-label class="font-comp">Institución</mat-label>
+      <input (ngModelChange)="handleModelChange($event, 1)" name="institucion"   type="text" [matAutocomplete]="auto" matInput [formControl]="myControl" class="font-comp"  appLetras>
+      <mat-autocomplete #auto="matAutocomplete" >
+      <mat-option *ngFor="let option of filteredOptions | async"  [value]="option.cPerNombre.toUpperCase()" (click)="customerOnChange(option, 1)" [displayWith]="displayFn"  class="font-comp">
+          {{option.cPerNombre.toUpperCase()}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="regMembresia.cLegMemInstitucion == clmdserv.codigonoinst" class="example-full-width" class="col-12 float-left">
+      <mat-label class="font-comp">Nombre de institución</mat-label>
+      <input matInput name="otra" maxlength="100" value="" class="col-l font-comp" formControlName="otraControl" required >
+    </mat-form-field>
+    
+    <mat-form-field class="example-full-width" class="col-12 float-left">
+      <mat-label class="font-comp">Nro Registro:</mat-label>
+      <input matInput name="nroRegistro" maxlength="50" value="" class="col-l font-comp" formControlName="nroRegistroControl" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="col-12 float-left">
+      <mat-label class="font-comp">Fecha Emision</mat-label>
+      <input class="font-comp col-12" matInput [matDatepicker]="dpF"  [formControl]="dateFechObt"   [max]="today" readonly />
+      <mat-datepicker-toggle matSuffix [for]="dpF"></mat-datepicker-toggle>
+      <mat-datepicker #dpF disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="col-12 float-left">
+      <mat-label class="font-comp">Fecha Expiración</mat-label>
+      <input class="font-comp col-12" matInput [matDatepicker]="dpF2"  [formControl]="dateFechObt2"   [max]="today" readonly />
+      <mat-datepicker-toggle matSuffix [for]="dpF2"></mat-datepicker-toggle>
+      <mat-datepicker #dpF2 disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardarMembresia($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="lstserv.listar_membresia(data.id);configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+
+

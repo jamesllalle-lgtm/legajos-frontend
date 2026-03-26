@@ -1,0 +1,113 @@
+<h2 mat-dialog-title class="title">{{ data.title }}</h2>
+<div mat-dialog-content class="mb-3">
+  <form
+    [formGroup]="FormGroup"
+    class="example-form col-12 float-left mb-3"
+    enctype="multipart/form-data"
+  >
+    <mat-form-field
+      class="col-12 float-left"
+      appearance="fill"
+      style="margin-top: 10px;"
+    >
+      <mat-label>Periodo</mat-label>
+      <mat-select
+        name="cPrdNombre"
+        class="font-comp"
+        [(ngModel)]="configservc.cPrdNombre"
+        formControlName="cPerCodigo"
+      >
+        <mat-option
+          *ngFor="let option of listserv.lPeriodo"
+          [value]="option.cPrdDescripcion"
+          (click)="comboOnChangePer(option)"
+        >
+          {{ option.cPrdDescripcion.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!--  -->
+    <mat-form-field
+      class="col-12 float-left"
+      appearance="fill"
+      style="margin-top: 10px;"
+    >
+      <mat-label>Tipo de Investigador</mat-label>
+      <mat-select name="nLegLidGrupInvSem" class="font-comp">
+        <mat-option
+          *ngFor="let option of listserv.lTipoGrupoInvestigador"
+          [value]="option.nIntCodigo"
+          (click)="comboOnChangeTipoGrupoInv(option)"
+        >
+          {{ option.cIntDescripcion.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      class="col-12 float-left"
+      appearance="fill"
+      style="margin-top: 10px;"
+    >
+      <mat-label>Línea</mat-label>
+      <mat-select name="nLegLidGrupInvSem" class="font-comp">
+        <mat-option
+          *ngFor="let option of listserv.lLineas"
+          [value]="option.nIntCodigo"
+          (click)="comboOnChangeLinea(option)"
+        >
+          {{ option.cIntDescripcion.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-label class="font-comp">Nombre:</mat-label>
+      <input
+        matInput
+        name="titulo"
+        maxlength="100"
+        class="col-l font-comp"
+        formControlName="nLegLidGrupInvSemTitulo"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field class="col-12 float-left" appearance="standard">
+      <mat-label>Adjuntar archivo(png, jpg, jpeg, pdf)</mat-label>
+      <ngx-mat-file-input
+        class="file-input"
+        placeholder="Adjuntar archivo(png, jpg, jpeg, pdf)"
+        (change)="fileProgress($event)"
+        [accept]="'image/png, image/jpeg, application/pdf'"
+      ></ngx-mat-file-input>
+      <mat-icon matSuffix>insert_photo</mat-icon>
+      <small
+        *ngIf="erradjunto"
+        id="adjuntoHelp"
+        class="form-text text-muted msj-chk small-msj"
+      >
+        <i class="far fa-check-circle"></i>
+        Se cargó imágen.
+      </small>
+    </mat-form-field>
+
+    <div mat-dialog-actions class="apbtn col-12 float-left">
+      <button
+        class="btn btn-sm btn-primary btn-uq"
+        mat-button
+        (click)="guardar()"
+      >
+        Aceptar
+      </button>
+      <button
+        class="btn btn-sm btn-default btn-uq"
+        mat-button
+        (click)="onClickCerrar()"
+      >
+        Cancelar
+      </button>
+      <!-- cdkFocusInitial ->FOCUS -->
+    </div>
+  </form>
+</div>

@@ -1,0 +1,105 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1001 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <table  class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="col-50 col-l"></th>
+          <th scope="col" class="namemd col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">TIPO DOC</th>
+          <th class="col-l col-50" scope="col">NRO DOC</th>
+          <th class="col-l col-50" scope="col">TIPO </th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+          <th class="col-l col-50" scope="col">AREA</th>
+          <th class="col-l namemd" scope="col">TEMA CAPACITACIÓN</th>
+          <th class="col-l col-c" scope="col">FECHA INICIO</th>
+          <th class="col-l col-c" scope="col">FECHA FIN</th>
+          <th class="col-l col-r" scope="col">HORAS</th>
+          <th class="col-l namemd" scope="col">COMPETENCIAS A MEJORAR</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+
+          <th scope="row" class="col-l">
+            <!-- <a class="btn btn-sm btn-primary" matTooltip="Editar registro" (click)="editar_cv(regist)"><i class="fa fa-edit"></i></a>&nbsp;
+            <a class="btn btn-sm btn-default" matTooltip="Ver datos generales" (click)="ver_datos(regist)"><i class="fa fa-eye"></i></a>&nbsp;
+            <a class="btn btn-sm btn-danger" matTooltip="Exportar PDF" (click)="exportar(regist)"><i class="fa fa-download"></i></a> -->
+            <!-- <div ngbDropdown container="body">
+              <button class="btn btn-outline-default btn-sm" ngbDropdownToggle>Acciones</button>
+              <div ngbDropdownMenu class="item-action">
+                <li *ngFor="let item of lstserv.lTareasPermiso; let i = index">
+                  <div *ngIf="i==3 || i == 2" class="dropdown-divider"></div>
+                  <button  ngbDropdownItem (click)="acciones(item.nTarModCodigo, regist)">{{ item.cTarModDescripcion }}</button>
+              </li>
+              </div>
+            </div> -->
+          </th>
+          <td  class="namemd col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cPerTipoDoc.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerNroDoc }}</td>
+          <td class="col-l">{{ regist.cTipoDesc.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cCargo.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cArea.toUpperCase() }}</td>
+          <td class="col-l namemd">{{ regist.cCapTema.toUpperCase() }}</td>
+          <td class="col-c">{{ regist.dCapFechaInicio  | date:'dd-MM-yyyy'}}</td>
+          <td class="col-c">{{ regist.dCapFechaFin  | date:'dd-MM-yyyy'}}</td>
+          <td class="col-r">{{ regist.nCapHoras }}</td>
+          <td class="col-l namemd">{{ regist.cCompetencias }}</td>
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="12">No existen registros de capacitaciones.</td>
+        </tr>
+        </tbody>
+       <!-- <tfoot>
+          <tr >
+            <td class="col-c">
+              <button class="btn btn-sm btn-info btn-uq"  matTooltip="Ir a caja"  [routerLink] = "['/caja']"><mat-icon>account_balance_wallet</mat-icon></button>
+            </td>
+            <td class="col-r num-tot"><b>{{ lstserv.getTotal(0, dataGlobal) | currency:'S/ ' }}</b></td>
+            <td  class="col-r col-un">
+              &nbsp;
+            </td>
+
+            <td class="col-r">{{ lstserv.getTotal(1, dataGlobal) | currency:'S/ '}}</td>
+            <td class="col-r">{{ lstserv.getTotal(2, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(3, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(4, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(5, dataGlobal) | currency:'S/ ' }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </tfoot> -->
+      </table>
+
+
+    </div>
+    <div *ngIf="pageService.dataSource.length > 0 " class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+
+      <!-- <ngb-pagination class="font-comp" [collectionSize]="collectionSize" [(page)]="pageService.page" [pageSize]="pageService.pageSize" (pageChange)="pageService.actualizaTabla(dataglobal)">
+      </ngb-pagination>
+
+      <select class="custom-select font-comp" style="width: auto" [(ngModel)]="pageService.pageSize" (ngModelChange)="pageService.actualizaTabla(dataglobal)">
+        <option [value]="5"> items por página</option>
+        <option [value]="10">10 items por página</option>
+        <option [value]="15">15 items por página</option>
+        <option [value]="dataglobal.length > 15"> todos los items</option>
+      </select> -->
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>

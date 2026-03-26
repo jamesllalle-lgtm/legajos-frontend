@@ -1,0 +1,7 @@
+{
+  "/api/*":{
+    "target": "http://betaseuss.com:82/",
+    "secure": false,
+    "loglevel": "debug"
+  }
+}

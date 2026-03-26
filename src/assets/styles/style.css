@@ -1,0 +1,151 @@
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+.rightbar {
+  background: none repeat scroll 0 0 #fff;
+  border-left: 5px solid #ccc;
+  height: 100%;
+  padding-top: 50px;
+  position: fixed;
+  right: 0;
+  width: 60px;
+  z-index: 200;
+}
+.rightbar ul li {
+ color: #333;
+  font-weight: 100;
+  padding: 16px 0 21px;
+  /*width: 0;*/
+  transition:all 0.3s ease;
+      -webkit-transition:all 0.3s ease;
+      -moz-transition:all 0.3s ease;
+      -o-transition:all 0.3s ease;
+      transition:all 0.3s ease;
+
+}
+.rightbar ul li:hover {
+background:inherit;
+width:100%;
+
+}
+.rightbar ul li a {
+  color: #8b8b8b;
+  float: right;
+  font-size: 12px;
+  line-height: 23px;
+  padding-right: 54px !important;
+  font-size:0;
+  transition: all 0.2s ease 0s;
+      -webkit-transition:all 0.1s ease;
+      -moz-transition:all 0.1s ease;
+      -o-transition:all 0.1s ease;
+      transition:all 0.1s ease;
+}
+.accordion-heading .accordion-toggle{
+  padding:0;
+}
+
+
+
+.rightbar ul li a i{
+color: #8b8b8b;
+  float: right;
+  font-size: 22px;
+  position: absolute;
+  right: 15px;
+     transition:all 0.3s ease;
+      -webkit-transition:all 0.3s ease;
+      -moz-transition:all 0.3s ease;
+      -o-transition:all 0.3s ease;
+      transition:all 0.3s ease;
+}
+
+.accordion-group{
+  border:medium none;
+}
+
+.tools-menu {
+position: relative;
+}
+
+.tools-menu .submenu {
+position: absolute;
+width: 100px;
+left: -140px;
+background-color: #fff;
+display: none;
+}
+
+.tools-menu:hover .submenu {
+display: block;
+}
+
+.noneStyle .tools-menu .submenu {
+display: block;
+position: static;
+}
+
+.accordion-inner ul li{
+  padding:10px 0;
+  list-style:none;
+}
+  .rightbar ul li:hover a,
+  .rightbar ul li:hover a i {
+      color: #23b7e5;
+      text-decoration: none;
+  }
+
+.noneStyle a{
+  font-size:13px !important;
+}
+.noneStyle {
+   width: 144px;
+  z-index: 1000;
+   transition:all 0.3s ease;
+      -webkit-transition:all 0.3s ease;
+      -moz-transition:all 0.3s ease;
+      -o-transition:all 0.3s ease;
+      transition:all 0.3s ease;
+
+}
+
+/* ANIMAR TEXTO */
+
+.line-1{
+  position: relative;
+  top: 80%;
+  margin: 50px auto !important;
+  width: 24em;
+  border-right: 2px solid rgba(255,255,255,.75);
+  color:#389D76;
+  font-size: 1em;
+  font-weight: bolder;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  transform: translateY(-50%);
+  font-family: 'Anonymous Pro', monospace;
+
+}
+
+/* Animation */
+.anim-typewriter{
+animation: typewriter 4s steps(44) 1s 1 normal both,
+           blinkTextCursor 500ms steps(44) infinite normal;
+}
+@keyframes typewriter{
+from{width: 0;}
+to{width: 24em;}
+}
+@keyframes blinkTextCursor{
+from{border-right-color: rgba(255,255,255,.75);}
+to{border-right-color: transparent;}
+}
+
+/* Evita que SweetAlert2 rompa el scroll y mande la página hacia arriba */
+body.swal2-height-auto {
+    height: auto !important;
+}
+
+html.swal2-height-auto {
+    height: auto !important;
+}
+

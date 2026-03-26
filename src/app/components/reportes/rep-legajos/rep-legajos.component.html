@@ -1,0 +1,152 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1002 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <table  class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="namemd col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">TIPO DOC</th>
+          <th class="col-l col-50" scope="col">NRO DOC</th>
+          <th class="col-l col-50" scope="col">TIPO </th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+          <th class="col-l col-50" scope="col">AREA</th>
+          <th class="col-l col-c" scope="col">SECC_01</th>
+          <th class="col-l col-c" scope="col">SECC_02</th>
+          <th class="col-l col-c" scope="col">SECC_03</th>
+          <th class="col-l col-c" scope="col">SECC_04</th>
+          <th class="col-l col-c" scope="col">SECC_05</th>
+          <th class="col-l col-c" scope="col">SECC_06</th>
+          <th class="col-l col-c" scope="col">SECC_07</th>
+          <th class="col-l col-c" scope="col">SECC_08</th>
+          <th class="col-l col-c" scope="col">SECC_09</th>
+          <th class="col-l col-c" scope="col">SECC_10</th>
+          <th class="col-l col-c" scope="col">SECC_11</th>
+          <th class="col-l col-c" scope="col">SECC_12</th>
+          <th class="col-l col-c" scope="col">SECC_13</th>
+          <th class="col-l col-c" scope="col">SECC_14</th>
+          <th class="col-l col-c" scope="col">SECC_15</th>
+          <th class="col-l col-c" scope="col">SECC_16</th>
+          <th class="col-l col-c" scope="col">ESTADO</th>
+          <th class="col-l col-c" scope="col">CV</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+          <td  class="namemd col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cPerTipoDoc.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerNroDoc }}</td>
+          <td class="col-l">{{ regist.cTipoDesc.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cCargo.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cArea.toUpperCase() }}</td>
+          <td class="col-c">{{ regist.secc01 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc02 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc03 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc04 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc05 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc06 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc07 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc08 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc09 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc10 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc11 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc12 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc13 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc14 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc15 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ regist.secc16 > 0  ? 'SI' : 'NO'  }}</td>
+          <td class="col-c">{{ (regist.secc01 > 0) &&  ( regist.secc02 > 0 ) && (regist.secc03 > 0 ) && (regist.secc04 > 0) && (regist.secc05 > 0 ) && (regist.secc06 > 0) && (regist.secc07 > 0 ) && (regist.secc08 > 0 ) && (regist.secc09 > 0 ) && (regist.secc10 > 0 ) && (regist.secc11 > 0 ) && (regist.secc12 > 0 ) && (regist.secc13 > 0 ) && (regist.secc14 > 0 ) && (regist.secc15 > 0 ) && (regist.secc16 > 0 ) ? 'COMPLETO' : 'INCOMPLETO'  }}</td>
+          <td class="col-c"><button class="btn btn-sm btn-list btn-uqm" (click)="exportCV(regist.cPerCodigo, regist.nTipo)"><i class="fa fa-download" ></i>Descargar CV</button></td>
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="24">No existen registros de legajoss.</td>
+        </tr>
+        </tbody>
+       <!-- <tfoot>
+          <tr >
+            <td class="col-c">
+              <button class="btn btn-sm btn-info btn-uq"  matTooltip="Ir a caja"  [routerLink] = "['/caja']"><mat-icon>account_balance_wallet</mat-icon></button>
+            </td>
+            <td class="col-r num-tot"><b>{{ lstserv.getTotal(0, dataGlobal) | currency:'S/ ' }}</b></td>
+            <td  class="col-r col-un">
+              &nbsp;
+            </td>
+
+            <td class="col-r">{{ lstserv.getTotal(1, dataGlobal) | currency:'S/ '}}</td>
+            <td class="col-r">{{ lstserv.getTotal(2, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(3, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(4, dataGlobal) | currency:'S/ ' }}</td>
+            <td class="col-r">{{ lstserv.getTotal(5, dataGlobal) | currency:'S/ ' }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </tfoot> -->
+      </table>
+
+
+    </div>
+
+    <div *ngIf="pageService.dataSource.length > 0 " class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+
+      <!-- <ngb-pagination class="font-comp" [collectionSize]="collectionSize" [(page)]="pageService.page" [pageSize]="pageService.pageSize" (pageChange)="pageService.actualizaTabla(dataglobal)">
+      </ngb-pagination>
+
+      <select class="custom-select font-comp" style="width: auto" [(ngModel)]="pageService.pageSize" (ngModelChange)="pageService.actualizaTabla(dataglobal)">
+        <option [value]="5"> items por página</option>
+        <option [value]="10">10 items por página</option>
+        <option [value]="15">15 items por página</option>
+        <option [value]="dataglobal.length > 15"> todos los items</option>
+      </select> -->
+    </div>
+    <div class="container-fluid d-flex justify-content-between p-2">
+      <mat-accordion class="col-12 float-left">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Leyenda
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+            <div class="col-4 float-left">
+            <p><b>SECC_01:</b> Grados y títulos.</p>
+            <p><b>SECC_02:</b> Experiencia en docencia universitaria.</p>
+            <p><b>SECC_03:</b> Categoría docente.</p>
+            <p><b>SECC_04:</b> Régimen de dedicación.</p>
+            <p><b>SECC_05:</b> Experiencia profesional no docente.</p>
+             </div>
+            <div class="col-4 float-left">
+            <p><b>SECC_06:</b> Dominio de computación.</p>
+            <p><b>SECC_07:</b> Dominio de idiomas.</p>
+            <p><b>SECC_08:</b> Docente investigador.</p>
+            <p><b>SECC_09:</b> Asesoría y jurado de tesis.</p>
+            <p><b>SECC_10:</b> Producción científica, lectiva y de investigación.</p>
+             </div>
+            <div class="col-4 float-left">
+            <p><b>SECC_11:</b> Participación en congresos, seminarios, talleres u otros.</p>
+            <p><b>SECC_12:</b> Carga administrativa universitaria.</p>
+            <p><b>SECC_13:</b> Reconocimiento de otras universidades.</p>
+            <p><b>SECC_14:</b> Capacitaciones.</p>
+            <p><b>SECC_15:</b> Proyección Social.</p>
+            <p><b>SECC_16:</b> Capacitaciones Internas.</p>
+            </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>
+

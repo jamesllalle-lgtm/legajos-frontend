@@ -1,0 +1,58 @@
+<mat-card>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <h4>Listado de Personal</h4>
+      </div>
+      <div class="col-12">
+        <mat-form-field appearance="fill">
+          <mat-label>Buscar por Apellidos y/o Nombres</mat-label>
+          <input matInput [(ngModel)]="cPerNombre" (keyup.enter)="buscar()" />
+          <button mat-icon-button matSuffix (click)="buscar()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="col-12">
+        <table mat-table [dataSource]="dataSource" class="table">
+          <ng-container matColumnDef="persona">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              NOMBRES COMPLETOS
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              (click)="obtenerRegistro(element)"
+              (dbclick)="registrarUsuario()"
+              [ngClass]="element.selected == true ? 'onselected' : 'selected'"
+            >
+              {{ element.cPerApellido }} {{ element.cPerNombre }}
+            </td>
+            <tr mat-header-row *matHeaderRowDef="columndefs"></tr>
+            <tr mat-row *matRowDef="let row; columns: columndefs"></tr>
+          </ng-container>
+        </table>
+      </div>
+      <div class="col-12">
+        <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+      </div>
+      <div class="col-12 align-self-end">
+        <button
+          [disabled]="!existeSeleccionado"
+          class="btn btn-success btn-sm mx-1"
+          (click)="registrarUsuario()"
+        >
+          Agregar
+        </button>
+        <button
+          mat-button
+          [mat-dialog-close]
+          class="btn btn-danger btn-sm mx-1"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+  <section><mat-progress-bar mode="indeterminate"></mat-progress-bar></section>
+</mat-card>

@@ -1,0 +1,32 @@
+export interface ReporteLegajos {
+  nLegDatCodigo: number;
+  cPerCodigo: string;
+  cPerApellido: string;
+  cPerNombre: string;
+  cCargo: string;
+  cArea: string;
+  nTipo: number;
+  cTipoDesc: string;
+  nRol: number;
+  cPerUsuCodigo: string;
+  cPerEmail: string;
+  cPerNroDoc: string;
+  cPerTipoDoc: string;
+  esDocente: number;
+  secc01: number;
+  secc02: number;
+  secc03: number;
+  secc04: number;
+  secc05: number;
+  secc06: number;
+  secc07: number;
+  secc08: number;
+  secc09: number;
+  secc10: number;
+  secc11: number;
+  secc12: number;
+  secc13: number;
+  secc14: number;
+  secc15: number;
+  secc16: number;
+}

@@ -1,0 +1,489 @@
+<div class="apbtn">
+  <section *ngIf="opcion == 1001">
+    <div class="float-left {{ classanc }}">
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;padding: 0px;"
+      >
+        <mat-label class="font-comp">Tipo Colaborador</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="nacionalidad"
+          class="font-comp"
+          [(ngModel)]="configservc.nTipoColaborador"
+          (selectionChange)="cleanrepcapac()">
+          <mat-option [value]="0">TODOS</mat-option>
+          <mat-option [value]="1">ADMINISTRATIVO</mat-option>
+          <mat-option [value]="2">ACADÉMICO</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Capacitaciones</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="capacitaciones"
+          class="font-comp"
+          [(ngModel)]="configservc.nCapacitacion"
+          (selectionChange)="cleanrepcapac()"
+        >
+          <mat-option [value]="0" (click)="comboOnChangeLeg(0)">
+            TODOS
+          </mat-option>
+          <mat-option
+            *ngFor="let option of listserv.lCapacitacionesUSS"
+            [value]="option.nCapCodigo"
+          >
+            {{ option.cCapTema.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-5 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label>Buscar colaborador por apellidos o nombres</mat-label>
+        <input
+          matInput
+          type="text"
+          class="example-left-align"
+          [(ngModel)]="configservc.cFiltroColaborador"
+          (keyup)="search_colaboradorcap(configservc.cFiltroColaborador)"
+          cdkFocusInitial
+          appLetras
+        />
+        <span matPrefix>
+          <i class="fa fa-search fa"></i>
+          &nbsp;
+        </span>
+      </mat-form-field>
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+      <button class="btn btn-sm btn-list btn-uqm" (click)="exportEvent($event)">
+        <i class="fa fa-download"></i>
+        Exportar
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="opcion == 1002">
+    <div class="float-left {{ classanc }}">
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Tipo Colaborador</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="tipoColaborador"
+          class="font-comp"
+          [(ngModel)]="configservc.nTipoColaborador"
+          (selectionChange)="cleanrepleg()"
+        >
+          <mat-option [value]="0">TODOS</mat-option>
+          <mat-option [value]="1">ADMINISTRATIVO</mat-option>
+          <mat-option [value]="2">ACADÉMICO</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-5 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label>Buscar colaborador por apellidos o nombres</mat-label>
+        <input
+          matInput
+          type="text"
+          class="example-left-align"
+          [(ngModel)]="configservc.cFiltroColaborador"
+          (keyup)="search_legajos(configservc.cFiltroColaborador)"
+          cdkFocusInitial
+          appLetras
+        />
+        <span matPrefix>
+          <i class="fa fa-search fa"></i>
+          &nbsp;
+        </span>
+      </mat-form-field>
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+      <button class="btn btn-sm btn-list btn-uqm" (click)="exportEvent($event)">
+        <i class="fa fa-download"></i>
+        Exportar
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="opcion == 1">
+    <div *ngIf="!ctrlserv._banregister" class="float-left {{ classanc }}">
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Tipo Colaborador</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="nacionalidad"
+          class="font-comp"
+          [(ngModel)]="configservc.nTipoColaborador"
+          (selectionChange)="listserv.listar(null)"
+        >
+          <mat-option [value]="0" (click)="comboOnChange(0)">TODOS</mat-option>
+          <mat-option [value]="1" (click)="comboOnChange(1)">
+            ADMINISTRATIVO
+          </mat-option>
+          <mat-option [value]="2" (click)="comboOnChange(2)">
+            ACADÉMICO
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Periodo</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="cPrdNombre"
+          class="font-comp"
+          [(ngModel)]="configservc.cPrdNombre"
+        >
+          <mat-option
+            *ngFor="let option of listserv.lPeriodo"
+            [value]="option.cPrdDescripcion"
+            (click)="comboOnChangePer(option.cPrdDescripcion)"
+          >
+            {{ option.cPrdDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Datos Legajo</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="nLegajoDatos"
+          class="font-comp"
+          [(ngModel)]="configservc.nLegajoDatos"
+        >
+          <mat-option [value]="0" (click)="comboOnChangeLeg(0)">
+            TODOS
+          </mat-option>
+          <mat-option [value]="1" (click)="comboOnChangeLeg(1)">SI</mat-option>
+          <mat-option [value]="2" (click)="comboOnChangeLeg(2)">NO</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-3 float-left" appearance="fill" style="margin-top: 10px;">
+        <mat-label>Buscar colaborador por apellidos o nombres</mat-label>
+        <input
+          matInput
+          type="text"
+          class="example-left-align"
+          [(ngModel)]="configservc.cFiltroColaborador"
+          (keyup)="search_colaborador(configservc.cFiltroColaborador)"
+          cdkFocusInitial
+          appLetras
+        />
+        <span matPrefix><i class="fa fa-search fa"></i>&nbsp;</span>
+      </mat-form-field>
+      <button
+        *ngIf="bannuevo && segserv.usuarioreg.nRol != 1"
+        class="btn btn-sm btn-new btn-uq"
+        (click)="newEvent($event)"
+      >
+        <i class="fa fa-file"></i>
+        Nuevo
+      </button>
+      <button
+        class="btn btn-sm btn-primary btn-uqx"
+        (click)="exportLegajosExcel()"
+      >
+        <i class="fa fa-sync-alt"></i>
+        Excel Validados/No Validados
+      </button>
+      <button class="btn btn-sm btn-primary btn-uqx" (click)="exportLegajos()">
+        <i class="fa fa-sync-alt"></i>
+        Exportar LEGAJOS
+      </button>
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+      <button
+        *ngIf="
+          bannuevo &&
+          segserv.usuarioreg.nRol == 1 &&
+          listserv.return_permiso(configservc.nTareaCapInt) > 0
+        "
+        class="btn btn-sm btn-default btn-uqx"
+        (click)="nvacapacitacion()"
+      >
+        <i class="fa fa-file"></i>
+        Capacitación USS
+      </button>
+      <!-- <div *ngIf="banexportar" class="btn-group">
+        <button type="button" class="btn btn-sm btn-default btnlbl"><i class="fa fa-download"></i> Exportar</button>
+        <div class="btn-group" ngbDropdown role="group" aria-label="Exportar Registros">
+          <button class="btn btn-default dropdown-toggle-split" ngbDropdownToggle></button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <button ngbDropdownItem class="font-comp">EXCEL</button>
+            <button ngbDropdownItem class="font-comp">PDF</button>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div *ngIf="ctrlserv._banregister" class="float-left {{ classanc }}">
+      <div
+        *ngIf="listserv._banvalidar"
+        class="col-10 float-left colaboradornombre"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <span>
+          <b>Colaborador:</b>
+          {{ ctrlserv.colaboradornombre }}
+        </span>
+      </div>
+      <button
+        *ngIf="!listserv._banvalidar"
+        class="btn btn-sm btn-primary btn-uq"
+        (click)="saveEvent($event)"
+      >
+        <i class="fa fa-save"></i>
+        Guardar
+      </button>
+      <button
+        *ngIf="!listserv._banvalidar"
+        class="btn btn-sm btn-list btn-uqm"
+        (click)="exportEvent($event)"
+      >
+        <i class="fa fa-download"></i>
+        Descargar CV
+      </button>
+      <button 
+        class="btn btn-sm btn-default {{ listserv._banvalidar ? 'btn-gd' : '' }}  
+          {{ segserv.usuarioreg.nRol == 1 ? 'btn-large' : 'btn-uq' }}"
+        (click)="segserv.usuarioreg.nRol == 1 ? cancelEvent($event) : cancelEvent($event)">
+        <i class="{{ segserv.usuarioreg.nRol == 1 ? 'fa - fa-arrow-circle-left' : 'fa fa-times' }}"></i>
+        {{ segserv.usuarioreg.nRol == 1 ? 'Ir al Listado' : 'Cancelar' }}
+      </button>
+      <!-- matTooltip="Cancelar Registro" -->
+    </div>
+  </section>
+
+  <!-- Para CONSOLIDADO             -------------------------------------------------- -->
+  <section *ngIf="opcion == 1003">
+    <div class="float-left {{ classanc }}">
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Tipo Colaborador</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="nTipoColaborador"
+          class="font-comp"
+          [(ngModel)]="configservc.nTipoColaborador"
+          (selectionChange)="cleanrepleg()"
+        >
+          <mat-option [value]="0">ACADÉMICO</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Periodo</mat-label>
+        <!-- (ngModelChange)="selrubro()" -->
+        <mat-select
+          name="cFiltroPeriodo"
+          class="font-comp"
+          [(ngModel)]="configservc.cFiltroPeriodo"
+          (selectionChange)="cleanrepleg()"
+        >
+          <mat-option [value]="202102">2021-II</mat-option>
+          <mat-option [value]="202101">2021-I</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        class="col-5 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label>Buscar docente por apellidos o nombres</mat-label>
+        <input
+          matInput
+          type="text"
+          class="example-left-align"
+          [(ngModel)]="configservc.cFiltroColaborador"
+          (keyup)="search_consolidado(configservc.cFiltroColaborador)"
+          cdkFocusInitial
+          appLetras
+        />
+        <span matPrefix>
+          <i class="fa fa-search fa"></i>
+          &nbsp;
+        </span>
+      </mat-form-field>
+      <!-- <mat-field class="col-3 float-left" style="margin-top: 10px;">
+        <button   id="btn_calculando"  type="button" class="btn-warning btn-sm"  disabled style="color:black;"><i class="fa fa-sync fa"></i>  &nbsp;&nbsp; Calculando notas &nbsp;... &nbsp;</button>
+      </mat-field> -->
+
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+
+      <button
+        class="btn btn-sm btn-info btn-uq"
+        (click)="calcularNotasEvent($event)"
+      >
+        <i class="fa fa-sync-alt"></i>
+        Calcular
+      </button>
+
+      <button class="btn btn-sm btn-list btn-uqm" (click)="exportEvent($event)">
+        <i class="fa fa-download"></i>
+        Exportar
+      </button>
+    </div>
+  </section>
+
+  <!-- Para LISTADO DE CAPACITACIONES E INVESTIGACIONES (HISTORIAL DE REGISTROS)             -------------------------------------------------- -->
+  <section *ngIf="opcion == 1004">
+    <div class="float-left {{ classanc }}">
+      <mat-form-field
+        class="col-2 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label class="font-comp">Tipo Colaborador</mat-label>
+        <mat-select
+          name="nacionalidad"
+          class="font-comp"
+          [(ngModel)]="configservc.nTipoColaborador"
+          (selectionChange)="listserv.listar(null)"
+        >
+          <mat-option [value]="0" (click)="comboOnChange(0)">TODOS</mat-option>
+          <mat-option [value]="1" (click)="comboOnChange(1)">
+            ADMINISTRATIVO
+          </mat-option>
+          <mat-option [value]="2" (click)="comboOnChange(2)">
+            ACADÉMICO
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="col-5 float-left"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <mat-label>Buscar docente por apellidos o nombres</mat-label>
+        <input
+          matInput
+          type="text"
+          class="example-left-align"
+          [(ngModel)]="configservc.cFiltroColaborador"
+          (keyup)="search_capinvlegajos(configservc.cFiltroColaborador)"
+          cdkFocusInitial
+          appLetras
+        />
+        <span matPrefix>
+          <i class="fa fa-search fa"></i>
+          &nbsp;
+        </span>
+      </mat-form-field>
+
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+
+      <button class="btn btn-sm btn-list btn-uqm" (click)="exportEvent($event)">
+        <i class="fa fa-download"></i>
+        Exportar
+      </button>
+    </div>
+  </section>
+
+  <!-- Para LISTADO UNIVERSIDADES POR GRADO ACADEMICO DE DOCENTES DE CARGA LECTIVA             -------------------------------------------------- -->
+  <section *ngIf="opcion == 1005">
+    <div class="float-left {{ classanc }}">
+      <button class="btn btn-sm btn-primary btn-uq" (click)="listEvent($event)">
+        <i class="fa fa-sync-alt"></i>
+        Listar
+      </button>
+
+      <button class="btn btn-sm btn-list btn-uqm" (click)="exportEvent($event)">
+        <i class="fa fa-download"></i>
+        Exportar
+      </button>
+    </div>
+  </section>
+  <!-- PARA CARGA MASIVA -->
+  <section *ngIf="opcion == 1006">
+    <div *ngIf="ctrlserv._banregister" class="float-left {{ classanc }}">
+      <div
+        *ngIf="listserv._banvalidar"
+        class="col-10 float-left colaboradornombre"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <span>
+          <b>Colaborador:</b>
+          {{ ctrlserv.colaboradornombre }}
+        </span>
+      </div>
+      <button class="btn btn-sm btn-primary btn-uq" (click)="saveEvent($event)">
+        <i class="fa fa-save"></i>
+        Guardar
+      </button>
+      <button class="btn btn-sm btn-warning btn-uq" (click)="volver()">
+        <i class="fa fa-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+  </section>
+  <section *ngIf="opcion == 1007">
+    <div *ngIf="ctrlserv._banregister" class="float-left {{ classanc }}">
+      <div
+        *ngIf="listserv._banvalidar"
+        class="col-10 float-left colaboradornombre"
+        appearance="fill"
+        style="margin-top: 10px;"
+      >
+        <span>
+          <b>Colaborador:</b>
+          {{ ctrlserv.colaboradornombre }}
+        </span>
+      </div>
+      <button class="btn btn-sm btn-primary btn-uq" (click)="saveEvent($event)">
+        <i class="fa fa-save"></i>
+        Guardar
+      </button>
+      <button class="btn btn-sm btn-warning btn-uq" (click)="volver()">
+        <i class="fa fa-arrow-left"></i>
+        Volver
+      </button>
+    </div>
+  </section>
+</div>
+<app-mensaje></app-mensaje>

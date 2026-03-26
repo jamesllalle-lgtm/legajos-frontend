@@ -1,0 +1,128 @@
+{
+    "ncode": 200,
+    "cstate": true,
+    "cmessage": "Se ha encontrado 11 registro(s).",
+    "odata": [
+        {
+            "nIntCodigo": 18,
+            "nIntClase": 1013,
+            "cIntJerarquia": "",
+            "cIntNombre": "CEDIDE",
+            "cIntDescripcion": "Cédula de identidad",
+            "nIntTipo": 12,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 22,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00004",
+            "cIntNombre": "CRNEXTRA",
+            "cIntDescripcion": "Carnet Extranjería",
+            "nIntTipo": 4,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 23,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00005",
+            "cIntNombre": "CRNFFAA",
+            "cIntDescripcion": "Carnet FA",
+            "nIntTipo": 7,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 24,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00005",
+            "cIntNombre": "CRNFFPP",
+            "cIntDescripcion": "Carnet FP",
+            "nIntTipo": 7,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 25,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00002",
+            "cIntNombre": "DNI",
+            "cIntDescripcion": "Documento de Identidad",
+            "nIntTipo": 1,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 27,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00010",
+            "cIntNombre": "PARTNAC",
+            "cIntDescripcion": "Partida",
+            "nIntTipo": 11,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 28,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00006",
+            "cIntNombre": "PSPORT",
+            "cIntDescripcion": "Pasaporte",
+            "nIntTipo": 7,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 45,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00007",
+            "cIntNombre": "CI-RREE",
+            "cIntDescripcion": "Carnet de identidad – RREE",
+            "nIntTipo": 0,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 46,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00008",
+            "cIntNombre": "CRNPTEMP",
+            "cIntDescripcion": "Carnet de permanencia temporal",
+            "nIntTipo": 0,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 47,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00009",
+            "cIntNombre": "DIEXT",
+            "cIntDescripcion": "Documento de Identidad Extranjero",
+            "nIntTipo": 0,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        },
+        {
+            "nIntCodigo": 48,
+            "nIntClase": 1013,
+            "cIntJerarquia": "00010",
+            "cIntNombre": "CRNSREF",
+            "cIntDescripcion": "Carnet Solicitud Refugio",
+            "nIntTipo": 0,
+            "padre": 0,
+            "nivel": 0,
+            "cValor": null
+        }
+    ]
+}

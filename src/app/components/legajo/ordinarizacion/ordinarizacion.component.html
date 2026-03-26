@@ -1,0 +1,172 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-select placeholder="Seleccione cargo" formControlName="cargoControl" cdkFocusInitial>
+        <mat-select-filter [placeholder]="'Búsqueda de cargo'" [displayMember]="'cIntDescripcion'" [array]="lstserv.lCargoCont" (filteredReturn)="lstserv.filtercargo =$event" class="font-comp"></mat-select-filter>
+        <mat-option *ngFor="let item of lstserv.filtercargo" [value]="item.nIntCodigo" (click)="customerOnChange(item, 1)" class="font-comp">
+          {{item.cIntDescripcion.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-select placeholder="Seleccione área" formControlName="areaControl" cdkFocusInitial>
+        <mat-select-filter [placeholder]="'Búsqueda de área'" [displayMember]="'cIntDescripcion'" [array]="lstserv.lAreaCont" (filteredReturn)="lstserv.filterarea =$event" class="font-comp"></mat-select-filter>
+        <mat-option *ngFor="let item of lstserv.filterarea" [value]="item.nIntCodigo" (click)="customerOnChange(item, 2)" class="font-comp">
+          {{item.cIntDescripcion.toUpperCase()}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-12 float-left">
+      <mat-label class="font-comp">Fecha Selección</mat-label>
+      <!-- [min]="datepast" -->
+      <input class="font-comp col-12" matInput [matDatepicker]="dpFechaI"  [formControl]="dateFecha"   [max]="today" readonly />
+      <mat-datepicker-toggle matSuffix [for]="dpFechaI"></mat-datepicker-toggle>
+      <mat-datepicker #dpFechaI disabled="false"></mat-datepicker>
+    </mat-form-field>
+    <div class="col-12 float-left">
+      <div>
+        <div class="form-control subir">
+          <label for="pdffichainscripcion"
+            ><i class="fas fa-cloud-upload-alt"></i> FICHA INSCRIPCIÓN (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #filefcin
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 0)"
+            (change)="filePDF($event, 0)"
+            class="form-control-file file-input"
+            id="pdffichainscripcion"
+            name="pdffichainscripcion"
+            [formControl]="fichainscripcionControl"
+          />
+        </div>
+        <small
+          *ngIf="errfichainscripcion"
+          id="pdffichainscripcionHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó FICHA INSCRIPCIÓN.</small>
+      </div>
+
+      <div>
+        <div class="form-control subir">
+          <label for="pdfevaluacionCV"
+            ><i class="fas fa-cloud-upload-alt"></i> EVALUACIÓN CV (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #fileevcv
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 1)"
+            (change)="filePDF($event, 1)"
+            class="form-control-file file-input"
+            id="pdfevaluacionCV"
+            name="pdfevaluacionCV"
+            [formControl]="evaluacioncvControl"
+          />
+        </div>
+        <small
+          *ngIf="errevaluacioncv"
+          id="pdfevaluacionCVHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó EVALUACIÓN CV.</small>
+      </div>
+
+      <div>
+        <div class="form-control subir">
+          <label for="pdfclasemodelo"
+            ><i class="fas fa-cloud-upload-alt"></i> CLASE MODELO (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #fileclmd
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 2)"
+            (change)="filePDF($event, 2)"
+            class="form-control-file file-input"
+            id="pdfclasemodelo"
+            name="pdfclasemodelo"
+            [formControl]="clasemodeloControl"
+          />
+        </div>
+        <small
+          *ngIf="errclasemodelo"
+          id="pdfclasemodelolHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó clase modelo.</small>
+      </div>
+
+      <div>
+        <div class="form-control subir">
+          <label for="pdfevaluacionpsico"
+            ><i class="fas fa-cloud-upload-alt"></i> EVALUACIÓN PSICOLÓGICA (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #fileevps
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 3)"
+            (change)="filePDF($event, 3)"
+            class="form-control-file file-input"
+            id="pdfevaluacionpsico"
+            name="pdfevaluacionpsico"
+            [formControl]="evaluacionpsicoControl"
+          />
+        </div>
+        <small
+          *ngIf="errevaluacionpsico"
+          id="pdfevaluacionpsicolHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó evaluación psicológica.</small>
+      </div>
+
+      <div>
+        <div class="form-control subir">
+          <label for="pdfentrevistapers"
+            ><i class="fas fa-cloud-upload-alt"></i> ENTREVISTA PERSONAL (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #fileenpr
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 4)"
+            (change)="filePDF($event, 4)"
+            class="form-control-file file-input"
+            id="pdfentrevistapers"
+            name="pdfentrevistapers"
+            [formControl]="entrevistapersControl"
+          />
+        </div>
+        <small
+          *ngIf="errentrevistapers"
+          id="pdfentrevistaperslHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó entrevista personal.</small>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+

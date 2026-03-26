@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="title"></h2>
+<div mat-dialog-content style="max-width: 100%;">
+  <div style="width: 100%;display: block; text-align: right;">
+    <button class="btn btn-sm" style="margin-left: -30px; position:absolute; z-index=10;
+    background: #444;
+    margin-top: 5px;"  (click)="configserv.onNoClickDialog(dialogRef)"><i class="fa fa-times"></i></button>
+  </div>
+  <div>
+    <div class="titulo-tarj" style="display: block; width: 100%;margin-bottom: 10px;">
+      <p>TARJETA DE PRESENTACIÓN</p>
+    </div>
+    <div class="datos-form">
+      <div class="col-5 float-left" style="text-align: center; margin-bottom: 10px;">
+        <img class="imgphotocv"  [src]="previewUrl">
+      </div>
+      <div class="col-7 float-left">
+        <p class="col-12 float-left">
+          <b>APELLIDOS y NOMBRES: </b> {{ data.obj.cLegDatNombres }} {{ data.obj.cLegDatApellidoPaterno }} {{ data.obj.cLegDatApellidoMaterno }}
+        </p>
+        <p class="col-12 float-left">
+          <b>{{ data.obj.vTipoDoc.cIntDescripcion.toUpperCase() }}: </b>   {{ data.obj.cLegDatNroDoc }}
+        </p>
+        <p class="col-8 float-left">
+          <b>FECHA NACIMIENTO: </b> {{ data.obj.dLegDatFechaNacimiento | date:'dd-MM-yyyy' }}
+        </p>
+        <p class="col-4 float-left">
+          <b>EDAD: </b> {{ edad }}
+        </p>
+        <p class="col-6 float-left">
+          <b>SEXO: </b>   {{ data.obj.vSexo.cConDescripcion.toUpperCase() }}
+        </p>
+        <p class="col-6 float-left">
+          <b>ESTADO CIVIL: </b>   {{ data.obj.vEstadoCivil.cConDescripcion.toUpperCase() }}
+        </p>
+        <p class="col-12 float-left">
+          <b>EMAIL: </b>   {{ data.obj.cLegDatEmail }}
+        </p>
+        <p class="col-12 float-left">
+          <b>TELÉF.: </b>   {{ data.obj.cLegDatMovil }} {{ data.obj.cLegDatTelefono != '' && data.obj.cLegDatTelefono != null ? '-' : '' }} {{ data.obj.cLegDatTelefono }}
+        </p>
+        <p class="col-12 float-left">
+          <b>GRADO ACADÉMICO: </b>   {{ data.obj.vGradoAcad.cIntDescripcion.toUpperCase() }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+

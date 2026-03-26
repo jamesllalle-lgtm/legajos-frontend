@@ -1,0 +1,160 @@
+<div class="menubn">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>{{ segserv.namesystem }}</span>
+      <button *ngIf="ctrlserv.isSmallScreen" mat-icon-button class="example-icon2"
+        aria-label="Example icon-button with menu icon"
+        (click)="sidenavservc.toogle(openNav.emit($event))">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>
+        {{ segserv.usuarioreg.cPerApellido }}
+        {{ segserv.usuarioreg.cPerNombre }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        <i class="fa fa-circle"></i> Conectado</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+
+  <div class="font-comp">
+    <mat-accordion>
+
+      <!-- <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let item of menu">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="font-men">
+            <mat-icon>collections_bookmark</mat-icon>
+            <span class="menpr">{{ item.cIntDescripcion }}</span>
+          </mat-panel-title>
+          <mat-panel-description></mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>
+          <mat-list>
+            <a [routerLink]="[submenu.cValor]" *ngFor="let submenu of item.submenu">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+                <span>{{ submenu.cIntDescripcion }}</span>
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </p>
+      </mat-expansion-panel> -->
+      
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="font-men">
+            <mat-icon>collections_bookmark</mat-icon>
+            <span class="menpr">LEGAJOS</span>
+          </mat-panel-title>
+          <mat-panel-description></mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>
+          <mat-list>
+            <!-- <a [routerLink]="['/legajo']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span>CONTROL DE LEGAJOS</span>
+              </mat-list-item>
+            </a> -->
+            <mat-divider></mat-divider>
+
+            <a [routerLink]="['/dgeneral']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span>INFORMACIÓN GENERAL</span>
+              </mat-list-item>
+            </a>
+            <mat-divider></mat-divider>
+            <a [routerLink]="['/dcapacitaciones']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span>CAPACITACIÓN</span>
+              </mat-list-item>
+            </a>
+            <mat-divider></mat-divider>
+            <a [routerLink]="['/dinvestigacion']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span>INVESTIGACIÓN</span>
+              </mat-list-item>
+            </a>
+            <mat-divider></mat-divider>
+            <a [routerLink]="['/dcargamasiva']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> C.M PARTICIPANTES </span>
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </p>
+      </mat-expansion-panel>
+
+      
+
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+        *ngIf=" (this.segserv.usuarioreg.nRol == 1 && this.codigoArea == 1) ">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="font-men">
+            <mat-icon>collections_bookmark</mat-icon> <span class="menpr">REPORTES LEGAJO</span>
+
+          </mat-panel-title>
+          <mat-panel-description>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>
+          <mat-list>
+            <a [routerLink]="['/replegajos']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Reporte de Legajos </span>
+              </mat-list-item>
+            </a>
+            <mat-divider></mat-divider>
+            <a [routerLink]="['/repcapacitaciones']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Reporte de Capacitaciones </span>
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </p>
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+        *ngIf="(this.segserv.usuarioreg.nRol == 1 && this.codigoArea == 13) ">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="font-men">
+            <mat-icon>collections_bookmark</mat-icon> <span class="menpr">REPORTES DOCENTE</span>
+
+          </mat-panel-title>
+          <mat-panel-description>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p>
+          <mat-list>
+            <a [routerLink]="['/repcapacinves']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Capacitaciones e Investigaciones </span>
+              </mat-list-item>
+            </a>
+            <a [routerLink]="['/repevaluaciond']" *ngIf="this.segserv.usuarioreg.cPerCodigo == '1000189691'">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Consolidado </span>
+              </mat-list-item>
+            </a>
+          
+            <a href="https://campus.uss.edu.pe/45_EVA/ReporteLegajos.aspx" target="_blank">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Consolidado actualizado</span>
+              </mat-list-item>
+            </a>
+            <a [routerLink]="['/reprankinguni']">
+              <mat-list-item class="font-comp">
+                <mat-icon>keyboard_arrow_right</mat-icon><span> Ranking Univ. </span>
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </p>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </div>
+</div>

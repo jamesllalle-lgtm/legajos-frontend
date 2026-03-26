@@ -1,0 +1,82 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1003 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <table  class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="namemd col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">NRO DOC</th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+          <th class="col-l col-50" scope="col">AREA</th>
+          <th class="col-l col-c" scope="col">EVALUACION DE DESEMPEÑO DOCENTE</th>
+          <th class="col-l col-c" scope="col">CAPACITACION DOCENTE</th>
+          <th class="col-l col-c" scope="col">PRODUCCION CIENTIFICA, LECTIVA Y DE INVESTIGACION</th>
+          <th class="col-l col-c" scope="col">PROMEDIO</th>
+          <th class="col-l col-c" scope="col">*Condición final <br> (RENUEVA/RATIFICA/SÍ/NO)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+          <td  class="namemd col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cPerNroDoc }}</td>
+          <td class="col-l col-50">{{ regist.cCargo.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cArea.toUpperCase() }}</td>
+          <td class="col-c">{{ regist.nLegRenRatEDD }}</td>
+          <td class="col-c">{{ regist.nLegRenRatCD }}</td>
+          <td class="col-c">{{ regist.nLegRenRatPC }}</td>
+          <td class="col-c">{{ regist.nLegRenRatPromedio }}</td>
+          <td class="col-c">{{ regist.cLegRenRatCondicion }}</td>
+
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="9">No existen registros de legajoss.</td>
+        </tr>
+        </tbody>
+
+      </table>
+
+
+    </div>
+
+    <div *ngIf="pageService.dataSource.length > 0 " class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+
+    </div>
+    <div class="container-fluid d-flex justify-content-between p-2">
+      <mat-accordion class="col-12 float-left">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Leyenda
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+            <div class="col-4 float-left">
+            <p><b>EDD:</b>Evaluación de desempeño docente. Peso = 90%</p>
+            <p><b>CD:</b> Capacitación docente. Peso = 5%</p>
+            <p><b>PC:</b> Producción científica, lectiva y de investigación. Peso = 5%</p>
+            <p><b>PROMEDIO:</b> .</p>
+            
+             </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>
+

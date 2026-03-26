@@ -1,0 +1,56 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1005 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <table  class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+            <th class="col-l col-50" scope="col">CODIGO</th>
+            <th class="col-l col-50" scope="col">COLABORADOR</th>
+            <th class="col-l col-50" scope="col">GRADO ACADEMICO</th>
+            <th class="col-l col-50" scope="col">INSTITUCION</th>
+   
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+          <td  class="col-l col-50">{{ regist.cPerCodigo}}</td>
+          <td  class="col-l col-50">
+            {{ regist.cPerApellido }} {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cIntDescripcion }}</td>
+          <td class="col-l col-50">{{ regist.cInstitucion }}</td>
+ 
+
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="5">No existen registros de legajoss.</td>
+        </tr>
+        </tbody>
+
+      </table>
+
+
+    </div>
+
+    <div *ngIf="pageService.dataSource.length > 0 " class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+
+    </div>
+    
+  </div>
+
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>
+

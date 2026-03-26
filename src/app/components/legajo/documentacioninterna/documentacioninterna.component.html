@@ -1,0 +1,60 @@
+<h2 mat-dialog-title class="title">{{data.title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="FormGroup" class="example-form col-12 float-left" enctype="multipart/form-data">
+    <mat-form-field class="example-full-width float-left col-12 font-comp">
+      <mat-label class="font-comp">Tipo Documento</mat-label>
+        <mat-select name="tipodoc_for" class="font-comp" formControlName="tipodocControl" >
+          <mat-option [value]="0" (click)="customerOnChange(null, 1)"> Seleccione...</mat-option>
+          <mat-option *ngFor="let option of lstserv.lTipoDocInt" [value]="option.nConValor" (click)="customerOnChange(option, 1)">
+            {{ option.cConDescripcion.toUpperCase() }}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="LegDocumentacionInterna.nLegValTipoDoc == 1002 || LegDocumentacionInterna.nLegValTipoDoc == 1003" class="example-full-width" class="col-12 float-left">
+      <mat-label class="font-comp">DNI o CARNET DE EXTRANJERÍA</mat-label>
+      <input matInput name="codigo" maxlength="12" value="" class="col-l font-comp" formControlName="codigoControl" required >
+    </mat-form-field>
+    <mat-form-field *ngIf="LegDocumentacionInterna.nLegValTipoDoc == 1002 || LegDocumentacionInterna.nLegValTipoDoc == 1003" class="example-full-width" class="col-12 float-left">
+      <mat-label class="font-comp">Nombres y apellidos</mat-label>
+      <input matInput name="nombre" maxlength="150" value="" class="col-l font-comp" formControlName="descripcionControl" required >
+    </mat-form-field>
+    <div class="col-12 float-left">
+      <div>
+        <div class="form-control subir">
+          <label for="archivopdfCV"
+            ><i class="fas fa-cloud-upload-alt"></i> ARCHIVO ADJUNTO (Formato PDF)</label
+          >
+          <!-- (click)="limpiar_adj('imagen')"
+            (change)="previewimage(fileimg, 'imagen')" -->
+          <input
+            #fileevcv
+            type="file"
+            accept="application/pdf"
+            data-preview-file-type="text"
+            (click)="filePDF(null, 1)"
+            (change)="filePDF($event, 1)"
+            class="form-control-file file-input"
+            id="archivopdfCV"
+            name="archivopdfCV"
+            [formControl]="archivopdf"
+          />
+        </div>
+        <small
+          *ngIf="erradjunto"
+          id="archivopdfCVHelp"
+          class="form-text text-muted msj-chk"
+          ><i class="far fa-check-circle"></i> Se cargó ARCHIVO ADJUNTO.</small>
+      </div>
+
+    </div>
+
+  </form>
+</div>
+<div mat-dialog-actions class="apbtn col-12 float-left">
+  <button class="btn btn-sm btn-primary btn-uq" mat-button (click)="guardar($event)" >Aceptar</button>
+  <button class="btn btn-sm btn-default btn-uq" mat-button (click)="configserv.onNoClickDialog(dialogRef)">Cancelar</button>
+  <!-- cdkFocusInitial ->FOCUS -->
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>
+
+

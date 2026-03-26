@@ -1,0 +1,83 @@
+<!-- <div (keydown.enter)="recaptchaRef.execute()" class="container-fluid col-lg-7 col-md-10 col-sm-8 col-10 px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto fondo-screen"> -->
+<div class="container-fluid col-lg-7 col-md-10 col-sm-8 col-10 px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto fondo-screen">
+  <!-- <div class="d-lg-none d-md-none d-sm-block d-block col-12">
+    <div class="d-flex col-12 secc-one"> <img src="assets/images/USS-logotipo.svg" class="logo"> </div>
+    <div class="d-flex col-12 secc-one">
+      <p>Carretera a Pimentel Km. 5 / Teléf. (074) - 481610</p>
+      <p>Informes: Teléf. 481619 - 481621 - Chiclayo</p></div>
+  </div> -->
+  <div class="card card0 border-0">
+      <div class="d-flex altdiv imglog">
+          <div class="d-lg-block d-md-block d-sm-none d-none col-lg-6 col-md-6 imgsec">
+              <div class="card1 pb-5  col-12">
+                  <div class="secc title" style="text-align: center;color: #FFF !important;">
+                    
+                    <h2>SISTEMA DE LEGAJO USS </h2><p>Docente - Administrativo</p>
+                  </div>
+                  <div class="secc" style="text-align: center;">
+                    <img src="assets/images/uss_isonew2.svg" class="logo responsive">
+                  </div>
+                  <div class="secc-two"><p>Carretera a Pimentel Km. 5 / Teléf. (074) - 481610</p>
+                    <p>Informes: Teléf. 481619 - 481621 - Chiclayo</p></div>
+                  <!-- <div class="row px-3 justify-content-center mt-4 mb-5 border-line">
+                    <p class="line-1 anim-typewriter">Sistema de administración de iglesia</p>
+                  </div> -->
+              </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-12 seslog">
+              <div class="mb-4 px-3 title">
+                <h6 class="mb-0 mr-4 mt-2" style="text-align: center;">Inicio de sesión</h6>
+              </div>
+              <div class="card2 border-0 px-4 form-input-white" >
+                    <mat-form-field appearance="fill"  >
+                      <mat-label>Usuario</mat-label>
+                      <input  matInput type="text" class="example-left-align" style="color: #FFF" [(ngModel)] = 'usuario' cdkFocusInitial uppercase>
+                      <span matPrefix><i class="fa fa-user-lock fa-2x"></i> &nbsp;</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Contraseña</mat-label>
+                      <input matInput [type]="hide ? 'password' : 'text'" class="example-left-align" style="color: #FFF;text-transform: none" [(ngModel)] = 'password'>
+                      <span matPrefix><i class="fa fa-key fa-2x"></i> &nbsp;</span>
+                      <button class="btn-pass" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                  <div class="row px-3 mb-4">
+                      <div class="custom-control custom-checkbox custom-control-inline"> <input id="chk1" type="checkbox" name="chk" class="custom-control-input"> <label for="chk1" class="custom-control-label text-sm">Remember me</label> </div> 
+                      <a href="#" class="ml-auto mb-0 text-sm olvpas">Olvidé contraseña</a>
+                  </div>
+                  <!-- <re-captcha
+                  #recaptchaRef
+                  siteKey="{{ segserv.keyrecaptcha }}"
+                  size="invisible"
+                  (resolved)="$event && login($event)">
+                  </re-captcha> -->
+                  <div class="row mb-3 px-3 col-r">
+                    <!-- <button mat-raised-button class="btn btn-blue text-center"
+                     (click)="recaptchaRef.execute()" [disabled]="segserv.disload" >
+                     <mat-icon *ngIf="segserv.disload"><mat-spinner diameter="20">
+                      </mat-spinner></mat-icon>
+                      <b *ngIf="!segserv.disload"> Acceder</b>
+                    </button> -->
+                    <button mat-raised-button
+                            class="btn btn-blue text-center"
+                            (click)="loginDirecto()"
+                            [disabled]="segserv.disload">
+                      <mat-icon *ngIf="segserv.disload">
+                        <mat-spinner diameter="20"></mat-spinner>
+                      </mat-icon>
+                      <b *ngIf="!segserv.disload">Acceder</b>
+                    </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="bg-blue py-4 footlog">
+          <div class="row px-3"> <small class="col-lg-9 col-md-9 col-12 cpy">Copyright &copy; {{ anio }} | Todos los derechos reservados.</small>
+              <div class="social-contact ml-4 ml-sm-auto col-lg-3 col-md-3 col-12"> webmaster@uss.edu.pe </div>
+          </div>
+      </div>
+  </div>
+</div>
+<app-mensaje></app-mensaje> <ngx-spinner></ngx-spinner>

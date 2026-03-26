@@ -1,0 +1,6 @@
+<h4 class="secc-lst">SECCIONES POR COMPLETAR</h4>
+<mat-nav-list>
+  <a  *ngFor="let item of lstserv.lmsjLegajo; let i = index" mat-list-item (click)="openLink($event)">
+    <span mat-line>{{ item.cMensaje }}</span>
+  </a>
+</mat-nav-list>

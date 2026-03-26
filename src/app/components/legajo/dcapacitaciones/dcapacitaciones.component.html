@@ -1,0 +1,258 @@
+<app-header></app-header>
+<mat-drawer-container class="example-container" autosize>
+  <div class="example-sidenav-content">
+    <app-titlemodule class="divtitle" [title] = title [route] = route></app-titlemodule>
+    <div class="container-fluid float-left col-12 col-qpad divtop">
+      <app-button  [banctrl]="[true,true, true, false, true, true]" [opcion]=1 [modulo]="modulo"></app-button>
+    </div>
+    <div class="container-fluid float-left div-table">
+      <div *ngIf="ctrlserv._banregister">
+        <mat-tab-group dynamicHeight #tabGroup (selectedTabChange)="tabChanged($event)">
+          <mat-tab label="Curriculum Vitae">
+            <div class="example-small-box mat-elevation-z4" style="margin-top: 15px;">
+              <div class="col-lg-3 col-md-4  col-12 float-left fieldphoto">
+                <img class="imgphotocv"  [src]="previewUrl">
+              
+              </div>
+              <div class="col-lg-9 col-md-8 col-12 float-left">
+                <mat-vertical-stepper [linear]="isLinear" #stepper>
+
+                 
+
+                  <!-- X.	PARTICIPACIÓN EN CONGRESOS, TALLERES, SEMINARIOS Y OTROS -->
+                  <mat-step [stepControl]="FormGroup11">
+                    <form enctype="multipart/form-data">
+                      <ng-template matStepLabel>Participación en congresos, talleres, seminarios y otros - <span class="span-mat-step">{{ lstserv.lParticipacion.length }} registro(s)</span></ng-template>
+
+                      <div class="float-left">
+                        <h5><b>*Internacional : Se considera cuando en el mismo certificado lo declara
+                          <br>
+                            *Nacional : cualquier evento realizado dentro de su país</b>
+                        </h5>
+                      </div>
+
+                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                        <button class="btn btn-sm btn-primary btn-uqx"   (click)="nuevo_participacion(clmdserv.empty_participacion())"><i class="fa fa-graduation-cap" ></i> Agregar</button>
+                      </div>
+                      <div class="col-12 float-left div-table">
+                        <table class="table table-fixed font-comp table-style">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="col-50 col-l"></th>
+                              <th scope="col" class="namemd col-l">INSTITUCIÓN</th>
+                              <th class="col-l col-w" scope="col">ROL</th>
+                              <th class="col-l col-w" scope="col">NOMBRE EVENTO</th>
+                              <th class="col-r col-w" scope="col">ÁMBITO</th>
+                              <th class="col-r col-w" scope="col">FECHA INICIO</th>
+                              <th class="col-r col-w" scope="col">FECHA FIN</th>
+                              <th class="col-r col-w" scope="col">HORAS</th>
+                              <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let regist of lstserv.lParticipacion">
+
+                               <th scope="row" class="col-c">
+                                 <a *ngIf="!regist.cLegParValida && regLegDatosGenerales.nLegDatCodigo > 0 && (configserv.nTareaValidar != bValidar)" class="btn btn-sm btn-primary" matTooltip="Editar registro" (click)="nuevo_participacion(regist)"><i class="fa fa-edit"></i></a>&nbsp;
+                                 <a *ngIf="!regist.cLegParValida && (configserv.nTareaValidar == bValidar)"class="btn btn-sm btn-default" matTooltip="Validar registro" (click)="eliminar_validar_participacion(regist, false)"><i class="fa fa-check"></i></a>&nbsp;
+                                 <a *ngIf="!regist.cLegParValida" class="btn btn-sm btn-danger" matTooltip="Eliminar registro" (click)="eliminar_validar_participacion(regist, true)"><i class="fa fa-times"></i></a>
+                                 <a *ngIf="regist.cLegParValida" class="btn btn-sm btn-primary" matTooltip="Registro validado"><i class="fa fa-check"></i></a>
+                               </th>
+                               <td *ngIf="regist.cLegParInstitucion !=clmdserv.codigonoinst" class="col-l">{{ regist.cLegParInstitucionNavigation.cPerNombre.toUpperCase()}}</td>
+                               <td *ngIf="regist.cLegParInstitucion ==clmdserv.codigonoinst" class="col-l">{{ regist.cLegParOtraInst.toUpperCase()}}</td>
+                               <td class="col-l">{{ regist.vRol.cIntDescripcion.toUpperCase()}}</td>
+                               <td class="col-l">{{ regist.cLegParNombre.toUpperCase()}}</td>
+                               <td class="col-l">{{ regist.vAmbito.cIntDescripcion.toUpperCase()}}</td>
+                               <td class="col-r">{{ regist.dLegParFecha| date:'dd-MM-yyyy'}}</td>
+                               <td class="col-r">{{ regist.dLegParFechaFin| date:'dd-MM-yyyy'}}</td>
+                               <td class="col-r">{{ regist.nLegParHoras}}</td>
+                               <td class="col-c" *ngIf="regist.cUsuRegistro!='pdf'"> <img *ngIf="regist.nLegParCodigo > 0" class="imgphotofor" [src]="regist.cLegParArchivo  | secure | async" (click)="mdlserv.nuevoModalPrevImage(regist.cLegParArchivo)"><img *ngIf="regist.nLegParCodigo == 0" class="imgphotofor" [src]="regist.cFile | secure | async" (click)="mdlserv.nuevoModalPrevImage(regist.cFile)"></td>
+                               <td class="col-c" *ngIf="regist.cUsuRegistro=='pdf'"><img class="imgphotofor" src="assets/images/pdf-logo.png" (click)="mdlserv.openpdf(regist.cLegParArchivo)"></td>
+                             </tr>
+                             <tr *ngIf="lstserv.lParticipacion.length == 0"  class="col-c cel-ie">
+                               <td colspan="9">No se ha registrado producción científica.</td>
+                             </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-12 float-left divform apbtn">
+                        <button matStepperPrevious class="btn btn-sm btn-default btn-uq">Atrás</button>
+                        <button matStepperNext class="btn btn-sm btn-primary btn-uq">Siguiente</button>
+                      </div>
+                    </form>
+                  </mat-step>
+
+                  <!-- XIII.	CAPACITACIONES  -->
+                  <mat-step [stepControl]="FormGroup14">
+                    <form enctype="multipart/form-data">
+                      <ng-template matStepLabel>Capacitaciones - <span class="span-mat-step">{{ lstserv.lcapacitaciones.length }} registro(s)</span></ng-template>
+                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                        <button class="btn btn-sm btn-primary btn-uqx"   (click)="nuevo_capacitacion(clmdserv.empty_capacitaciones())"><i class="fa fa-graduation-cap" ></i> Agregar</button>
+                      </div>
+                      <div class="col-12 float-left div-table">
+                        <table class="table table-fixed font-comp table-style">
+                          <thead>
+                          <tr>
+                            <th scope="col" class="col-50 col-l"></th>
+                            <th scope="col" class="namemd col-l">TIPO CAPACITACIÓN</th>
+                            <th scope="col" class="namemd col-l">{{ ban_administrativo ? 'TIPO DURACIÓN' : 'TIPO ESPECIALIDAD' }}</th>
+                            <th class="col-r col-w" scope="col">FECHA INICIO</th>
+                            <th class="col-r col-w" scope="col">FECHA FIN</th>
+                            <th class="col-r col-w" scope="col">{{ ban_administrativo ? 'CANTIDAD' : 'HORAS LECTIVAS' }}</th>
+                            <th class="col-l col-w" scope="col">INSTITUCIÓN</th>
+                            <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let regist of lstserv.lcapacitaciones">
+
+                               <th scope="row" class="col-c">
+                                 <a *ngIf="!regist.cLegCapValida && regLegDatosGenerales.nLegDatCodigo > 0 && (configserv.nTareaValidar != bValidar)" class="btn btn-sm btn-primary" matTooltip="Editar registro" (click)="nuevo_capacitacion(regist)"><i class="fa fa-edit"></i></a>&nbsp;
+                                 <a *ngIf="!regist.cLegCapValida && (configserv.nTareaValidar == bValidar)"class="btn btn-sm btn-default" matTooltip="Validar registro" (click)="eliminar_validar_capacitacion(regist, false)"><i class="fa fa-check"></i></a>&nbsp;
+                                 <a *ngIf="!regist.cLegCapValida" class="btn btn-sm btn-danger" matTooltip="Eliminar registro" (click)="eliminar_validar_capacitacion(regist, true)"><i class="fa fa-times"></i></a>
+                                 <a *ngIf="regist.cLegCapValida" class="btn btn-sm btn-primary" matTooltip="Registro validado"><i class="fa fa-check"></i></a>
+                               </th>
+
+                               <td class="col-l">{{ regist.vTipo.cConDescripcion.toUpperCase()}}</td>
+                               <td class="col-l">{{ regist.vTipoEsp.cConDescripcion.toUpperCase()}}</td>
+                               <td class="col-r">{{ regist.dLegCapFechaInicio| date:'dd-MM-yyyy'}}</td>
+                               <td class="col-r">{{ regist.dLegCapFechaFin| date:'dd-MM-yyyy'}}</td>
+                               <td class="col-l">{{ regist.nLegCapHoras}}</td>
+                               <td *ngIf="regist.cLegCapInstitucion !=clmdserv.codigonoinst" class="col-l">{{ regist.vInstitucion.cPerNombre.toUpperCase()}}</td>
+                               <td *ngIf="regist.cLegCapInstitucion ==clmdserv.codigonoinst" class="col-l">{{ regist.cLegCapOtraInst.toUpperCase()}}</td>
+                               <td class="col-c" *ngIf="regist.cUsuRegistro!='pdf'"> <img *ngIf="regist.nLegCapCodigo > 0" class="imgphotofor" [src]="regist.cLegCapArchivo  | secure | async" (click)="mdlserv.nuevoModalPrevImage(regist.cLegCapArchivo)" ><img *ngIf="regist.nLegCapCodigo == 0" class="imgphotofor" [src]="regist.cFile | secure | async" (click)="mdlserv.nuevoModalPrevImage(regist.cFile)"></td>
+                               <td class="col-c" *ngIf="regist.cUsuRegistro=='pdf'"><img class="imgphotofor" src="assets/images/pdf-logo.png" (click)="mdlserv.openpdf(regist.cLegCapArchivo)"></td>
+                             </tr>
+                             <tr *ngIf="lstserv.lcapacitaciones.length == 0"  class="col-c cel-ie">
+                               <td colspan="8">No se ha registrado reconocimientos.</td>
+                             </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="col-12 float-left divform apbtn">
+                        <button matStepperPrevious class="btn btn-sm btn-default btn-uq">Atrás</button>
+                        <button matStepperNext class="btn btn-sm btn-primary btn-uq">Siguiente</button>
+                      </div>
+                    </form>
+                  </mat-step>
+
+                  <mat-step *ngIf="configserv.nTareaValidar != bValidar">
+                    <form [formGroup]="EndFormGroup">
+                      <ng-template matStepLabel>Finalizar</ng-template>
+                      
+                      <div class="col-12 float-left divform apbtn">
+                        <button matStepperPrevious class="btn btn-sm btn-default btn-uq">Atrás</button>
+                        <button class="btn btn-sm btn-primary btn-uq" (click)="guardarcv()">Guardar</button>
+                        <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+                      </div>
+                    </form>
+                  </mat-step>
+                </mat-vertical-stepper>
+
+              </div>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+
+      </div>
+
+      <table *ngIf="!ctrlserv._banregister  && this.codigoArea == 1" class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="col-50 col-l"></th>
+          <th scope="col" class="namemd col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">TIPO DOC</th>
+          <th class="col-l col-50" scope="col">NRO DOC</th>
+          <th class="col-l col-50" scope="col">TIPO </th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+          <th class="col-l col-50" scope="col">EMAIL</th>
+          <th class="col-l col-50" scope="col">¿DATOS LEGAJO?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+          <th scope="row" class="col-l">
+            <div ngbDropdown container="body">
+              <button class="btn btn-outline-default btn-sm" ngbDropdownToggle>Acciones</button>
+              <div ngbDropdownMenu class="item-action">
+                <li *ngFor="let item of lstserv.lTareasPermiso; let i = index">
+                  <div *ngIf="item.nTarModCodigo==3 || item.nTarModCodigo == 4 || item.nTarModCodigo == 11" class="dropdown-divider"></div>
+                  <button  ngbDropdownItem (click)="acciones(item.nTarModCodigo, regist)">{{ item.cTarModDescripcion }}</button>
+              </li>
+              </div>
+            </div>
+          </th>
+          <td  class="namemd col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l col-50">{{ regist.cPerTipoDoc.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerNroDoc }}</td>
+          <td class="col-l">{{ regist.cTipoDesc.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cCargo.toUpperCase() }}</td>
+          <td class="col-l col-50">{{ regist.cPerEmail }}</td>
+          <td class="col-c">{{ regist.bLegajo ? 'SI' : 'NO' }}</td>
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="8">No existen registros de colaboradores.</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- DESARROLLO ACADEMICO -->
+      <table *ngIf="!ctrlserv._banregister  && this.codigoArea == 13" class="table table-fixed font-comp table-style">
+        <thead>
+        <tr>
+          <th scope="col" class="col-50 col-l"></th>
+          <th scope="col" class="col-50 col-l">COLABORADOR</th>
+          <th class="col-l col-50" scope="col">TIPO DOC</th>
+          <th class="col-l col-50" scope="col">NRO DOC</th>
+          <th class="col-l col-50" scope="col">TIPO </th>
+          <th class="col-l col-50" scope="col">CARGO</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let regist of pageService.dataSource">
+
+          <th scope="row" class="col-l">
+            <div ngbDropdown container="body">
+              <button class="btn btn-outline-default btn-sm" ngbDropdownToggle>Acciones</button>
+              <div ngbDropdownMenu class="item-action">
+                <li *ngFor="let item of lstserv.lTareasPermiso; let i = index">
+                  <div *ngIf="item.nTarModCodigo==3 || item.nTarModCodigo == 4 || item.nTarModCodigo == 11" class="dropdown-divider"></div>
+                  <button  ngbDropdownItem (click)="acciones(item.nTarModCodigo, regist)">{{ item.cTarModDescripcion }}</button>
+              </li>
+              </div>
+            </div>
+          </th>
+          <td  class="col-l">
+            {{ regist.cPerApellido }}, {{ regist.cPerNombre }}
+          </td>
+          <td class="col-l">{{ regist.cPerTipoDoc.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cPerNroDoc }}</td>
+          <td class="col-l">{{ regist.cTipoDesc.toUpperCase() }}</td>
+          <td class="col-l">{{ regist.cCargo.toUpperCase() }}</td>
+        </tr>
+        <tr *ngIf="pageService.dataSource.length == 0" class="col-c cel-ie">
+          <td colspan="6">No existen registros de colaboradores.</td>
+        </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+    <div *ngIf="pageService.dataSource.length > 0 && !ctrlserv._banregister" class="container-fluid d-flex justify-content-between p-2">
+
+      <mat-paginator [length]="pageService.collectionSize" (page)="pageService.actualizaTabla2(pageService.dataglobal, $event);"
+            [pageSize]="pageService.pageSize"
+            [pageSizeOptions]="pageService.pageSizeOptions">
+      </mat-paginator>
+    </div>
+  </div>
+  <ngx-spinner></ngx-spinner>
+  <mat-drawer #drawer class="example-sidenav" >
+
+    <app-menu></app-menu>
+  </mat-drawer>
+</mat-drawer-container>
+
