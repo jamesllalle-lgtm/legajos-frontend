@@ -11,9 +11,11 @@ export class PaginationService {
   pageSize: number = 20;
   pageSizeOptions = [5, 10, 15, 20];
   collectionSize: number = 0
+
   constructor(private paginator: MatPaginatorIntl) {
     this.paginator.itemsPerPageLabel = 'Registros por página'
   }
+  
   actualizaTabla($data: any) {
     this.dataSource = $data
       .map((item: any, i: number) => ({ row: i + 1, ...item }))
