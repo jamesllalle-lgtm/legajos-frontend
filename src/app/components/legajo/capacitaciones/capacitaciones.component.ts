@@ -90,7 +90,7 @@ export class CapacitacionesComponent implements OnInit {
     let paisuniv: number = 0;
     let vpais: Interface = this.clmdserv.empty_interface()
 
-    this.fecha_minima = new Date(new Date().getFullYear() - 5, new Date().getMonth(), new Date().getDate())
+    // this.fecha_minima = new Date(new Date().getFullYear() - 5, new Date().getMonth(), new Date().getDate())
 
     if (this.data.id > 0 && this.data.formacion.nLegCapCodigo > 0) {
       this.regCapacitacion = this.data.formacion
