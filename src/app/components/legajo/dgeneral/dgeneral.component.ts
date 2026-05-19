@@ -97,8 +97,8 @@ export class DgeneralComponent implements OnInit {
 
   // Variable de Clase id de Declaracion Jurada - EBS 11/2025 ------------------>
   nLegDjcodigo: number = 0
-// Declara esta variable para guardar los resultados de la búsqueda
-public filternacionalidad: any[] = [];
+  // Declara esta variable para guardar los resultados de la búsqueda
+  public filternacionalidad: any[] = [];
   // -------- Edgar BS - 2025 ------------------>
   anexo1Control: FormControl
   anexo2_2Control: FormControl
@@ -435,9 +435,14 @@ public filternacionalidad: any[] = [];
 
     Promise.all(promesas).then(() => {
       console.log("Todas las listas se han cargado. Ejecutando editar_cv...");
+      console.log(this.segserv.usuarioreg);
       this.editar_cv(this.segserv.usuarioreg);
     }).catch(error => {
       console.error("Error al cargar datos:", error);
+    });
+
+    this.FormGroup1.get('tipodocumentoControl')?.valueChanges.subscribe(valor => {
+      console.log("El usuario cambió el tipo de documento a:", valor);
     });
   }
 
@@ -527,15 +532,15 @@ public filternacionalidad: any[] = [];
       .then((data) => {
         let lubigeo: Interface[] = data
         this.lstserv.lubigeo = lubigeo.filter((x) => x.nIntCodigo != 0)
-        
+
         // Aquí se traen las nacionalidades
         this.lstserv.lnacionalidad = this.lstserv.lubigeo.filter(
           (x) => x.cIntJerarquia.trim().length == 3,
         )
-        
+
         // 🚩 AGREGA ESTA LÍNEA AQUÍ PARA QUE LA LISTA NO SALGA VACÍA:
         this.filternacionalidad = this.lstserv.lnacionalidad.slice();
-        
+
         this.lstserv.lpaisNac = this.lstserv.lnacionalidad
         this.lstserv.filterpais = this.lstserv.lpaisNac.slice()
         this.lstserv.ldepartamento = this.lstserv.lubigeo.filter(
@@ -890,9 +895,9 @@ public filternacionalidad: any[] = [];
           provinciaNacControl: provnacimiento,
           distritoNacControl: distnacimiento,
           edadControl: '',
-          gradoacademicoControl: $obj.vGradoAcad == null ? 0 : $obj.vGradoAcad.nIntCodigo ?? 0,
+          gradoacademicoControl: $obj.nLegDatGradoAcad == null ? 0 : $obj.nLegDatGradoAcad ?? 0,
           nacionalidadControl: $obj.vPais == null ? 0 : $obj.vPais.nIntCodigo ?? 0,
-          tipodocumentoControl: $obj.vTipoDoc == null ? 0 : $obj.vTipoDoc.nIntCodigo ?? 0,
+          tipodocumentoControl: $obj.nLegDatTipoDoc == null ? 0 : $obj.nLegDatTipoDoc ?? 0,
           nrodocumentoControl: $obj.cLegDatNroDoc == null ? '' : $obj.cLegDatNroDoc,
           sexoControl: $obj.vSexo == null ? 0 : $obj.vSexo.nConValor,
           estadocivilControl: $obj.vEstadoCivil == null ? 0 : $obj.vEstadoCivil.nConValor ?? 0,
@@ -1127,29 +1132,29 @@ public filternacionalidad: any[] = [];
           }
           // Reemplaza el bloque dentro del forEach de legProfesNoDocente
           $obj.legProfesNoDocente.forEach((item) => {
-              // 1. Validar institución
-              if (!item.cLegProInstitucion || item.cLegProInstitucion.trim() == '') {
-                  item.cLegProInstitucion = this.clmdserv.codigonoinst;
-                  item.cLegProInstitucionNavigation = this.clmdserv.empty_persona();
-              }
-              
-              item.cLegProInstitucionNavigation.cPerNombre = 
-                  item.cLegProInstitucionNavigation.cPerNombre ?? this.clmdserv.nombrenoinst;
+            // 1. Validar institución
+            if (!item.cLegProInstitucion || item.cLegProInstitucion.trim() == '') {
+              item.cLegProInstitucion = this.clmdserv.codigonoinst;
+              item.cLegProInstitucionNavigation = this.clmdserv.empty_persona();
+            }
 
-              // 2. Validar cargo
-              item.vCargo = item.vCargo == null ? this.clmdserv.empty_constante() : item.vCargo;
+            item.cLegProInstitucionNavigation.cPerNombre =
+              item.cLegProInstitucionNavigation.cPerNombre ?? this.clmdserv.nombrenoinst;
 
-              // 3. 🚩 AQUÍ ESTÁ LA CORRECCIÓN CRÍTICA:
-              if (item.cUsuRegistro && item.cUsuRegistro.length >= 3) {
-                  item.cUsuRegistro = item.cUsuRegistro.substr(item.cUsuRegistro.length - 3, 3);
-              } else {
-                  item.cUsuRegistro = 'img'; // Valor por defecto si es nulo
-              }
+            // 2. Validar cargo
+            item.vCargo = item.vCargo == null ? this.clmdserv.empty_constante() : item.vCargo;
 
-              // 4. Validar archivo
-              item.cLegProArchivo = item.cLegProArchivo
-                  ? (item.cUsuRegistro == 'pdf' ? environment.APIFILEPDF : environment.APIFILE) + item.cLegProArchivo
-                  : environment.CERTDEFAULT;
+            // 3. 🚩 AQUÍ ESTÁ LA CORRECCIÓN CRÍTICA:
+            if (item.cUsuRegistro && item.cUsuRegistro.length >= 3) {
+              item.cUsuRegistro = item.cUsuRegistro.substr(item.cUsuRegistro.length - 3, 3);
+            } else {
+              item.cUsuRegistro = 'img'; // Valor por defecto si es nulo
+            }
+
+            // 4. Validar archivo
+            item.cLegProArchivo = item.cLegProArchivo
+              ? (item.cUsuRegistro == 'pdf' ? environment.APIFILEPDF : environment.APIFILE) + item.cLegProArchivo
+              : environment.CERTDEFAULT;
           });
           this.lstserv.lProfesNoDocente = $obj.legProfesNoDocente
         }
@@ -1661,7 +1666,7 @@ public filternacionalidad: any[] = [];
     setTimeout(() => {
       // Buscamos en el HTML la cabecera del paso que se acaba de activar
       const activeStep = document.querySelector('.mat-step-header[aria-selected="true"]');
-      
+
       if (activeStep) {
         // Obligamos a la pantalla a hacer scroll suavemente hasta ese título
         activeStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2142,8 +2147,6 @@ public filternacionalidad: any[] = [];
     }
   }
 
-
-
   onTipoDocumentoChange(value: number) {
     if (value === 22 ||
       value === 28 ||
@@ -2167,48 +2170,48 @@ public filternacionalidad: any[] = [];
     this.mostrarCamposCesante = value === 3;
   }
 
- onHaberesChange(value: number) {
-  const bancoControl = this.FormGroup1.get('bancoControl');
-  const numCuentaControl = this.FormGroup1.get('numCuentaControl');
-  const numCuentaCciControl = this.FormGroup1.get('numCuentaCciControl');
-  const bancoAperturarControl = this.FormGroup1.get('bancoAperturarControl');
+  onHaberesChange(value: number) {
+    const bancoControl = this.FormGroup1.get('bancoControl');
+    const numCuentaControl = this.FormGroup1.get('numCuentaControl');
+    const numCuentaCciControl = this.FormGroup1.get('numCuentaCciControl');
+    const bancoAperturarControl = this.FormGroup1.get('bancoAperturarControl');
 
-  if (value === 1) { // SI tiene cuenta
-    this.mostrarBanco = true;
-    this.mostrarBancoAperturar = false;
+    if (value === 1) { // SI tiene cuenta
+      this.mostrarBanco = true;
+      this.mostrarBancoAperturar = false;
 
-    // Banco y Cuentas pasan a ser OBLIGATORIOS
-    bancoControl?.setValidators([Validators.required]);
-    numCuentaControl?.setValidators([Validators.required, Validators.maxLength(14)]);
-    numCuentaCciControl?.setValidators([Validators.required, Validators.maxLength(20)]);
-    
-    // Banco Aperturar deja de ser obligatorio y se limpia
-    bancoAperturarControl?.clearValidators();
-    bancoAperturarControl?.setValue(0);
-  } 
-  else if (value === 2) { // NO tiene cuenta
-    this.mostrarBanco = false;
-    this.mostrarBancoAperturar = true;
+      // Banco y Cuentas pasan a ser OBLIGATORIOS
+      bancoControl?.setValidators([Validators.required]);
+      numCuentaControl?.setValidators([Validators.required, Validators.maxLength(14)]);
+      numCuentaCciControl?.setValidators([Validators.required, Validators.maxLength(20)]);
 
-    // Banco Aperturar pasa a ser OBLIGATORIO
-    bancoAperturarControl?.setValidators([Validators.required]);
-    
-    // Los otros dejan de ser obligatorios y se limpian
-    bancoControl?.clearValidators();
-    numCuentaControl?.clearValidators();
-    numCuentaCciControl?.clearValidators();
-    
-    bancoControl?.setValue(0);
-    numCuentaControl?.setValue('');
-    numCuentaCciControl?.setValue('');
+      // Banco Aperturar deja de ser obligatorio y se limpia
+      bancoAperturarControl?.clearValidators();
+      bancoAperturarControl?.setValue(0);
+    }
+    else if (value === 2) { // NO tiene cuenta
+      this.mostrarBanco = false;
+      this.mostrarBancoAperturar = true;
+
+      // Banco Aperturar pasa a ser OBLIGATORIO
+      bancoAperturarControl?.setValidators([Validators.required]);
+
+      // Los otros dejan de ser obligatorios y se limpian
+      bancoControl?.clearValidators();
+      numCuentaControl?.clearValidators();
+      numCuentaCciControl?.clearValidators();
+
+      bancoControl?.setValue(0);
+      numCuentaControl?.setValue('');
+      numCuentaCciControl?.setValue('');
+    }
+
+    // IMPORTANTE: Actualizar el estado de los controles para que Angular se entere del cambio
+    bancoControl?.updateValueAndValidity();
+    numCuentaControl?.updateValueAndValidity();
+    numCuentaCciControl?.updateValueAndValidity();
+    bancoAperturarControl?.updateValueAndValidity();
   }
-
-  // IMPORTANTE: Actualizar el estado de los controles para que Angular se entere del cambio
-  bancoControl?.updateValueAndValidity();
-  numCuentaControl?.updateValueAndValidity();
-  numCuentaCciControl?.updateValueAndValidity();
-  bancoAperturarControl?.updateValueAndValidity();
-}
 
   fileProgress(fileInput: any, btipo: boolean = true): void {
     if (btipo) {
@@ -5582,5 +5585,13 @@ public filternacionalidad: any[] = [];
     }
   }
   // Eliminación de documentos para subir (Anexos) - EBS 11/2025   ------------>
+  get legajoGuardado(): boolean {
+    return this.regLegDatosGenerales &&
+      this.regLegDatosGenerales.nLegDatCodigo != null &&
+      this.regLegDatosGenerales.nLegDatCodigo > 0;
+  }
 
+  irAlPaso1(): void {
+    this.stepper.selectedIndex = 0;
+  }
 }

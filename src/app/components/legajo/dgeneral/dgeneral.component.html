@@ -2,7 +2,7 @@
 <mat-drawer-container class="example-container" autosize>
   <div class="example-sidenav-content">
     <app-titlemodule class="divtitle" [title]="title" [route]="route"></app-titlemodule>
-    <div class="container-fluid float-left col-12 col-qpad divtop" >
+    <div class="container-fluid float-left col-12 col-qpad divtop">
       <app-button [banctrl]="[true, true, true, false, true, true]" [opcion]="1" [modulo]="modulo"></app-button>
     </div>
     <div class="container-fluid float-left div-table">
@@ -15,7 +15,6 @@
               </div>
               <div class="col-lg-9 col-md-8 col-12 float-left">
                 <mat-vertical-stepper [linear]="isLinear" #stepper (selectionChange)="scrollToActiveStep()">>
-
                   <mat-step *ngIf="configserv.nTareaValidar != bValidar" [stepControl]="FormGroup1">
 
                     <ng-template matStepLabel>Datos Generales</ng-template>
@@ -28,27 +27,24 @@
                         <!-- Paso 1: Generales -->
                         <mat-step label="Generales">
                           <div class="col-lg-6 col-md-6 col-12 float-left">
-                          <mat-form-field class="col-12 float-left" appearance="fill">
+                            <mat-form-field class="col-12 float-left" appearance="fill">
                               <mat-label class="font-comp">Nacionalidad</mat-label>
                               <mat-select name="nacionalidad" class="font-comp" formControlName="nacionalidadControl">
-                                
-                                <mat-select-filter 
-                                  [placeholder]="'Buscar nacionalidad...'" 
-                                  [displayMember]="'cIntDescripcion'" 
-                                  [array]="lstserv.lnacionalidad" 
-                                  (filteredReturn)="filternacionalidad = $event" 
-                                  class="font-comp">
+
+                                <mat-select-filter [placeholder]="'Buscar nacionalidad...'"
+                                  [displayMember]="'cIntDescripcion'" [array]="lstserv.lnacionalidad"
+                                  (filteredReturn)="filternacionalidad = $event" class="font-comp">
                                 </mat-select-filter>
-                                
+
                                 <mat-option [value]="0" (click)="comboOnChange(null, 0)">
                                   Seleccione...
                                 </mat-option>
-                                
+
                                 <mat-option *ngFor="let option of filternacionalidad" [value]="option.nIntCodigo"
                                   (click)="comboOnChange(option, configserv.nIntNacionalidad)">
                                   {{ option.cIntDescripcion.toUpperCase() }}
                                 </mat-option>
-                                
+
                               </mat-select>
                             </mat-form-field>
                             <mat-form-field class="col-lg-6 col-md-6 col-12 float-left" appearance="fill">
@@ -354,12 +350,9 @@
                                   Seleccione país
                                 </mat-label>
                                 <mat-select name="paisnac" class="font-comp" formControlName="paisNacControl">
-                                  <mat-select-filter 
-                                    [placeholder]="'Buscar lugar de nacimiento...'" 
-                                    [displayMember]="'cIntDescripcion'" 
-                                    [array]="lstserv.lpaisNac" 
-                                    (filteredReturn)="lstserv.lpaisNac = $event" 
-                                    class="font-comp">
+                                  <mat-select-filter [placeholder]="'Buscar lugar de nacimiento...'"
+                                    [displayMember]="'cIntDescripcion'" [array]="lstserv.lpaisNac"
+                                    (filteredReturn)="lstserv.lpaisNac = $event" class="font-comp">
                                   </mat-select-filter>
                                   <mat-option [value]="0" (click)="ubigeoOnChange(null, 0)">
                                     Seleccione...
@@ -493,7 +486,8 @@
                           </div>
 
                           <div class="col-12 float-left divform apbtn">
-                            <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">Siguiente</button>
+                            <button type="button" matStepperNext
+                              class="btn btn-sm btn-primary btn-uq">Siguiente</button>
                           </div>
 
                         </mat-step>
@@ -573,7 +567,8 @@
                           </div>
 
                           <div class="col-12 float-left divform apbtn">
-                            <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">Atrás</button>
+                            <button type="button" matStepperPrevious
+                              class="btn btn-sm btn-default btn-uq">Atrás</button>
                           </div>
                         </mat-step>
 
@@ -588,359 +583,363 @@
                   </mat-step>
 
                   <!-- ADJUNTAR DOCUMENTOS  -->
-                  <mat-step *ngIf="configserv.nTareaValidar != bValidar" [stepControl]="FormGroupAD">
+                  <mat-step *ngIf="configserv.nTareaValidar != bValidar" [stepControl]="FormGroupAD"
+                    [editable]="legajoGuardado">
                     <form enctype="multipart/form-data" [formGroup]="FormGroupAD">
                       <ng-template matStepLabel>
                         <span>Salud / Antecedentes</span>
                       </ng-template>
-                      <!-- <div class="col-lg-4 col-md-4  col-12 float-left"> -->
-                      <!-- matTooltip="Adjuntar foto" matTooltipPosition="right" matTooltipClass="tooltipStyle" -->
-                      <!-- <mat-form-field class="fieldphoto float-left" appearance="outline" [hideRequiredMarker]="true" >
-                          <img class="imgphotofirma"  [src]="previewFirmaUrl   | secure | async">
-                          <div><label for="photofir" class="labelphoto"  ><i class="fa fa-paperclip"></i> Adjuntar Firma</label></div>
-                          <ngx-mat-file-input name="photocert" id="photofir" class="filephoto" [formControl]="photoControl" placeholder="Subir firma (png, jpg, jpeg)" (change)="fileProgress($event, false)" [accept]="'image/png, image/jpeg'"></ngx-mat-file-input>
-                        </mat-form-field>
 
-                      </div> -->
-                      <div class="col-lg-12 col-md-12 col-12 float-left">
-                        <!-- EXAMEN MEDICO -->
-                        <div class="col-12">
-                          <fieldset>
-                            <legend> SALUD </legend>
-                            <div class="col-12">
-                              <div class="form-control subir">
-                                <label for="pdfBuenaSalud">
-                                  <i class="fas fa-cloud-upload-alt"></i>
-                                  CERTIFICADO MÉDICO DE GOZAR DE BUENA
-                                  SALUD(Formato PDF)
-                                </label>
-                                <!-- (click)="limpiar_adj('imagen')"
-                              (change)="previewimage(fileimg, 'imagen')" -->
-                                <input #filepol type="file" accept="application/pdf" data-preview-file-type="text"
-                                  (click)="filePDF(null, 7)" (change)="filePDF($event, 7)"
-                                  class="form-control-file file-input" id="pdfBuenaSalud" name="pdfBuenaSalud"
-                                  [formControl]="registrosbuenasalud" />
-                              </div>
-                              <small *ngIf="errregbuenasalud" id="pdfBuenaSalud" class="form-text text-muted msj-chk">
-                                <i class="far fa-check-circle"></i>
-                                Se cargó certificado médico de gozar buena salud
-                                física y mental.
-                              </small>
-                            </div>
-
-                            <div class="col-12 mt-2">
-                              <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;">
-                                <mat-label>Discapacidad:</mat-label>
-                                <mat-select id="nLegDatDiscapacidad" name="nLegDatDiscapacidad" class="font-comp"
-                                  formControlName="nLegDatDiscapacidad" required>
-                                  <mat-option *ngFor="let option of lstTieneDiscapacidad" [value]="option.nIntCodigo"
-                                    (click)="  comboOnChangeTieneDiscacidad(option.nIntCodigo)
-                                    ">
-                                    {{ option.cIntDescripcion.toUpperCase() }}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                              <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;"
-                                *ngIf="discapacidadFlag">
-                                <mat-label>Tipo de Discapacidad:</mat-label>
-                                <mat-select name="nLegDatTipoDiscapacidad" class="font-comp"
-                                  formControlName="nLegDatTipoDiscapacidad">
-                                  <mat-option *ngFor="let option of lstTipoDiscapacidad" [value]="option.nIntCodigo"
-                                    (click)="  comboOnChangeTipoDiscapacidad(option.nIntCodigo)
-                                    ">
-                                    {{ option.cIntDescripcion.toUpperCase() }}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                              <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;"
-                                *ngIf="otraDiscapacidadFlag && discapacidadFlag">
-                                <mat-label>Otro: </mat-label>
-                                <input matInput name="cLegDatOtraDiscapcidad" formControlName="cLegDatOtraDiscapcidad"
-                                  maxlength="150" value="" class="col-l font-comp" appLetras uppercase />
-                              </mat-form-field>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-12 float-left" *ngIf="discapacidadFlag">
+                      <div *ngIf="legajoGuardado; else mensajeBloqueo">
+                        <div class="col-lg-12 col-md-12 col-12 float-left">
+                          <div class="col-12">
+                            <fieldset>
+                              <legend> SALUD </legend>
                               <div class="col-12">
                                 <div class="form-control subir">
-                                  <label for="cLegDatArchivoConadis">
+                                  <label for="pdfBuenaSalud">
                                     <i class="fas fa-cloud-upload-alt"></i>
-                                    CERTIFICADO CONADIS
+                                    CERTIFICADO MÉDICO DE GOZAR DE BUENA SALUD (Formato PDF)
                                   </label>
-                                  <!-- (click)="limpiar_adj('imagen')"
-                                  (change)="previewimage(fileimg, 'imagen')" -->
                                   <input #filepol type="file" accept="application/pdf" data-preview-file-type="text"
-                                    (click)="filePDF(null, 8)" (change)="filePDF($event,8)"
-                                    class="form-control-file file-input" id="cLegDatArchivoConadis"
-                                    name="cLegDatArchivoConadis" />
-                                  <!-- [formControl]="registrosbuenasalud" -->
+                                    (click)="filePDF(null, 7)" (change)="filePDF($event, 7)"
+                                    class="form-control-file file-input" id="pdfBuenaSalud" name="pdfBuenaSalud"
+                                    [formControl]="registrosbuenasalud" />
                                 </div>
-                                <small *ngIf="errregconadis" id="errregconadis" class="form-text text-muted msj-chk">
+                                <small *ngIf="errregbuenasalud" id="pdfBuenaSalud" class="form-text text-muted msj-chk">
                                   <i class="far fa-check-circle"></i>
-                                  Se cargó certificado de CONADIS.
+                                  Se cargó certificado médico de gozar buena salud física y mental.
                                 </small>
                               </div>
-                            </div>
-                          </fieldset>
-                        </div>
-                        <div class="col-12 mt-2">
-                          <fieldset>
-                            <legend> ANTECEDENTES </legend>
-                            <div class="col-12">
-                              <div class="form-control subir">
-                                <label for="pdfpolicial">
-                                  <i class="fas fa-cloud-upload-alt"></i>
-                                  ANTECEDENTES POLICIALES (Formato PDF)
-                                </label>
-                                <!-- (click)="limpiar_adj('imagen')"
-                              (change)="previewimage(fileimg, 'imagen')" -->
-                                <input #filepol type="file" accept="application/pdf" data-preview-file-type="text"
-                                  (click)="filePDF(null, 2)" (change)="filePDF($event, 2)"
-                                  class="form-control-file file-input" id="pdfpolicial" name="pdfpolicial"
-                                  [formControl]="policialControl" />
-                              </div>
-                              <small *ngIf="errpolicial" id="pdfpolicialHelp" class="form-text text-muted msj-chk">
-                                <i class="far fa-check-circle"></i>
-                                Se cargó antecedentes policiales.
-                              </small>
-                            </div>
 
-                            <div class="col-12">
-                              <div class="form-control subir">
-                                <label for="pdfjudicial">
-                                  <i class="fas fa-cloud-upload-alt"></i>
-                                  ANTECEDENTES JUDICIALES (Formato PDF)
-                                </label>
-                                <!-- (click)="limpiar_adj('imagen')"
-                              (change)="previewimage(fileimg, 'imagen')" -->
-                                <input #filejud type="file" accept="application/pdf" data-preview-file-type="text"
-                                  (click)="filePDF(null, 3)" (change)="filePDF($event, 3)"
-                                  class="form-control-file file-input" id="pdfjudicial" name="pdfjudicial"
-                                  [formControl]="judicialControl" />
+                              <div class="col-12 mt-2">
+                                <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;">
+                                  <mat-label>Discapacidad:</mat-label>
+                                  <mat-select id="nLegDatDiscapacidad" name="nLegDatDiscapacidad" class="font-comp"
+                                    formControlName="nLegDatDiscapacidad" required>
+                                    <mat-option *ngFor="let option of lstTieneDiscapacidad" [value]="option.nIntCodigo"
+                                      (click)="comboOnChangeTieneDiscacidad(option.nIntCodigo)">
+                                      {{ option.cIntDescripcion.toUpperCase() }}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;"
+                                  *ngIf="discapacidadFlag">
+                                  <mat-label>Tipo de Discapacidad:</mat-label>
+                                  <mat-select name="nLegDatTipoDiscapacidad" class="font-comp"
+                                    formControlName="nLegDatTipoDiscapacidad">
+                                    <mat-option *ngFor="let option of lstTipoDiscapacidad" [value]="option.nIntCodigo"
+                                      (click)="comboOnChangeTipoDiscapacidad(option.nIntCodigo)">
+                                      {{ option.cIntDescripcion.toUpperCase() }}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="col-4 float-left" appearance="fill" style="margin-top: 10px;"
+                                  *ngIf="otraDiscapacidadFlag && discapacidadFlag">
+                                  <mat-label>Otro: </mat-label>
+                                  <input matInput name="cLegDatOtraDiscapcidad" formControlName="cLegDatOtraDiscapcidad"
+                                    maxlength="150" value="" class="col-l font-comp" appLetras uppercase />
+                                </mat-form-field>
                               </div>
-                              <small *ngIf="errjudicial" id="pdfjudicialHelp" class="form-text text-muted msj-chk">
-                                <i class="far fa-check-circle"></i>
-                                Se cargó antecedentes judiciales.
-                              </small>
-                            </div>
-                          </fieldset>
+
+                              <div class="col-lg-12 col-md-12 col-12 float-left" *ngIf="discapacidadFlag">
+                                <div class="col-12">
+                                  <div class="form-control subir">
+                                    <label for="cLegDatArchivoConadis">
+                                      <i class="fas fa-cloud-upload-alt"></i> CERTIFICADO CONADIS
+                                    </label>
+                                    <input #filepol type="file" accept="application/pdf" data-preview-file-type="text"
+                                      (click)="filePDF(null, 8)" (change)="filePDF($event,8)"
+                                      class="form-control-file file-input" id="cLegDatArchivoConadis"
+                                      name="cLegDatArchivoConadis" />
+                                  </div>
+                                  <small *ngIf="errregconadis" id="errregconadis" class="form-text text-muted msj-chk">
+                                    <i class="far fa-check-circle"></i> Se cargó certificado de CONADIS.
+                                  </small>
+                                </div>
+                              </div>
+                            </fieldset>
+                          </div>
+
+                          <div class="col-12 mt-2">
+                            <fieldset>
+                              <legend> ANTECEDENTES </legend>
+                              <div class="col-12">
+                                <div class="form-control subir">
+                                  <label for="pdfpolicial">
+                                    <i class="fas fa-cloud-upload-alt"></i> ANTECEDENTES POLICIALES (Formato PDF)
+                                  </label>
+                                  <input #filepol type="file" accept="application/pdf" data-preview-file-type="text"
+                                    (click)="filePDF(null, 2)" (change)="filePDF($event, 2)"
+                                    class="form-control-file file-input" id="pdfpolicial" name="pdfpolicial"
+                                    [formControl]="policialControl" />
+                                </div>
+                                <small *ngIf="errpolicial" id="pdfpolicialHelp" class="form-text text-muted msj-chk">
+                                  <i class="far fa-check-circle"></i> Se cargó antecedentes policiales.
+                                </small>
+                              </div>
+
+                              <div class="col-12">
+                                <div class="form-control subir">
+                                  <label for="pdfjudicial">
+                                    <i class="fas fa-cloud-upload-alt"></i> ANTECEDENTES JUDICIALES (Formato PDF)
+                                  </label>
+                                  <input #filejud type="file" accept="application/pdf" data-preview-file-type="text"
+                                    (click)="filePDF(null, 3)" (change)="filePDF($event, 3)"
+                                    class="form-control-file file-input" id="pdfjudicial" name="pdfjudicial"
+                                    [formControl]="judicialControl" />
+                                </div>
+                                <small *ngIf="errjudicial" id="pdfjudicialHelp" class="form-text text-muted msj-chk">
+                                  <i class="far fa-check-circle"></i> Se cargó antecedentes judiciales.
+                                </small>
+                              </div>
+                            </fieldset>
+                          </div>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn mt-2">
+                          <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">Atrás</button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">Siguiente</button>
                         </div>
                       </div>
-                      <div class="col-12 float-left divform apbtn mt-2">
-                        <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar su
+                            información de Salud y Antecedentes.</p>
+                          <button type="button" class="ColorFondoVolver btn btn-sm" (click)="irAlPaso1()">Volver al Paso
+                            1</button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
-
 
                   <!-- I. GRADOS Y TITULOS -->
                   <mat-step [stepControl]="FormGroup2">
                     <form [formGroup]="FormGroup2" enctype="multipart/form-data">
-                      <div class="col-12">
-                        <div class="form-control subir">
-                          <label for="pdfsunedu">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            REGISTRO SUNEDU (Formato PDF)
-                          </label>
-                          <!-- (click)="limpiar_adj('imagen')"
-                            (change)="previewimage(fileimg, 'imagen')" -->
-                          <input #filesun type="file" accept="application/pdf" data-preview-file-type="text"
-                            (click)="filePDF(null, 1)" (change)="filePDF($event, 1)"
-                            class="form-control-file file-input" id="pdfsunedu" name="pdfsunedu"
-                            [formControl]="registrosuneduControl" />
-                        </div>
-                        <small *ngIf="errregsunedu" id="pdfsuneduHelp" class="form-text text-muted msj-chk">
-                          <i class="far fa-check-circle"></i>
-                          Se cargó registro de SUNEDU.
-                        </small>
-                      </div>
                       <ng-template matStepLabel>
                         Grados y títulos -
                         <span class="span-mat-step">
                           {{ lstserv.lLegGradoTitulo.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx"
-                          (click)="nuevo_gradotitulo(clmdserv.empty_gradotitulo())">
-                          <i class="fa fa-graduation-cap"></i>Agregar</button>
-                      </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">
-                                CARRERA PROFESIONAL
-                              </th>
-                              <th class="col-l col-w" scope="col">
-                                INSTITUCIÓN
-                              </th>
-                              <th class="col-l col-w" scope="col">PAÍS</th>
-                              <th class="col-l col-w" scope="col">
-                                GRADO ACADÉMICO
-                              </th>
-                              <th class="col-r col-w" scope="col">
-                                FECHA DE OBTENCIÓN
-                              </th>
-                              <th class="col-c col-w" scope="col">
-                                ADJ ARCHIVO
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lLegGradoTitulo">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="!regist.cLegGraValida &&
+
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div class="col-12">
+                          <div class="form-control subir">
+                            <label for="pdfsunedu">
+                              <i class="fas fa-cloud-upload-alt"></i>
+                              REGISTRO SUNEDU (Formato PDF)
+                            </label>
+                            <!-- (click)="limpiar_adj('imagen')"
+                            (change)="previewimage(fileimg, 'imagen')" -->
+                            <input #filesun type="file" accept="application/pdf" data-preview-file-type="text"
+                              (click)="filePDF(null, 1)" (change)="filePDF($event, 1)"
+                              class="form-control-file file-input" id="pdfsunedu" name="pdfsunedu"
+                              [formControl]="registrosuneduControl" />
+                          </div>
+                          <small *ngIf="errregsunedu" id="pdfsuneduHelp" class="form-text text-muted msj-chk">
+                            <i class="far fa-check-circle"></i>
+                            Se cargó registro de SUNEDU.
+                          </small>
+                        </div>
+
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button type="button" class="btn btn-sm btn-primary btn-uqx"
+                            (click)="nuevo_gradotitulo(clmdserv.empty_gradotitulo())">
+                            <i class="fa fa-graduation-cap"></i>Agregar</button>
+                        </div>
+
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">
+                                  CARRERA PROFESIONAL
+                                </th>
+                                <th class="col-l col-w" scope="col">
+                                  INSTITUCIÓN
+                                </th>
+                                <th class="col-l col-w" scope="col">PAÍS</th>
+                                <th class="col-l col-w" scope="col">
+                                  GRADO ACADÉMICO
+                                </th>
+                                <th class="col-r col-w" scope="col">
+                                  FECHA DE OBTENCIÓN
+                                </th>
+                                <th class="col-c col-w" scope="col">
+                                  ADJ ARCHIVO
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lLegGradoTitulo">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="!regist.cLegGraValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_gradotitulo(regist)">
-                                  <i class="fa fa-edit"></i></a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_gradotitulo(regist)">
+                                    <i class="fa fa-edit"></i></a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegGraValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_formacion(regist, false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegGraValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_formacion(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegGraValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td class="col-l">
-                                {{ regist.cLegGraCarreraProf.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegGraInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegGraInstitucionNavigation.cPerNombre.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegGraInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegGraOtraInst.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vPais.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vGradoAcad.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegGraFecha | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegGraCodigo > 0" class="imgphotofor"
-                                  [src]="regist.cLegGraArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
+                                    matTooltip="Validar registro" (click)="eliminar_validar_formacion(regist, false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegGraValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro" (click)="eliminar_validar_formacion(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegGraValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td class="col-l">
+                                  {{ regist.cLegGraCarreraProf.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegGraInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegGraInstitucionNavigation.cPerNombre.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegGraInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegGraOtraInst.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vPais.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vGradoAcad.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegGraFecha | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegGraCodigo > 0" class="imgphotofor"
+                                    [src]="regist.cLegGraArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
                                       regist.cLegGraArchivo
                                     )" />
-                                <img *ngIf="regist.nLegGraCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
+                                  <img *ngIf="regist.nLegGraCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
 
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegGraArchivo)" />
-                              </td>
-                            </tr>
-                            <tr *ngIf="lstserv.lLegGradoTitulo.length == 0" class="col-c cel-ie">
-                              <td colspan="7">
-                                No se ha registrado grados y títulos.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegGraArchivo)" />
+                                </td>
+                              </tr>
+                              <tr *ngIf="lstserv.lLegGradoTitulo.length == 0" class="col-c cel-ie">
+                                <td colspan="7">
+                                  No se ha registrado grados y títulos.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
 
+                        <fieldset *ngIf="configserv.nTareaValidar != bValidar">
+                          <!-- <legend>Colegiatura</legend> -->
+                          <div class="col-lg-6 col-md-6 col-12 float-left">
+                            <mat-form-field class="example-full-width float-left col-12">
+                              <mat-label class="font-comp">
+                                Colegio Profesional
+                              </mat-label>
+                              <input (ngModelChange)="handleModelChange($event, 1)" name="institucion" type="text"
+                                [matAutocomplete]="auto" matInput [formControl]="myControl" class="font-comp"
+                                appLetras />
 
-                      <fieldset *ngIf="configserv.nTareaValidar != bValidar">
-                        <!-- <legend>Colegiatura</legend> -->
-                        <div class="col-lg-6 col-md-6 col-12 float-left">
-                          <mat-form-field class="example-full-width float-left col-12">
-                            <mat-label class="font-comp">
-                              Colegio Profesional
-                            </mat-label>
-                            <input (ngModelChange)="handleModelChange($event, 1)" name="institucion" type="text"
-                              [matAutocomplete]="auto" matInput [formControl]="myControl" class="font-comp" appLetras />
-
-                            <mat-autocomplete #auto="matAutocomplete">
-                              <mat-option *ngFor="let option of filteredOptions | async"
-                                [value]="option.cPerNombre.toUpperCase()" (click)="customerOnChange(option)"
-                                [displayWith]="displayFn" class="font-comp">
-                                {{ option.cPerNombre.toUpperCase() }}
-                              </mat-option>
-                            </mat-autocomplete>
-                          </mat-form-field>
-                          <mat-form-field class="col-12 float-left" appearance="fill">
-                            <mat-label class="font-comp">Condición</mat-label>
-                            <mat-select name="condicion" class="font-comp" formControlName="condicionControl">
-                              <mat-option value="-1" (click)="
+                              <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptions | async"
+                                  [value]="option.cPerNombre.toUpperCase()" (click)="customerOnChange(option)"
+                                  [displayWith]="displayFn" class="font-comp">
+                                  {{ option.cPerNombre.toUpperCase() }}
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            <mat-form-field class="col-12 float-left" appearance="fill">
+                              <mat-label class="font-comp">Condición</mat-label>
+                              <mat-select name="condicion" class="font-comp" formControlName="condicionControl">
+                                <mat-option value="-1" (click)="
                                   comboConsOnChange(
                                     null,
                                     configserv.nConCondicion
                                   )">
-                                Seleccione...
-                              </mat-option>
-                              <mat-option *ngFor="let option of lstserv.lCondicionColeg" [value]="option.nConValor"
-                                (click)="
+                                  Seleccione...
+                                </mat-option>
+                                <mat-option *ngFor="let option of lstserv.lCondicionColeg" [value]="option.nConValor"
+                                  (click)="
                                   comboConsOnChange(
                                     option,
                                     configserv.nConCondicion
                                   )">
-                                {{ option.cConDescripcion.toUpperCase() }}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
+                                  {{ option.cConDescripcion.toUpperCase() }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-12 float-left">
+                            <mat-form-field appearance="fill" class="col-lg-6 col-md-6 col-12 float-left">
+                              <mat-label class="font-comp">
+                                Fecha Emisión
+                              </mat-label>
+                              <!-- [min]="datepast" -->
+                              <input class="font-comp col-12" matInput [matDatepicker]="dpemi" [formControl]="dateFEmi"
+                                [max]="today" readonly />
+                              <mat-datepicker-toggle matSuffix [for]="dpemi"></mat-datepicker-toggle>
+                              <mat-datepicker #dpemi disabled="false"></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" class="col-lg-6 col-md-6 col-12 float-left">
+                              <mat-label class="font-comp">
+                                Fecha Expiración
+                              </mat-label>
+                              <!-- [min]="datepast" -->
+                              <input class="font-comp col-12" matInput [matDatepicker]="dpexp" [formControl]="dateFExp"
+                                readonly />
+                              <mat-datepicker-toggle matSuffix [for]="dpexp"></mat-datepicker-toggle>
+                              <mat-datepicker #dpexp disabled="false"></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field class="col-12 float-left" appearance="fill">
+                              <mat-label class="font-comp">
+                                Colegiatura Nro
+                              </mat-label>
+                              <input matInput name="colegionro" maxlength="10" value="" class="col-l font-comp"
+                                formControlName="colegionroControl" uppercase />
+                            </mat-form-field>
+                          </div>
+                        </fieldset>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" *ngIf="configserv.nTareaValidar != bValidar" matStepperPrevious
+                            class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-12 float-left">
-                          <mat-form-field appearance="fill" class="col-lg-6 col-md-6 col-12 float-left">
-                            <mat-label class="font-comp">
-                              Fecha Emisión
-                            </mat-label>
-                            <!-- [min]="datepast" -->
-                            <input class="font-comp col-12" matInput [matDatepicker]="dpemi" [formControl]="dateFEmi"
-                              [max]="today" readonly />
-                            <mat-datepicker-toggle matSuffix [for]="dpemi"></mat-datepicker-toggle>
-                            <mat-datepicker #dpemi disabled="false"></mat-datepicker>
-                          </mat-form-field>
-
-                          <mat-form-field appearance="fill" class="col-lg-6 col-md-6 col-12 float-left">
-                            <mat-label class="font-comp">
-                              Fecha Expiración
-                            </mat-label>
-                            <!-- [min]="datepast" -->
-                            <input class="font-comp col-12" matInput [matDatepicker]="dpexp" [formControl]="dateFExp"
-                              readonly />
-                            <mat-datepicker-toggle matSuffix [for]="dpexp"></mat-datepicker-toggle>
-                            <mat-datepicker #dpexp disabled="false"></mat-datepicker>
-                          </mat-form-field>
-
-                          <mat-form-field class="col-12 float-left" appearance="fill">
-                            <mat-label class="font-comp">
-                              Colegiatura Nro
-                            </mat-label>
-                            <input matInput name="colegionro" maxlength="10" value="" class="col-l font-comp"
-                              formControlName="colegionroControl" uppercase />
-                          </mat-form-field>
-                        </div>
-                      </fieldset>
-
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" *ngIf="configserv.nTareaValidar != bValidar" matStepperPrevious
-                          class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
                       </div>
+
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar este formulario.</p>
+                          <button type="button" class="ColorFondoVolver btn btn-sm" (click)="irAlPaso1()">
+                            Volver al Paso 1
+                          </button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
 
@@ -1320,6 +1319,7 @@
                       </div>
                     </form>
                   </mat-step>
+
                   <!-- V.	EXPERIENCIA PROFESIONAL NO DOCENTE  -->
                   <mat-step [stepControl]="FormGroup6">
                     <form enctype="multipart/form-data">
@@ -1334,120 +1334,138 @@
                           {{ lstserv.lProfesNoDocente.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
-                            nuevo_experiencianodoc(
-                              clmdserv.empty_profesnodocente()
-                            )
-                          ">
-                          <i class="fa fa-graduation-cap"></i>
-                          Agregar
-                        </button>
+
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
+                              nuevo_experiencianodoc(
+                                clmdserv.empty_profesnodocente()
+                              )
+                            ">
+                            <i class="fa fa-graduation-cap"></i>
+                            Agregar
+                          </button>
+                        </div>
+
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">INSTITUCIÓN</th>
+                                <th class="col-l col-w" scope="col">CARGO</th>
+
+                                <th class="col-l col-w" scope="col">DESCRIPCIÓN</th>
+
+                                <th class="col-r col-w" scope="col">FECHA INICIO</th>
+                                <th class="col-r col-w" scope="col">FECHA FIN</th>
+                                <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lProfesNoDocente">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="!regist.cLegProValida && regLegDatosGenerales.nLegDatCodigo > 0 && configserv.nTareaValidar != bValidar"
+                                    class="btn btn-sm btn-primary" matTooltip="Editar registro"
+                                    (click)="nuevo_experiencianodoc(regist)">
+                                    <i class="fa fa-edit"></i>
+                                  </a>
+
+                                  &nbsp;
+
+                                  <a *ngIf="!regist.cLegProValida && configserv.nTareaValidar == bValidar"
+                                    class="btn btn-sm btn-default" matTooltip="Validar registro"
+                                    (click)="eliminar_validar_experiencianodoc(regist, false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+
+                                  &nbsp;
+
+                                  <a *ngIf="!regist.cLegProValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro"
+                                    (click)="eliminar_validar_experiencianodoc(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+
+                                  <a *ngIf="regist.cLegProValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+
+                                <td *ngIf="regist.cLegProInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ (regist.cLegProInstitucionNavigation?.cPerNombre || '').toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegProInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ (regist.cLegProOtraInst || '').toUpperCase() }}
+                                </td>
+
+                                <td class="col-l">
+                                  {{ (regist.cLegProCargoProf || '').toUpperCase() }}
+                                </td>
+
+                                <td class="col-l">
+                                  {{ (regist.cLegDescCargo || 'SIN DESCRIPCIÓN').toUpperCase() }}
+                                </td>
+
+                                <td class="col-r">
+                                  {{ regist.dLegProFechaInicio | date: 'dd-MM-yyyy' }}
+                                </td>
+
+                                <td class="col-r"
+                                  *ngIf="regist.dLegProFechaFin.toString() != clmdserv.fechahoradefault && regist.dLegProFechaFin.toString() != clmdserv.fechaformdefault.toString()">
+                                  {{ regist.dLegProFechaFin | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-r"
+                                  *ngIf="regist.dLegProFechaFin.toString() == clmdserv.fechahoradefault || regist.dLegProFechaFin.toString() == clmdserv.fechaformdefault.toString()">
+                                  ACTUALIDAD
+                                </td>
+
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegProCodigo > 0" class="imgphotofor"
+                                    [src]="regist.cLegProArchivo | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cLegProArchivo)" />
+                                  <img *ngIf="regist.nLegProCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegProArchivo)" />
+                                </td>
+                              </tr>
+
+                              <tr *ngIf="lstserv.lProfesNoDocente.length == 0" class="col-c cel-ie">
+                                <td colspan="7"> No se ha registrado experiencia profesional no docente. </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">INSTITUCIÓN</th>
-                              <th class="col-l col-w" scope="col">CARGO</th>
 
-                              <th class="col-l col-w" scope="col">DESCRIPCIÓN</th>
-
-                              <th class="col-r col-w" scope="col">FECHA INICIO</th>
-                              <th class="col-r col-w" scope="col">FECHA FIN</th>
-                              <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lProfesNoDocente">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="!regist.cLegProValida && regLegDatosGenerales.nLegDatCodigo > 0 && configserv.nTareaValidar != bValidar"
-                                  class="btn btn-sm btn-primary" matTooltip="Editar registro"
-                                  (click)="nuevo_experiencianodoc(regist)">
-                                  <i class="fa fa-edit"></i>
-                                </a>
-
-                                &nbsp;
-
-                                <a *ngIf="!regist.cLegProValida && configserv.nTareaValidar == bValidar"
-                                  class="btn btn-sm btn-default" matTooltip="Validar registro"
-                                  (click)="eliminar_validar_experiencianodoc(regist, false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-
-                                &nbsp;
-
-                                <a *ngIf="!regist.cLegProValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro"
-                                  (click)="eliminar_validar_experiencianodoc(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-
-                                <a *ngIf="regist.cLegProValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-
-                              <td *ngIf="regist.cLegProInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ (regist.cLegProInstitucionNavigation?.cPerNombre || '').toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegProInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ (regist.cLegProOtraInst || '').toUpperCase() }}
-                              </td>
-
-                              <td class="col-l">
-                                {{ (regist.cLegProCargoProf || '').toUpperCase() }}
-                              </td>
-
-                              <td class="col-l">
-                                {{ (regist.cLegDescCargo || 'SIN DESCRIPCIÓN').toUpperCase() }}
-                              </td>
-
-                              <td class="col-r">
-                                {{ regist.dLegProFechaInicio | date: 'dd-MM-yyyy' }}
-                              </td>
-
-                              <td class="col-r"
-                                *ngIf="regist.dLegProFechaFin.toString() != clmdserv.fechahoradefault && regist.dLegProFechaFin.toString() != clmdserv.fechaformdefault.toString()">
-                                {{ regist.dLegProFechaFin | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-r"
-                                *ngIf="regist.dLegProFechaFin.toString() == clmdserv.fechahoradefault || regist.dLegProFechaFin.toString() == clmdserv.fechaformdefault.toString()">
-                                ACTUALIDAD
-                              </td>
-
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegProCodigo > 0" class="imgphotofor"
-                                  [src]="regist.cLegProArchivo | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cLegProArchivo)" />
-                                <img *ngIf="regist.nLegProCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegProArchivo)" />
-                              </td>
-                            </tr>
-
-                            <tr *ngIf="lstserv.lProfesNoDocente.length == 0" class="col-c cel-ie">
-                              <td colspan="7"> No se ha registrado experiencia profesional no docente. </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar su experiencia profesional.</p>
+                          <button type="button" class="btn btn-sm btn-outline-primary" (click)="irAlPaso1()">
+                            Volver al Paso 1
+                          </button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
+
                   <!-- VI.	DOMINIO DE IDIOMAS – HERRAMIENTAS DE OFIMÁTICA  -->
                   <mat-step [stepControl]="FormGroup7">
                     <form enctype="multipart/form-data">
@@ -1458,216 +1476,234 @@
                         </span>
                       </ng-template>
 
-                      <div class="col-12 float-left div-table">
-                        <div class="float-left">
-                          <h5>
-                            <b>DOMINIO DE UN IDIOMA DISTINTO AL MATERNO</b>
-                            -
-                            <span class="span-mat-step">
-                              {{ lstserv.lidioma.length }} registro(s)
-                            </span>
-                          </h5>
-                        </div>
-                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                          <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div class="col-12 float-left div-table">
+                          <div class="float-left">
+                            <h5>
+                              <b>DOMINIO DE UN IDIOMA DISTINTO AL MATERNO</b>
+                              -
+                              <span class="span-mat-step">
+                                {{ lstserv.lidioma.length }} registro(s)
+                              </span>
+                            </h5>
+                          </div>
+                          <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                            <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
                               nuevo_idiomasofimatica(
                                 clmdserv.empty_idiomaofimatica(),
                                 false
                               )
                             ">
-                            <i class="fa fa-graduation-cap"></i>
-                            Agregar
-                          </button>
-                        </div>
+                              <i class="fa fa-graduation-cap"></i>
+                              Agregar
+                            </button>
+                          </div>
 
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">IDIOMA</th>
-                              <th class="col-l col-w" scope="col">NIVEL</th>
-                              <th class="col-l col-w" scope="col">
-                                FECHA DE CERTIFICACIÓN
-                              </th>
-                              <th class="col-c col-w" scope="col">
-                                ADJ ARCHIVO
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lidioma">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">IDIOMA</th>
+                                <th class="col-l col-w" scope="col">NIVEL</th>
+                                <th class="col-l col-w" scope="col">
+                                  FECHA DE CERTIFICACIÓN
+                                </th>
+                                <th class="col-c col-w" scope="col">
+                                  ADJ ARCHIVO
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lidioma">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="
                                     !regist.cLegIdOfValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_idiomasofimatica(regist, false)">
-                                  <i class="fa fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_idiomasofimatica(regist, false)">
+                                    <i class="fa fa-edit"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegIdOfValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_idiomasofimatica(regist,false,
+                                    matTooltip="Validar registro" (click)="eliminar_validar_idiomasofimatica(regist,false,
                                       false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegIdOfValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_idiomasofimatica(regist,false,
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegIdOfValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro" (click)="eliminar_validar_idiomasofimatica(regist,false,
                                       true
                                     )">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegIdOfValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td class="col-l">
-                                {{ regist.vCodigoDesc.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vNivel.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegIdOfFecha | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegIdOfCodigo > 0" class="imgphotofor" [src]="
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegIdOfValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td class="col-l">
+                                  {{ regist.vCodigoDesc.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vNivel.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegIdOfFecha | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegIdOfCodigo > 0" class="imgphotofor" [src]="
                                     regist.cLegIdOfArchivo | secure | async                                  " (click)="mdlserv.nuevoModalPrevImage(
                                       regist.cLegIdOfArchivo
                                     )" />
-                                <img *ngIf="regist.nLegIdOfCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
+                                  <img *ngIf="regist.nLegIdOfCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
 
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegIdOfArchivo)" />
-                              </td>
-                            </tr>
-                            <tr *ngIf="lstserv.lidioma.length == 0" class="col-c cel-ie">
-                              <td colspan="5">
-                                No se ha registrado dominio de idiomas.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <div class="float-left">
-                          <h5>
-                            <b>DOMINIO DE HERRAMIENTAS DE INFORMÁTICA</b>
-                            -
-                            <span class="span-mat-step">
-                              {{ lstserv.lofimatica.length }} registro(s)
-                            </span>
-                          </h5>
-                        </div>
-                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                          <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegIdOfArchivo)" />
+                                </td>
+                              </tr>
+                              <tr *ngIf="lstserv.lidioma.length == 0" class="col-c cel-ie">
+                                <td colspan="5">
+                                  No se ha registrado dominio de idiomas.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <div class="float-left">
+                            <h5>
+                              <b>DOMINIO DE HERRAMIENTAS DE INFORMÁTICA</b>
+                              -
+                              <span class="span-mat-step">
+                                {{ lstserv.lofimatica.length }} registro(s)
+                              </span>
+                            </h5>
+                          </div>
+
+                          <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                            <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
                               nuevo_idiomasofimatica(
                                 clmdserv.empty_idiomaofimatica(),
                                 true
                               )
                             ">
-                            <i class="fa fa-graduation-cap"></i>
-                            Agregar
-                          </button>
-                        </div>
+                              <i class="fa fa-graduation-cap"></i>
+                              Agregar
+                            </button>
+                          </div>
 
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">
-                                INFORMÁTICA
-                              </th>
-                              <th class="col-l col-w" scope="col">NIVEL</th>
-                              <th class="col-l col-w" scope="col">
-                                FECHA DE CERTIFICACIÓN
-                              </th>
-                              <th class="col-c col-w" scope="col">
-                                ADJ ARCHIVO
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lofimatica">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">
+                                  INFORMÁTICA
+                                </th>
+                                <th class="col-l col-w" scope="col">NIVEL</th>
+                                <th class="col-l col-w" scope="col">
+                                  FECHA DE CERTIFICACIÓN
+                                </th>
+                                <th class="col-c col-w" scope="col">
+                                  ADJ ARCHIVO
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lofimatica">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="
                                     !regist.cLegIdOfValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_idiomasofimatica(regist, true)">
-                                  <i class="fa fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_idiomasofimatica(regist, true)">
+                                    <i class="fa fa-edit"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegIdOfValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_idiomasofimatica(
+                                    matTooltip="Validar registro" (click)="eliminar_validar_idiomasofimatica(
                                       regist,
                                       true,
                                       false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegIdOfValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_idiomasofimatica(
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegIdOfValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro" (click)="eliminar_validar_idiomasofimatica(
                                       regist,
                                       true,
                                       true
                                     )">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegIdOfValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td class="col-l">
-                                {{ regist.vCodigoDesc.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vNivel.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegIdOfFecha | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegIdOfCodigo > 0" class="imgphotofor" [src]="
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegIdOfValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td class="col-l">
+                                  {{ regist.vCodigoDesc.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vNivel.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegIdOfFecha | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegIdOfCodigo > 0" class="imgphotofor" [src]="
                                     regist.cLegIdOfArchivo | secure | async                                  " (click)="mdlserv.nuevoModalPrevImage(
                                       regist.cLegIdOfArchivo
                                     )" />
-                                <img *ngIf="regist.nLegIdOfCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
+                                  <img *ngIf="regist.nLegIdOfCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
 
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegIdOfArchivo)" />
-                              </td>
-                            </tr>
-                            <tr *ngIf="lstserv.lofimatica.length == 0" class="col-c cel-ie">
-                              <td colspan="5">
-                                No se ha registrado dominio de TIC´s.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegIdOfArchivo)" />
+                                </td>
+                              </tr>
+                              <tr *ngIf="lstserv.lofimatica.length == 0" class="col-c cel-ie">
+                                <td colspan="5">
+                                  No se ha registrado dominio de TIC´s.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar Grados y títulos.</p>
+                          <button type="button" class="btn btn-sm btn-outline-primary" (click)="irAlPaso1()">
+                            Volver al Paso 1
+                          </button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
+
                   <!-- VII.	REGISTRO COMO DOCENTE INVESTIGADOR  -->
                   <mat-step *ngIf="!ban_administrativo" [stepControl]="FormGroup8">
                     <form enctype="multipart/form-data">
@@ -1770,6 +1806,7 @@
                       </div>
                     </form>
                   </mat-step>
+
                   <!-- VIII.	ASESORÍA Y JURADO DE TESIS  -->
                   <mat-step *ngIf="!ban_administrativo" [stepControl]="FormGroup9">
                     <form enctype="multipart/form-data">
@@ -1892,86 +1929,91 @@
                         </span>
                       </ng-template>
                       <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="nuevo_produccionciencia(clmdserv.empty_produccionciencia())">
+                        <button type="button" class="btn btn-sm btn-primary btn-uqx"
+                          (click)="nuevo_produccionciencia(clmdserv.empty_produccionciencia())">
                           <i class="fa fa-graduation-cap"></i>
                           Agregar
                         </button>
                       </div>
                       <div class="col-12 float-left div-table" style="overflow-x: auto;">
-                       <table class="table table-fixed font-comp table-style">
-                        <thead>
-                          <tr>
-                            <th scope="col" class="col-50 col-l"></th>
-                            <th scope="col" class="namemd col-l">TITULO</th>
-                            <th class="col-r col-w" scope="col">FECHA</th>
-                            <th class="col-l col-w" scope="col">TIPO PUBLICACIÓN</th>
-                            <th class="col-l col-w" scope="col">PAÍS</th>
-                            <th class="col-l col-w" scope="col">PARTICIPACIÓN</th>
-                            <th class="col-r col-w" scope="col">N° REGISTRO/RESOLUCIÓN</th>
-                            <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let regist of lstserv.lProduccionCiencia">
-                            <th scope="row" class="col-c">
-                              <a *ngIf="!regist.cLegProdValida && regLegDatosGenerales.nLegDatCodigo > 0 && configserv.nTareaValidar != bValidar" 
-                                  class="btn btn-sm btn-primary" matTooltip="Editar registro" (click)="nuevo_produccionciencia(regist)">
-                                <i class="fa fa-edit"></i>
-                              </a>
-                              &nbsp;
-                              <a *ngIf="!regist.cLegProdValida && configserv.nTareaValidar == bValidar" 
-                                  class="btn btn-sm btn-default" matTooltip="Validar registro" (click)="eliminar_validar_produccionciencia(regist,false)">
-                                <i class="fa fa-check"></i>
-                              </a>
-                              &nbsp;
-                              <a *ngIf="!regist.cLegProdValida" class="btn btn-sm btn-danger" matTooltip="Eliminar registro" 
+                        <table class="table table-fixed font-comp table-style">
+                          <thead>
+                            <tr>
+                              <th scope="col" class="col-50 col-l"></th>
+                              <th scope="col" class="namemd col-l">TITULO</th>
+                              <th class="col-r col-w" scope="col">FECHA</th>
+                              <th class="col-l col-w" scope="col">TIPO PUBLICACIÓN</th>
+                              <th class="col-l col-w" scope="col">PAÍS</th>
+                              <th class="col-l col-w" scope="col">PARTICIPACIÓN</th>
+                              <th class="col-r col-w" scope="col">N° REGISTRO/RESOLUCIÓN</th>
+                              <th class="col-c col-w" scope="col">ADJ ARCHIVO</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let regist of lstserv.lProduccionCiencia">
+                              <th scope="row" class="col-c">
+                                <a *ngIf="!regist.cLegProdValida && regLegDatosGenerales.nLegDatCodigo > 0 && configserv.nTareaValidar != bValidar"
+                                  class="btn btn-sm btn-primary" matTooltip="Editar registro"
+                                  (click)="nuevo_produccionciencia(regist)">
+                                  <i class="fa fa-edit"></i>
+                                </a>
+                                &nbsp;
+                                <a *ngIf="!regist.cLegProdValida && configserv.nTareaValidar == bValidar"
+                                  class="btn btn-sm btn-default" matTooltip="Validar registro"
+                                  (click)="eliminar_validar_produccionciencia(regist,false)">
+                                  <i class="fa fa-check"></i>
+                                </a>
+                                &nbsp;
+                                <a *ngIf="!regist.cLegProdValida" class="btn btn-sm btn-danger"
+                                  matTooltip="Eliminar registro"
                                   (click)="eliminar_validar_produccionciencia(regist, true)">
-                                <i class="fa fa-times"></i>
-                              </a>
-                              <a *ngIf="regist.cLegProdValida" class="btn btn-sm btn-primary" matTooltip="Registro validado">
-                                <i class="fa fa-check"></i>
-                              </a>
-                            </th>
+                                  <i class="fa fa-times"></i>
+                                </a>
+                                <a *ngIf="regist.cLegProdValida" class="btn btn-sm btn-primary"
+                                  matTooltip="Registro validado">
+                                  <i class="fa fa-check"></i>
+                                </a>
+                              </th>
 
-                            <td class="col-l">{{ regist.cLegProdTitulo.toUpperCase() }}</td>
-                            <td class="col-r">{{ regist.dLegProdFecha | date: 'dd-MM-yyyy' }}</td>
-                            <td class="col-l">{{ regist.vTipo.cIntDescripcion.toUpperCase() }}</td>
+                              <td class="col-l">{{ regist.cLegProdTitulo.toUpperCase() }}</td>
+                              <td class="col-r">{{ regist.dLegProdFecha | date: 'dd-MM-yyyy' }}</td>
+                              <td class="col-l">{{ regist.vTipo.cIntDescripcion.toUpperCase() }}</td>
 
-                            <td class="col-l">
-                              {{ $any(regist.vPais)?.cIntDescripcion?.toUpperCase() || '---' }}
-                            </td>
+                              <td class="col-l">
+                                {{ $any(regist.vPais)?.cIntDescripcion?.toUpperCase() || '---' }}
+                              </td>
 
-                            <td class="col-l">
-                              <span *ngIf="regist.nLegProdParticipacion == 1">AUTOR</span>
-                              
-                              <span *ngIf="regist.nLegProdParticipacion == 2">COAUTOR</span>
-                              
-                              <span *ngIf="!regist.nLegProdParticipacion || regist.nLegProdParticipacion == 0">
-                                ---
-                              </span>
-                            </td>
+                              <td class="col-l">
+                                <span *ngIf="regist.nLegProdParticipacion == 1">AUTOR</span>
 
-                            <td class="col-r">{{ regist.cLegProdNroResolucion.toUpperCase() }}</td>
+                                <span *ngIf="regist.nLegProdParticipacion == 2">COAUTOR</span>
 
-                            <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                              <img *ngIf="regist.nLegProdCodigo > 0" class="imgphotofor" 
-                                    [src]="regist.cLegProdArchivo | secure | async" 
-                                    (click)="mdlserv.nuevoModalPrevImage(regist.cLegProdArchivo)" />
-                              <img *ngIf="regist.nLegProdCodigo == 0" class="imgphotofor"
-                                    [src]="regist.cFile | secure | async"
-                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                            </td>
-                            <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                              <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                    (click)="mdlserv.openpdf(regist.cLegProdArchivo)" />
-                            </td>
-                          </tr>
+                                <span *ngIf="!regist.nLegProdParticipacion || regist.nLegProdParticipacion == 0">
+                                  ---
+                                </span>
+                              </td>
 
-                          <tr *ngIf="lstserv.lProduccionCiencia.length == 0" class="col-c cel-ie">
-                            <td colspan="8">No se ha registrado producción científica.</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              <td class="col-r">{{ regist.cLegProdNroResolucion.toUpperCase() }}</td>
+
+                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                <img *ngIf="regist.nLegProdCodigo > 0" class="imgphotofor"
+                                  [src]="regist.cLegProdArchivo | secure | async"
+                                  (click)="mdlserv.nuevoModalPrevImage(regist.cLegProdArchivo)" />
+                                <img *ngIf="regist.nLegProdCodigo == 0" class="imgphotofor"
+                                  [src]="regist.cFile | secure | async"
+                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                              </td>
+                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                  (click)="mdlserv.openpdf(regist.cLegProdArchivo)" />
+                              </td>
+                            </tr>
+
+                            <tr *ngIf="lstserv.lProduccionCiencia.length == 0" class="col-c cel-ie">
+                              <td colspan="8">No se ha registrado producción científica.</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                       <div class="col-12 float-left divform apbtn">
                         <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
@@ -1994,109 +2036,127 @@
                           {{ lstserv.lParticipacion.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
+
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
                             nuevo_participacion(clmdserv.empty_participacion())
                           ">
-                          <i class="fa fa-graduation-cap"></i>
-                          Agregar
-                        </button>
-                      </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">
-                                INSTITUCIÓN
-                              </th>
-                              <th class="col-l col-w" scope="col">ROL</th>
-                              <th class="col-l col-w" scope="col">
-                                NOMBRE EVENTO
-                              </th>
-                              <th class="col-r col-w" scope="col">ÁMBITO</th>
-                              <th class="col-r col-w" scope="col">FECHA</th>
-                              <th class="col-c col-w" scope="col">
-                                ADJ ARCHIVO
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lParticipacion">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="
+                            <i class="fa fa-graduation-cap"></i>
+                            Agregar
+                          </button>
+                        </div>
+
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">
+                                  INSTITUCIÓN
+                                </th>
+                                <th class="col-l col-w" scope="col">ROL</th>
+                                <th class="col-l col-w" scope="col">
+                                  NOMBRE EVENTO
+                                </th>
+                                <th class="col-r col-w" scope="col">ÁMBITO</th>
+                                <th class="col-r col-w" scope="col">FECHA</th>
+                                <th class="col-c col-w" scope="col">
+                                  ADJ ARCHIVO
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lParticipacion">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="
                                     !regist.cLegParValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_participacion(regist)">
-                                  <i class="fa fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_participacion(regist)">
+                                    <i class="fa fa-edit"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegParValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_participacion(regist,false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegParValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_participacion(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegParValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td *ngIf="regist.cLegParInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegParInstitucionNavigation.cPerNombre.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegParInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegParOtraInst.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vRol.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.cLegParNombre.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vAmbito.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegParFecha | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegParCodigo > 0" class="imgphotofor"
-                                  [src]="regist.cLegParArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
+                                    matTooltip="Validar registro"
+                                    (click)="eliminar_validar_participacion(regist,false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegParValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro"
+                                    (click)="eliminar_validar_participacion(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegParValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td *ngIf="regist.cLegParInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegParInstitucionNavigation.cPerNombre.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegParInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegParOtraInst.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vRol.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.cLegParNombre.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vAmbito.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegParFecha | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegParCodigo > 0" class="imgphotofor"
+                                    [src]="regist.cLegParArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
                                       regist.cLegParArchivo
                                     )" />
-                                <img *ngIf="regist.nLegParCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
+                                  <img *ngIf="regist.nLegParCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
 
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegParArchivo)" />
-                              </td>
-                            </tr>
-                            <tr *ngIf="lstserv.lParticipacion.length == 0" class="col-c cel-ie">
-                              <td colspan="7">
-                                No se ha registrado producción científica.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegParArchivo)" />
+                                </td>
+                              </tr>
+                              <tr *ngIf="lstserv.lParticipacion.length == 0" class="col-c cel-ie">
+                                <td colspan="7">
+                                  No se ha registrado producción científica.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar Grados y títulos.</p>
+                          <button type="button" class="btn btn-sm btn-outline-primary" (click)="irAlPaso1()">
+                            Volver al Paso 1
+                          </button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
 
@@ -2346,125 +2406,140 @@
                           {{ lstserv.lcapacitaciones.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
+
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button type="button" class="btn btn-sm btn-primary btn-uqx" (click)="
                             nuevo_capacitacion(clmdserv.empty_capacitaciones())
                           ">
-                          <i class="fa fa-graduation-cap"></i>
-                          Agregar
-                        </button>
-                      </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
-                              <th scope="col" class="namemd col-l">
-                                TIPO CAPACITACIÓN
-                              </th>
-                              <th scope="col" class="namemd col-l">
-                                {{
-                                ban_administrativo
-                                ? 'TIPO DURACIÓN'
-                                : 'TIPO
-                                ESPECIALIDAD' }}
-                              </th>
-                              <th class="col-r col-w" scope="col">
-                                FECHA INICIO
-                              </th>
-                              <th class="col-r col-w" scope="col">FECHA FIN</th>
-                              <th class="col-r col-w" scope="col">
-                                {{
-                                ban_administrativo
-                                ? 'CANTIDAD'
-                                : 'HORAS LECTIVAS' }}
-                              </th>
-                              <th class="col-l col-w" scope="col">
-                                INSTITUCIÓN
-                              </th>
-                              <th class="col-c col-w" scope="col">
-                                ADJ ARCHIVO
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lcapacitaciones">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="
+                            <i class="fa fa-graduation-cap"></i>
+                            Agregar
+                          </button>
+                        </div>
+
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th scope="col" class="namemd col-l">
+                                  TIPO CAPACITACIÓN
+                                </th>
+                                <th scope="col" class="namemd col-l">
+                                  {{ ban_administrativo ? 'TIPO DURACIÓN' : 'TIPO ESPECIALIDAD' }}
+                                </th>
+                                <th class="col-r col-w" scope="col">
+                                  FECHA INICIO
+                                </th>
+                                <th class="col-r col-w" scope="col">FECHA FIN</th>
+                                <th class="col-r col-w" scope="col">
+                                  {{
+                                  ban_administrativo
+                                  ? 'CANTIDAD'
+                                  : 'HORAS LECTIVAS' }}
+                                </th>
+                                <th class="col-l col-w" scope="col">
+                                  INSTITUCIÓN
+                                </th>
+                                <th class="col-c col-w" scope="col">
+                                  ADJ ARCHIVO
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lcapacitaciones">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="
                                     !regist.cLegCapValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_capacitacion(regist)">
-                                  <i class="fa fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_capacitacion(regist)">
+                                    <i class="fa fa-edit"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegCapValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_capacitacion(regist, false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegCapValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_capacitacion(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegCapValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
+                                    matTooltip="Validar registro"
+                                    (click)="eliminar_validar_capacitacion(regist, false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegCapValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro"
+                                    (click)="eliminar_validar_capacitacion(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegCapValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
 
-                              <td class="col-l">
-                                {{ regist.vTipo.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vTipoEsp.cConDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegCapFechaInicio | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegCapFechaFin | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-l">{{ regist.nLegCapHoras }}</td>
-                              <td *ngIf="regist.cLegCapInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ regist.vInstitucion.cPerNombre.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegCapInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegCapOtraInst.toUpperCase() }}
-                              </td>
-                              <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
-                                <img *ngIf="regist.nLegCapCodigo > 0" class="imgphotofor"
-                                  [src]="regist.cLegCapArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
+                                <td class="col-l">
+                                  {{ regist.vTipo.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vTipoEsp.cConDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegCapFechaInicio | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegCapFechaFin | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-l">{{ regist.nLegCapHoras }}</td>
+                                <td *ngIf="regist.cLegCapInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.vInstitucion.cPerNombre.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegCapInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegCapOtraInst.toUpperCase() }}
+                                </td>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro != 'pdf'">
+                                  <img *ngIf="regist.nLegCapCodigo > 0" class="imgphotofor"
+                                    [src]="regist.cLegCapArchivo | secure | async" (click)="mdlserv.nuevoModalPrevImage(
                                       regist.cLegCapArchivo
                                     )" />
-                                <img *ngIf="regist.nLegCapCodigo == 0" class="imgphotofor"
-                                  [src]="regist.cFile | secure | async"
-                                  (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
-                              </td>
+                                  <img *ngIf="regist.nLegCapCodigo == 0" class="imgphotofor"
+                                    [src]="regist.cFile | secure | async"
+                                    (click)="mdlserv.nuevoModalPrevImage(regist.cFile)" />
+                                </td>
 
-                              <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
-                                <img class="imgphotofor" src="assets/images/pdf-logo.png"
-                                  (click)="mdlserv.openpdf(regist.cLegCapArchivo)" />
-                              </td>
-                            </tr>
-                            <tr *ngIf="lstserv.lcapacitaciones.length == 0" class="col-c cel-ie">
-                              <td colspan="8">
-                                No se ha registrado reconocimientos.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                                <td class="col-c" *ngIf="regist.cUsuRegistro == 'pdf'">
+                                  <img class="imgphotofor" src="assets/images/pdf-logo.png"
+                                    (click)="mdlserv.openpdf(regist.cLegCapArchivo)" />
+                                </td>
+                              </tr>
+                              <tr *ngIf="lstserv.lcapacitaciones.length == 0" class="col-c cel-ie">
+                                <td colspan="8">
+                                  No se ha registrado reconocimientos.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar su experiencia profesional.</p>
+                          <button type="button" class="btn btn-sm btn-outline-primary" (click)="irAlPaso1()">
+                            Volver al Paso 1
+                          </button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
 
@@ -2599,104 +2674,115 @@
                   <!-- XVII. LICENCIA PROFESIONAL -->
                   <mat-step [stepControl]="FormGroup16">
                     <form enctype="multipart/form-data" [formGroup]="FormGroup16">
-
                       <ng-template matStepLabel>
                         Licencia Profesional -
                         <span class="span-mat-step">
                           {{ lstserv.lLegLicenciaProfesional.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button type="button" class="btn btn-sm btn-primary btn-uqx"
-                          (click)="nuevo_licenciaprofesional(clmdserv.empty_licenciaprofesional())">
-                          <i class="fa fa-graduation-cap"></i>Agregar</button>
-                      </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
 
-                              <th class="col-l col-w" scope="col">PAÍS</th>
-                              <th class="col-l col-w" scope="col">COLEGIO PROFESIONAL</th>
-                              <th scope="col" class="namemd col-l">NRO COLEGIATURA</th>
-                              <th class="col-l col-w" scope="col">CONDICION</th>
-                              <th class="col-r col-w" scope="col">FECHA EMISION</th>
-                              <th class="col-c col-w" scope="col">FECHA EXPIRACION</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lLegLicenciaProfesional">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="!regist.cLegLicValida &&
+
+                      <div *ngIf="legajoGuardado; else mensajeBloqueo">
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button type="button" class="btn btn-sm btn-primary btn-uqx"
+                            (click)="nuevo_licenciaprofesional(clmdserv.empty_licenciaprofesional())">
+                            <i class="fa fa-graduation-cap"></i>Agregar</button>
+                        </div>
+
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+
+                                <th class="col-l col-w" scope="col">PAÍS</th>
+                                <th class="col-l col-w" scope="col">COLEGIO PROFESIONAL</th>
+                                <th scope="col" class="namemd col-l">NRO COLEGIATURA</th>
+                                <th class="col-l col-w" scope="col">CONDICION</th>
+                                <th class="col-r col-w" scope="col">FECHA EMISION</th>
+                                <th class="col-c col-w" scope="col">FECHA EXPIRACION</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lLegLicenciaProfesional">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="!regist.cLegLicValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_licenciaprofesional(regist)">
-                                  <i class="fa fa-edit"></i></a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_licenciaprofesional(regist)">
+                                    <i class="fa fa-edit"></i></a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegLicValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_licencia(regist, false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegLicValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_licencia(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegLicValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td class="col-l">
-                                {{ regist.vPais.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegLicInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegLicInstitucionNavigation.cPerNombre.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegLicInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegLicOtraInst.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.cLegLicNroRegistro.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.vCondicion.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegLicFechaEmision | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegLicFechaExpiracion | date: 'dd-MM-yyyy' }}
-                              </td>
+                                    matTooltip="Validar registro" (click)="eliminar_validar_licencia(regist, false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegLicValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro" (click)="eliminar_validar_licencia(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegLicValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td class="col-l">
+                                  {{ regist.vPais.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegLicInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegLicInstitucionNavigation.cPerNombre.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegLicInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegLicOtraInst.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.cLegLicNroRegistro.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.vCondicion.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegLicFechaEmision | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegLicFechaExpiracion | date: 'dd-MM-yyyy' }}
+                                </td>
 
-                            </tr>
-                            <tr *ngIf="lstserv.lLegLicenciaProfesional.length == 0" class="col-c cel-ie">
-                              <td colspan="7">
-                                No se ha registrado licencias profesionales.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                              </tr>
+                              <tr *ngIf="lstserv.lLegLicenciaProfesional.length == 0" class="col-c cel-ie">
+                                <td colspan="7">
+                                  No se ha registrado licencias profesionales.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button *ngIf="configserv.nTareaValidar != bValidar" type="button" matStepperPrevious
+                            class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
 
-
-
-
-                      <div class="col-12 float-left divform apbtn">
-                        <button *ngIf="configserv.nTareaValidar != bValidar" type="button" matStepperPrevious
-                          class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar su
+                            información de Salud y Antecedentes.</p>
+                          <button type="button" class="ColorFondoVolver btn btn-sm" (click)="irAlPaso1()">Volver al Paso 1</button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
-
 
                   <!-- XVIII. MEMBRESIA -->
                   <mat-step [stepControl]="FormGroup17">
@@ -2708,87 +2794,100 @@
                           {{ lstserv.lLegMembresia.length }} registro(s)
                         </span>
                       </ng-template>
-                      <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
-                        <button class="btn btn-sm btn-primary btn-uqx"
-                          (click)="nuevo_membresia(clmdserv.empty_membresia())">
-                          <i class="fa fa-graduation-cap"></i>Agregar</button>
-                      </div>
-                      <div class="col-12 float-left div-table">
-                        <table class="table table-fixed font-comp table-style">
-                          <thead>
-                            <tr>
-                              <th scope="col" class="col-50 col-l"></th>
 
-                              <th class="col-l col-w" scope="col">PAÍS</th>
-                              <th class="col-l col-w" scope="col">COLEGIO PROFESIONAL</th>
-                              <th scope="col" class="namemd col-l">NRO COLEGIATURA</th>
-                              <th class="col-r col-w" scope="col">FECHA EMISION</th>
-                              <th class="col-c col-w" scope="col">FECHA EXPIRACION</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let regist of lstserv.lLegMembresia">
-                              <th scope="row" class="col-c">
-                                <a *ngIf="!regist.cLegMemValida &&
+                      <div *ngIf="legajoGuardado;else mensajeBloqueo">
+                        <div *ngIf="configserv.nTareaValidar != bValidar" class="col-12 float-left divform apbtn">
+                          <button class="btn btn-sm btn-primary btn-uqx"
+                            (click)="nuevo_membresia(clmdserv.empty_membresia())">
+                            <i class="fa fa-graduation-cap"></i>Agregar</button>
+                        </div>
+                        <div class="col-12 float-left div-table">
+                          <table class="table table-fixed font-comp table-style">
+                            <thead>
+                              <tr>
+                                <th scope="col" class="col-50 col-l"></th>
+                                <th class="col-l col-w" scope="col">PAÍS</th>
+                                <th class="col-l col-w" scope="col">COLEGIO PROFESIONAL</th>
+                                <th scope="col" class="namemd col-l">NRO COLEGIATURA</th>
+                                <th class="col-r col-w" scope="col">FECHA EMISION</th>
+                                <th class="col-c col-w" scope="col">FECHA EXPIRACION</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let regist of lstserv.lLegMembresia">
+                                <th scope="row" class="col-c">
+                                  <a *ngIf="!regist.cLegMemValida &&
                                     regLegDatosGenerales.nLegDatCodigo > 0 &&
                                     configserv.nTareaValidar != bValidar" class="btn btn-sm btn-primary"
-                                  matTooltip="Editar registro" (click)="nuevo_membresia(regist)">
-                                  <i class="fa fa-edit"></i></a>
-                                &nbsp;
-                                <a *ngIf="
+                                    matTooltip="Editar registro" (click)="nuevo_membresia(regist)">
+                                    <i class="fa fa-edit"></i></a>
+                                  &nbsp;
+                                  <a *ngIf="
                                     !regist.cLegMemValida &&
                                     configserv.nTareaValidar == bValidar" class="btn btn-sm btn-default"
-                                  matTooltip="Validar registro" (click)="eliminar_validar_membresia(regist, false)">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                                &nbsp;
-                                <a *ngIf="!regist.cLegMemValida" class="btn btn-sm btn-danger"
-                                  matTooltip="Eliminar registro" (click)="eliminar_validar_membresia(regist, true)">
-                                  <i class="fa fa-times"></i>
-                                </a>
-                                <a *ngIf="regist.cLegMemValida" class="btn btn-sm btn-primary"
-                                  matTooltip="Registro validado">
-                                  <i class="fa fa-check"></i>
-                                </a>
-                              </th>
-                              <td class="col-l">
-                                {{ regist.vPais.cIntDescripcion.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegMemInstitucion != clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegMemInstitucionNavigation.cPerNombre.toUpperCase() }}
-                              </td>
-                              <td *ngIf="regist.cLegMemInstitucion == clmdserv.codigonoinst" class="col-l">
-                                {{ regist.cLegMemOtraInst.toUpperCase() }}
-                              </td>
-                              <td class="col-l">
-                                {{ regist.cLegMemNroRegistro.toUpperCase() }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegMemFechaEmision | date: 'dd-MM-yyyy' }}
-                              </td>
-                              <td class="col-r">
-                                {{ regist.dLegMemFechaExpiracion | date: 'dd-MM-yyyy' }}
-                              </td>
+                                    matTooltip="Validar registro" (click)="eliminar_validar_membresia(regist, false)">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                  &nbsp;
+                                  <a *ngIf="!regist.cLegMemValida" class="btn btn-sm btn-danger"
+                                    matTooltip="Eliminar registro" (click)="eliminar_validar_membresia(regist, true)">
+                                    <i class="fa fa-times"></i>
+                                  </a>
+                                  <a *ngIf="regist.cLegMemValida" class="btn btn-sm btn-primary"
+                                    matTooltip="Registro validado">
+                                    <i class="fa fa-check"></i>
+                                  </a>
+                                </th>
+                                <td class="col-l">
+                                  {{ regist.vPais.cIntDescripcion.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegMemInstitucion != clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegMemInstitucionNavigation.cPerNombre.toUpperCase() }}
+                                </td>
+                                <td *ngIf="regist.cLegMemInstitucion == clmdserv.codigonoinst" class="col-l">
+                                  {{ regist.cLegMemOtraInst.toUpperCase() }}
+                                </td>
+                                <td class="col-l">
+                                  {{ regist.cLegMemNroRegistro.toUpperCase() }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegMemFechaEmision | date: 'dd-MM-yyyy' }}
+                                </td>
+                                <td class="col-r">
+                                  {{ regist.dLegMemFechaExpiracion | date: 'dd-MM-yyyy' }}
+                                </td>
 
-                            </tr>
-                            <tr *ngIf="lstserv.lLegMembresia.length == 0" class="col-c cel-ie">
-                              <td colspan="7">
-                                No se ha registrado membresia.
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                              </tr>
+                              <tr *ngIf="lstserv.lLegMembresia.length == 0" class="col-c cel-ie">
+                                <td colspan="7">
+                                  No se ha registrado membresia.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="col-12 float-left divform apbtn">
+                          <button type="button" *ngIf="configserv.nTareaValidar != bValidar" matStepperPrevious
+                            class="btn btn-sm btn-default btn-uq">
+                            Atrás
+                          </button>
+                          <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
+                            Siguiente
+                          </button>
+                        </div>
                       </div>
 
-                      <div class="col-12 float-left divform apbtn">
-                        <button type="button" *ngIf="configserv.nTareaValidar != bValidar" matStepperPrevious
-                          class="btn btn-sm btn-default btn-uq">
-                          Atrás
-                        </button>
-                        <button type="button" matStepperNext class="btn btn-sm btn-primary btn-uq">
-                          Siguiente
-                        </button>
-                      </div>
+                      <ng-template #mensajeBloqueo>
+                        <div class="alert alert-warning text-center" style="margin-top: 50px;">
+                          <i class="fas fa-exclamation-triangle fa-2x"></i><br><br>
+                          <h5>Sección Bloqueada</h5>
+                          <p>Debe completar y <b>Guardar</b> los Datos Generales en el paso anterior para poder
+                            registrar este formulario.</p>
+                          <button type="button" class="ColorFondoVolver btn btn-sm" (click)="irAlPaso1()">Volver al Paso
+                            1</button>
+                        </div>
+                      </ng-template>
                     </form>
                   </mat-step>
                   <!------------------ EBS - 01/2026 ---------------------->
@@ -2801,7 +2900,8 @@
                         <button type="button" matStepperPrevious class="btn btn-sm btn-default btn-uq">
                           Atrás
                         </button>
-                        <button type="button" class="btn btn-sm btn-primary btn-uq" (click)="guardarTodo()">Guardar</button>
+                        <button type="button" class="btn btn-sm btn-primary btn-uq"
+                          (click)="guardarTodo()">Guardar</button>
                         <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
                       </div>
                     </form>
@@ -2875,7 +2975,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo1Url ? mdlserv.openpdf(previewAnexo1Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo1)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(9)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(9)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -2903,7 +3004,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo2_2Url ? mdlserv.openpdf(previewAnexo2_2Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo2_2)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(10)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(10)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -2931,7 +3033,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo3Url ? mdlserv.openpdf(previewAnexo3Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo3)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(11)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(11)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -2963,7 +3066,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo4Url ? mdlserv.openpdf(previewAnexo4Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo4)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(12)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(12)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -2990,7 +3094,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo5Url ? mdlserv.openpdf(previewAnexo5Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo5)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(13)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(13)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3017,7 +3122,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewAnexo6_2Url ? mdlserv.openpdf(previewAnexo6_2Url) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjanexo6_2)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(14)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(14)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3046,7 +3152,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjDNIUrl ? mdlserv.openpdf(previewDjDNIUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjDNI)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(15)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(15)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3072,7 +3179,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjDNI_DHUrl ? mdlserv.openpdf(previewDjDNI_DHUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjDNI_DH)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(16)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(16)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3099,7 +3207,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjFotoCarnetUrl ? mdlserv.openpdf(previewDjFotoCarnetUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjFotoCarnet)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(17)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(17)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3129,7 +3238,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjNumCtaUrl ? mdlserv.openpdf(previewDjNumCtaUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjNumCta)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(18)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(18)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3156,7 +3266,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjConsJubilacionUrl ? mdlserv.openpdf(previewDjConsJubilacionUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjConsJubilacion)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(19)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(19)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3183,7 +3294,8 @@
                             <div class="document-actions">
                               <img class="imgphotofor" src="assets/images/pdf-logo.png"
                                 (click)="previewDjConsAfiliacionOnpAfpUrl ? mdlserv.openpdf(previewDjConsAfiliacionOnpAfpUrl) : mdlserv.openpdf(lstserv.LegDeclaracionJurada.cLegDjConsAfiliacionOnpAfp)">
-                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn" (click)="eliminarDocumento(20)">
+                              <button type="button" class="btn btn-sm btn-danger btn-uq eliminar-btn"
+                                (click)="eliminarDocumento(20)">
                                 <i class="fas fa-trash"></i>
                               </button>
                             </div>
@@ -3325,7 +3437,7 @@
                         item.nTarModCodigo == 4 ||
                         item.nTarModCodigo == 11
                       " class="dropdown-divider"></div>
-                    <button type="button"  ngbDropdownItem (click)="acciones(item.nTarModCodigo, regist)">
+                    <button type="button" ngbDropdownItem (click)="acciones(item.nTarModCodigo, regist)">
                       {{ item.cTarModDescripcion }}
                     </button>
                   </li>
