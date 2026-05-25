@@ -3859,1217 +3859,6 @@ export class DgeneralComponent implements OnInit {
     this.FormGroup1.get('edadControl')?.setValue(this.edad)
   }
 
-  async guardarTodo() {
-    let isConfirmed = false;
-    let aceptaTerminos = this.regLegDatosGenerales.nLegDatAceptaTerminos || false;
-
-    console.log('nTipo del usuario:', this.segserv.usuarioreg.nTipo)
-
-    if (!aceptaTerminos) { // Solo muestra el Swal si no se ha aceptado antes
-      const result = await Swal.fire({
-        title: 'PROTECCIÓN DE DATOS PERSONALES',
-        html: 'Al hacer clic en “ENVIAR”, aceptas enviar tu información a la UNIVERSIDAD SEÑOR DE SIPAN, que usará conforme a la LEY N°29733. Debes aceptar los términos y condiciones para continuar.<br> <div id="downloadLink" style="color: blue; text-decoration: underline; cursor: pointer;">Leer términos y condiciones</div>',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Aceptar',
-        cancelButtonText: 'Cancelar',
-        heightAuto: false,
-        input: 'checkbox',
-        inputValue: 0,
-        inputPlaceholder: 'Acepto los términos y condiciones',
-        inputValidator: (value) => {
-          return value ? null : 'Debe aceptar los términos y condiciones';
-        },
-        didOpen: () => {
-          const link = Swal.getHtmlContainer()?.querySelector("#downloadLink");
-          if (link) {
-            link.addEventListener("click", (event) => {
-              event.preventDefault();
-              this.descargarArchivo('PROTECCION_DE_DATOS_PERSONALES.pdf');
-            });
-          }
-        }
-      });
-
-      console.log("Resultado del Swal:", result);
-
-      isConfirmed = result.isConfirmed;
-      aceptaTerminos = result.value ? true : false;
-      this.regLegDatosGenerales.nLegDatAceptaTerminos = aceptaTerminos;
-    } else {
-      isConfirmed = true; // Si ya estaba aceptado, continuar sin preguntar
-    }
-
-    // Si el usuario ha aceptado, proceder con la ejecución
-    if (isConfirmed && aceptaTerminos) {
-      try {
-        // Validaciones de formulario
-        if (this.FormGroup1.invalid) {
-          this.stepper.selectedIndex = 0;
-          const camposInvalidos = this.obtenerCamposInvalidos(this.FormGroup1);
-          const mensaje = 'Los siguientes campos son obligatorios:\n• ' + camposInvalidos.join('\n• ');
-          this.valserv.mensaje_info(mensaje);
-          return;
-        }
-        if (this.date.invalid) {
-          this.valserv.mensaje_info('Ingrese una fecha de nacimiento válida.');
-          return;
-        }
-        if (this.dateCeseControl.invalid) {
-          this.valserv.mensaje_info('Ingrese una fecha de Cese válida.');
-          return;
-        }
-
-        if (this.segserv.usuarioreg.nTipo == 1 || this.segserv.usuarioreg.nTipo == 2) {
-
-          if (!this.lstserv.LegDeclaracionJurada.cLegDjanexo1 && this.regLegDatosGenerales.nValorAfiliado === 2) {
-            this.valserv.mensaje_info('Adjunte archivo de Anexo 1.  \nEn: Documentos para Contratación -> Documentos para Subir')
-            return
-          }
-          if (!this.lstserv.LegDeclaracionJurada.cLegDjNumCta && this.regLegDatosGenerales.nValorHaberes === 1) {
-            this.valserv.mensaje_info('Adjunte archivo de Nº de Cuenta (voucher o captura).  \nEn: Documentos para Contratación -> Documentos para Subir')
-            return
-          }
-          if (!this.lstserv.LegDeclaracionJurada.cLegDjConsJubilacion && this.regLegDatosGenerales.nValorAfiliado === 3) {
-            this.valserv.mensaje_info('Adjunte archivo de Constancia de Jubilación.  \nEn: Documentos para Contratación -> Documentos para Subir')
-            return
-          }
-          if (!this.lstserv.LegDeclaracionJurada.cLegDjConsAfiliacionOnpAfp && this.regLegDatosGenerales.nValorAfiliado === 1) {
-            this.valserv.mensaje_info('Adjunte archivo de Constancia de Afiliacion de ONP o AFP.  \nEn: Documento para Contratación -> Documentos para Subir')
-            return
-          }
-        }
-
-        // Validaciones de colegiatura
-        this.regLegDatosGenerales.cLegDatColegioProf ??= '';
-        if (this.regLegDatosGenerales.cLegDatColegioProf) {
-          if (!this.FormGroup2.get('colegionroControl')?.value || this.regLegDatosGenerales.nLegDatCondicionColeg?.toString() === '0') {
-            this.stepper.selectedIndex = 2;
-            this.valserv.mensaje_info('Complete los datos de colegiatura.');
-            return;
-          }
-          if (this.dateFEmi.invalid) {
-            this.valserv.mensaje_info('Ingrese fecha de emisión válida.');
-            return;
-          }
-          if (this.dateFExp.invalid) {
-            this.valserv.mensaje_info('Ingrese fecha de expiración válida.');
-            return;
-          }
-          if (this.dateFEmi.value > this.dateFExp.value) {
-            this.valserv.mensaje_info('Fecha de emisión no puede ser posterior a fecha de expiración.');
-            return;
-          }
-        }
-
-        if (this.regLegDatosGenerales.nLegDatCodigo > 0 && this.regLegDatosGenerales.cPerCodigo.toString() == this.segserv.usuarioreg.cPerCodigo) {
-          if (this.regLegDatosGenerales.nLetDatNacimiento == 0 || this.regLegDatosGenerales.nLetDatNacimiento == null) {
-            this.stepper.selectedIndex = 0
-            this.valserv.mensaje_info('Seleccione lugar de nacimiento.')
-            return
-          }
-        }
-
-        var formData = new FormData()
-        let fecha: any = this.configserv.datepipe.transform(new Date())
-        this.spinner.show()
-
-        // Primero, guardamos el CV
-        let dataCV;
-
-        formData.append('cPerCodigo', this.regLegDatosGenerales.cPerCodigo.toString())
-        formData.append('nLegDatCodigo', this.regLegDatosGenerales.nLegDatCodigo.toString() ?? '')
-        formData.append('nLegDatTipoDoc', this.regLegDatosGenerales.nLegDatTipoDoc.toString() ?? '')
-        formData.append('nClaseTipoDoc', this.regLegDatosGenerales.nClaseTipoDoc.toString() ?? '')
-        formData.append('cLegDatNroDoc', this.FormGroup1.get('nrodocumentoControl')?.value)
-        formData.append('cLegDatApellidoPaterno', this.FormGroup1.get('apellidopaternoControl')?.value)
-        formData.append('cLegDatApellidoMaterno', this.FormGroup1.get('apellidomaternoControl')?.value)
-        formData.append('cLegDatNombres', this.FormGroup1.get('nombresControl')?.value)
-        let fechanac: any = this.configserv.datepipe.transform(this.regLegDatosGenerales.dLegDatFechaNacimiento, 'yyyy-MM-dd')
-        formData.append('dLegDatFechaNacimiento', fechanac)
-        formData.append('nLegDatSexo', this.regLegDatosGenerales.nLegDatSexo.toString() ?? '')
-        formData.append('nClaseSexo', this.regLegDatosGenerales.nClaseSexo.toString() ?? '')
-        formData.append('nLegDatEstadoCivil', this.regLegDatosGenerales.nLegDatEstadoCivil.toString() ?? '')
-        formData.append('nClaseEstadoCivil', this.regLegDatosGenerales.nClaseEstadoCivil.toString() ?? '')
-        formData.append('declaracionjuradaflag', this.regLegDatosGenerales.declaracionjuradaflag.toString() ?? '')
-
-
-        formData.append('nLegDatRegPenAfiliado', this.regLegDatosGenerales?.nLegDatRegPenAfiliado?.toString() ?? '');
-        formData.append('nValorAfiliado', this.regLegDatosGenerales?.nValorAfiliado?.toString() ?? '');
-        formData.append('nLegDatRegPenEntidad', this.regLegDatosGenerales?.nLegDatRegPenEntidad?.toString() ?? '');
-        formData.append('nValorEntidad', this.regLegDatosGenerales?.nValorEntidad?.toString() ?? '');
-        formData.append('nLegDatCtaHabHaberes', this.regLegDatosGenerales?.nLegDatCtaHabHaberes?.toString() ?? '');
-        formData.append('nValorHaberes', this.regLegDatosGenerales?.nValorHaberes?.toString() ?? '');
-        formData.append('nLegDatCtaHabBanco', this.regLegDatosGenerales?.nLegDatCtaHabBanco?.toString() ?? '');
-        formData.append('nValorBanco', this.regLegDatosGenerales?.nValorBanco?.toString() ?? '');
-        formData.append('nLegDatCtaHabBancoAperturar', this.regLegDatosGenerales?.nLegDatCtaHabBancoAperturar?.toString() ?? '');
-        formData.append('nValorBancoAperturar', this.regLegDatosGenerales?.nValorBancoAperturar?.toString() ?? '');
-        formData.append('cLegDatCtaHabNumCta', this.FormGroup1.get('numCuentaControl')?.value ?? '');
-        formData.append('cLegDatCtaHabNumCtaCci', this.FormGroup1.get('numCuentaCciControl')?.value ?? '');
-
-        formData.append('cLegDatMencionEnMayGradAcad', this.FormGroup1.get('mencionEnMayGradAcadControl')?.value ?? '');
-        formData.append('cLegDatInstitucionMayGradAcad', this.regLegDatosGenerales.cLegDatInstitucionMayGradAcad ?? '');
-        formData.append('nLegDatAceptaTerminos', (this.regLegDatosGenerales.nLegDatAceptaTerminos ?? aceptaTerminos).toString()
-        );
-
-
-        // formData.append("cFile", this.fileData)
-        formData.append('cFileFirma', this.fileDataCert)
-        if (this.regLegDatosGenerales.cLegDatSunedu != this.regLegDatosGenerales.cFileSunedu
-        ) {
-          formData.append('cFileSunedu', this.regLegDatosGenerales.cLegDatSunedu)
-        }
-        if (this.regLegDatosGenerales.cLegDatBuenaSalud != this.regLegDatosGenerales.cFileBuenaSalud
-        ) {
-          formData.append('cFileBuenaSalud', this.regLegDatosGenerales.cLegDatBuenaSalud)
-        }
-        if (this.regLegDatosGenerales.cLegDatPolicial != this.regLegDatosGenerales.cFilePolicial
-        ) {
-          formData.append('cFilePolicial', this.regLegDatosGenerales.cLegDatPolicial)
-        }
-        if (this.regLegDatosGenerales.cLegDatJudicial != this.regLegDatosGenerales.cFileJudicial
-        ) {
-          formData.append('cFileJudicial', this.regLegDatosGenerales.cLegDatJudicial)
-        }
-        if (this.regLegDatosGenerales.cLegDatArchivoConadis != this.regLegDatosGenerales.cFileConadis
-        ) {
-          formData.append('cFileConadis', this.regLegDatosGenerales.cLegDatArchivoConadis)
-        }
-
-        formData.append('cLegDatFoto', '')
-        formData.append('cLegDatEmail', this.FormGroup1.get('emailControl')?.value ?? '')
-        formData.append('cLegDatTelefono', this.FormGroup1.get('telefonoControl')?.value ?? '')
-        formData.append('cLegDatMovil', this.FormGroup1.get('movilControl')?.value ?? '')
-        formData.append('nLegDatGradoAcad', this.regLegDatosGenerales.nLegDatGradoAcad.toString() ?? '')
-        formData.append('nClaseGradoAcad', this.regLegDatosGenerales.nClaseGradoAcad.toString() ?? '')
-        formData.append('nLegDatPais', this.regLegDatosGenerales.nLegDatPais.toString() ?? '')
-        formData.append('nClasePais', this.regLegDatosGenerales.nClasePais.toString() ?? '')
-        formData.append('cLegDatAcerca', this.EndFormGroup.get('acercaControl')?.value ?? '')
-        formData.append('nLegDatTipoDomicilio', this.regLegDatosGenerales.nLegDatTipoDomicilio.toString() ?? '')
-        formData.append('nValorTipoDomicilio', this.regLegDatosGenerales.nValorTipoDomicilio.toString() ?? '')
-        formData.append('nLegDatZona', this.regLegDatosGenerales.nLegDatZona.toString() ?? '')
-        formData.append('nValorZona', this.regLegDatosGenerales.nValorZona.toString() ?? '')
-        formData.append('cLegDatCalleDomicilio', this.FormGroup1.get('direccionControl')?.value ?? '')
-        formData.append('cLegDatNroDomicilio', this.FormGroup1.get('numeroControl')?.value ?? '')
-        formData.append('cLegDatMzaDomicilio', this.FormGroup1.get('mzaControl')?.value ?? '')
-        formData.append('cLegDatLtDomicilio', this.FormGroup1.get('lteControl')?.value ?? '')
-        formData.append('cLegDatDptoDomicilio', this.FormGroup1.get('dptoControl')?.value ?? '')
-        formData.append('cLegDatReferencia', this.FormGroup1.get('referenciaControl')?.value ?? '')
-        formData.append('nLetDatUbigeo', this.regLegDatosGenerales.nLetDatUbigeo.toString() ?? '')
-        formData.append('nClaseUbigeo', this.regLegDatosGenerales.nClaseUbigeo.toString() ?? '')
-        formData.append('nLetDatNacimiento', this.regLegDatosGenerales.nLetDatNacimiento.toString() ?? '')
-        formData.append('nClaseNacimiento', this.regLegDatosGenerales.nClaseNacimiento.toString() ?? '')
-        formData.append('nLegIdiomaNativo', this.regLegDatosGenerales.nLegIdiomaNativo ? this.regLegDatosGenerales.nLegIdiomaNativo.toString() : '0')
-        formData.append('nLegDatDiscapacidad', this.regLegDatosGenerales.nLegDatDiscapacidad ? this.regLegDatosGenerales.nLegDatDiscapacidad.toString() : '')
-        formData.append('nLegDatTipoDiscapacidad', this.regLegDatosGenerales.nLegDatTipoDiscapacidad ? this.regLegDatosGenerales.nLegDatTipoDiscapacidad.toString() : '')
-        formData.append('cLegDatOtraDiscapcidad', this.FormGroupAD.get('cLegDatOtraDiscapcidad')?.value)
-        formData.append('declaracionjuradaflag', 'true')
-        formData.append('CLegDatEstado', 'true')
-        formData.append('dFechaRegistro', fecha)
-        formData.append('dFechaModifica', fecha)
-
-        if (this.regLegDatosGenerales.cLegDatColegioProf ?? '' != '') {
-          let fechaemis: any = this.configserv.datepipe.transform(this.dateFEmi.value ?? new Date(), 'yyyy-MM-dd')
-          let fechaexp: any = this.configserv.datepipe.transform(this.dateFExp.value ?? new Date(), 'yyyy-MM-dd')
-          formData.append('dLegDatosFechaEmisionColeg', fechaemis)
-          formData.append('dLegDatosFechaExpiraColeg', fechaexp)
-          formData.append('nLegDatCondicionColeg', this.regLegDatosGenerales.nLegDatCondicionColeg?.toString() ?? '')
-          formData.append('nValorCondicionColeg', this.regLegDatosGenerales.nValorCondicionColeg?.toString() ?? '')
-          formData.append('cLegDatColegioProf', this.regLegDatosGenerales.cLegDatColegioProf.toString() ?? '')
-          formData.append('cLegDatNroColegiatura', this.FormGroup2.get('colegionroControl')?.value ?? '')
-        }
-
-        if (this.regLegDatosGenerales.nLegDatCodigo == 0) {
-          formData.append('legDeclaracionJurada[0].nLegDjcodigo', this.lstserv.LegDeclaracionJurada.nLegDjcodigo.toString() ?? '0')
-
-          formData.append('legDeclaracionJurada[0].cFileDjanexo1', this.lstserv.LegDeclaracionJurada.cLegDjanexo1)
-          formData.append('legDeclaracionJurada[0].cFileDjanexo2_2', this.lstserv.LegDeclaracionJurada.cLegDjanexo2_2)
-          formData.append('legDeclaracionJurada[0].cFileDjanexo3', this.lstserv.LegDeclaracionJurada.cLegDjanexo3)
-          formData.append('legDeclaracionJurada[0].cFileDjanexo4', this.lstserv.LegDeclaracionJurada.cLegDjanexo4)
-          formData.append('legDeclaracionJurada[0].cFileDjanexo5', this.lstserv.LegDeclaracionJurada.cLegDjanexo5)
-          formData.append('legDeclaracionJurada[0].cFileDjanexo6_2', this.lstserv.LegDeclaracionJurada.cLegDjanexo6_2)
-          formData.append('legDeclaracionJurada[0].cFileDjDNI', this.lstserv.LegDeclaracionJurada.cLegDjDNI)
-          formData.append('legDeclaracionJurada[0].cFileDjDNI_DH', this.lstserv.LegDeclaracionJurada.cLegDjDNI_DH)
-          formData.append('legDeclaracionJurada[0].cFileDjFotoCarnet', this.lstserv.LegDeclaracionJurada.cLegDjFotoCarnet)
-          formData.append('legDeclaracionJurada[0].cFileDjNumCta', this.lstserv.LegDeclaracionJurada.cLegDjNumCta)
-          formData.append('legDeclaracionJurada[0].cFileDjConsJubilacion', this.lstserv.LegDeclaracionJurada.cLegDjConsJubilacion)
-          formData.append('legDeclaracionJurada[0].cFileDjConsAfiliacionOnpAfp', this.lstserv.LegDeclaracionJurada.cLegDjConsAfiliacionOnpAfp)
-
-          formData.append('legDeclaracionJurada[0].cLegDjanexo1', '')
-          formData.append('legDeclaracionJurada[0].cLegDjanexo2_2', '')
-          formData.append('legDeclaracionJurada[0].cLegDjanexo3', '')
-          formData.append('legDeclaracionJurada[0].cLegDjanexo4', '')
-          formData.append('legDeclaracionJurada[0].cLegDjanexo5', '')
-          formData.append('legDeclaracionJurada[0].cLegDjanexo6_2', '')
-          formData.append('legDeclaracionJurada[0].cLegDjDNI', '')
-          formData.append('legDeclaracionJurada[0].cLegDjDNI_DH', '')
-          formData.append('legDeclaracionJurada[0].cLegDjFotoCarnet', '')
-          formData.append('legDeclaracionJurada[0].cLegDjNumCta', '')
-          formData.append('legDeclaracionJurada[0].cLegDjConsJubilacion', '')
-          formData.append('legDeclaracionJurada[0].cLegDjConsAfiliacionOnpAfp', '')
-
-          formData.append('legDeclaracionJurada[0].bLegDjestado', 'true')
-
-
-          this.lstserv.lLegGradoTitulo.forEach(
-            (element: LegGradoTitulo, index) => {
-              let fechaobt: any = this.configserv.datepipe.transform(
-                element.dLegGraFecha,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].nLegGraCodigo',
-                element.nLegGraCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].nLegGraGradoAcad',
-                element.nLegGraGradoAcad.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].nClaseGradoAcad',
-                element.nClaseGradoAcad.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].cLegGraCarreraProf',
-                element.cLegGraCarreraProf.toString() ?? '',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].cLegGraInstitucion',
-                element.cLegGraInstitucion.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].cLegGraOtraInst',
-                element.cLegGraOtraInst.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].nLegGraPais',
-                element.nLegGraPais.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].nClasePais',
-                element.nClasePais.toString() ?? '0',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].dLegGraFecha',
-                fechaobt,
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].cFile',
-                element.cLegGraArchivo,
-              )
-              formData.append('legGradoTitulo[' + index + '].cLegGraArchivo', '')
-              formData.append(
-                'legGradoTitulo[' + index + '].cLegGraValida',
-                'false',
-              )
-              formData.append(
-                'legGradoTitulo[' + index + '].cLegGraEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lLegDocenciaUniv.forEach(
-            (element: LegDocenciaUniv, index) => {
-              formData.append(
-                'legDocenciaUniv[' + index + '].nLegDocCodigo',
-                element.nLegDocCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].nLegDocRegimen',
-                element.nLegDocRegimen.toString() ?? '0',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].nValorRegimen',
-                element.nValorRegimen.toString() ?? '0',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].nLegDocCategoria',
-                element.nLegDocCategoria.toString() ?? '0',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].nValorCategoria',
-                element.nValorCategoria.toString() ?? '0',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].cLegDocUniversidad',
-                element.cLegDocUniversidad.toString() ?? '',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].cLegDocOtraInst',
-                element.cLegDocOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].cLegDocPais',
-                element.cLegDocPais.toString() ?? '',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegDocFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].dLegDocFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegDocFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].dLegDocFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].cFile',
-                element.cLegDocArchivo,
-              )
-              formData.append('legDocenciaUniv[' + index + '].cLegGraArchivo', '')
-              formData.append(
-                'legDocenciaUniv[' + index + '].cLegDocValida',
-                'false',
-              )
-              formData.append(
-                'legDocenciaUniv[' + index + '].cLegDocEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lCategoriaDocente.forEach(
-            (element: LegCategoriaDocente, index) => {
-              formData.append(
-                'legCategoriaDocente[' + index + '].nLegCatCodigo',
-                element.nLegCatCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegCatInstitucion',
-                element.cLegCatInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegCatOtraInst',
-                element.cLegCatOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegCatPais',
-                element.cLegCatPais.toString() ?? '',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].nLegCatCategoria',
-                element.nLegCatCategoria.toString() ?? '0',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].nValorCategoria',
-                element.nValorCategoria.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegCatFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].dLegCatFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegCatFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].dLegCatFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cFile',
-                element.cLegCatArchivo,
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegGraArchivo',
-                '',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegCatValida',
-                'false',
-              )
-              formData.append(
-                'legCategoriaDocente[' + index + '].cLegCatEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lRegimenDedic.forEach(
-            (element: LegRegimenDedicacion, index) => {
-              formData.append(
-                'legRegimenDedicacion[' + index + '].nLegRegCodigo',
-                element.nLegRegCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegCatInstitucion',
-                element.cLegCatInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegRegOtraInst',
-                element.cLegRegOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegRegPais',
-                element.cLegRegPais.toString() ?? '',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].nLegRegDedicacion',
-                element.nLegRegDedicacion.toString() ?? '0',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].nValorDedicacion',
-                element.nValorDedicacion.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegRegFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].dLegRegFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegRegFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].dLegRegFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cFile',
-                element.cLegRegArchivo,
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegRegArchivo',
-                '',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegRegValida',
-                'false',
-              )
-              formData.append(
-                'legRegimenDedicacion[' + index + '].cLegRegEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lProfesNoDocente.forEach(
-            (element: LegProfesNoDocente, index) => {
-              formData.append(
-                'legProfesNoDocente[' + index + '].nLegProCodigo',
-                element.nLegProCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProInstitucion',
-                element.cLegProInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProOtraInst',
-                element.cLegProOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProPais',
-                element.cLegProPais.toString() ?? '',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].nLegProCargo',
-                element.nLegProCargo.toString() ?? '0',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProCargoProf',
-                element.cLegProCargoProf.toString() ?? '',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].nValorCargo',
-                element.nValorCargo.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegProFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].dLegProFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegProFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].dLegProFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cFile',
-                element.cLegProArchivo,
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProArchivo',
-                '',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProValida',
-                'false',
-              )
-              formData.append(
-                'legProfesNoDocente[' + index + '].cLegProEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lidiomasofimatica.forEach(
-            (element: LegIdiomaOfimatica, index) => {
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].nLegIdOfCodigo',
-                element.nLegIdOfCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].nLegIdOfCodigoDesc',
-                element.nLegIdOfCodigoDesc.toString() ?? '',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].nValorDesc',
-                element.nValorDesc.toString() ?? '0',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].nLegIdOfNivel',
-                element.nLegIdOfNivel.toString() ?? '0',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].nValorNivel',
-                element.nValorNivel.toString() ?? '0',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].cLegIdOfTipo',
-                element.cLegIdOfTipo.toString() ?? '',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegIdOfFecha,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].dLegIdOfFecha',
-                fecha,
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].cFile',
-                element.cLegIdOfArchivo,
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].cLegIdOfArchivo',
-                '',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].cLegIdOfValida',
-                'false',
-              )
-              formData.append(
-                'legIdiomaOfimatica[' + index + '].cLegIdOfEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.linvestigador.forEach(
-            (element: LegInvestigador, index) => {
-              formData.append(
-                'legInvestigador[' + index + '].nLegInvCodigo',
-                element.nLegInvCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].nLegInvCentroRegistro',
-                element.nLegInvCentroRegistro.toString() ?? '',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].nValorCentroRegistro',
-                element.nValorCentroRegistro.toString() ?? '0',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].cLegInvNroRegistro',
-                element.cLegInvNroRegistro.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegInvFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].dLegInvFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegInvFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].dLegInvFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legInvestigador[' + index + '].cFile',
-                element.cLegInvArchivo,
-              )
-              formData.append('legInvestigador[' + index + '].cLegInvArchivo', '')
-              formData.append(
-                'legInvestigador[' + index + '].cLegInvValida',
-                'false',
-              )
-              formData.append(
-                'legInvestigador[' + index + '].cLegInvEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lTesisAsesJur.forEach((element: LegTesisAseJur, index) => {
-            formData.append(
-              'legTesisAseJur[' + index + '].nLegTesCodigo',
-              element.nLegTesCodigo.toString() ?? '0',
-            )
-            formData.append(
-              'legTesisAseJur[' + index + '].nLegTesTipo',
-              element.nLegTesTipo.toString() ?? '0',
-            )
-            formData.append(
-              'legTesisAseJur[' + index + '].nValorTipo',
-              element.nValorTipo.toString() ?? '0',
-            )
-            formData.append(
-              'legTesisAseJur[' + index + '].nLegTesNivel',
-              element.nLegTesNivel.toString() ?? '0',
-            )
-            formData.append(
-              'legTesisAseJur[' + index + '].nValorNivel',
-              element.nValorNivel.toString() ?? '0',
-            )
-            formData.append(
-              'legTesisAseJur[' + index + '].cLegTesNroResolucion',
-              element.cLegTesNroResolucion.toString() ?? '',
-            )
-            fecha = this.configserv.datepipe.transform(element.dLegTesFecha,
-              'yyyy-MM-dd',
-            )
-            formData.append(
-              'legTesis[' + index + '].cLegTesInstitucion',
-              element.cLegTesInstitucion.toString() ?? '0',
-            )
-            formData.append(
-              'legTesis[' + index + '].cLegTesOtraInst',
-              element.cLegTesOtraInst.toString() ?? '0',
-            )
-            formData.append(
-              'legTesis[' + index + '].nLegTesPais',
-              element.nLegTesPais.toString() ?? '0',
-            )
-            formData.append(
-              'legTesis[' + index + '].nClasePais',
-              element.nClasePais.toString() ?? '0',
-            )
-            formData.append('legTesisAseJur[' + index + '].dLegTesFecha', fecha)
-            formData.append(
-              'legTesisAseJur[' + index + '].cFile',
-              element.cLegTesArchivo,
-            )
-            formData.append('legTesisAseJur[' + index + '].cLegTesArchivo', '')
-            formData.append(
-              'legTesisAseJur[' + index + '].cLegTesValida',
-              'false',
-            )
-            formData.append('legTesisAseJur[' + index + '].cLegTesEstado', 'true')
-          })
-
-          this.lstserv.lProduccionCiencia.forEach(
-            (element: LegProduccionCiencia, index) => {
-              formData.append(
-                'legProduccionCiencia[' + index + '].nLegProdCodigo',
-                element.nLegProdCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cLegProdNroResolucion',
-                element.cLegProdNroResolucion.toString() ?? '',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cLegProdTitulo',
-                element.cLegProdTitulo.toString() ?? '',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].nLegProdTipo',
-                element.nLegProdTipo.toString() ?? '0',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].nValorTipo',
-                element.nValorTipo.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegProdFecha,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].dLegProdFecha',
-                fecha,
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cFile',
-                element.cLegProdArchivo,
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cLegProdArchivo',
-                '',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cLegProdValida',
-                'false',
-              )
-              formData.append(
-                'legProduccionCiencia[' + index + '].cLegProdEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lParticipacion.forEach(
-            (element: LegParticipacionCongSem, index) => {
-              formData.append(
-                'legParticipacionCongSem[' + index + '].nLegParCodigo',
-                element.nLegParCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParInstitucion',
-                element.cLegParInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParOtraInst',
-                element.cLegParOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParPais',
-                element.cLegParPais.toString() ?? '',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParNombre',
-                element.cLegParNombre.toString() ?? '',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].nLegParRol',
-                element.nLegParRol.toString() ?? '0',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].nValorRol',
-                element.nValorRol.toString() ?? '0',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].nLegParAmbito',
-                element.nLegParAmbito.toString() ?? '0',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].nValorAmbito',
-                element.nValorAmbito.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegParFecha,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].dLegParFecha',
-                fecha,
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cFile',
-                element.cLegParArchivo,
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParArchivo',
-                '',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParValida',
-                'false',
-              )
-              formData.append(
-                'legParticipacionCongSem[' + index + '].cLegParEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lAdminitrativaCarga.forEach(
-            (element: LegAdminitrativaCarga, index) => {
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].nLegAdmCodigo',
-                element.nLegAdmCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmInstitucion',
-                element.cLegAdmInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmOtraInst',
-                element.cLegAdmOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmPais',
-                element.cLegAdmPais.toString() ?? '',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmDocumento',
-                element.cLegAdmDocumento.toString() ?? '',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].nLegAdmCargo',
-                element.nLegAdmCargo.toString() ?? '0',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].nClaseCargo',
-                element.nClaseCargo.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegAdmFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].dLegAdmFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegAdmFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].dLegAdmFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cFile',
-                element.cLegAdmArchivo,
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmArchivo',
-                '',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmValida',
-                'false',
-              )
-              formData.append(
-                'legAdminitrativaCarga[' + index + '].cLegAdmEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lReconocimiento.forEach(
-            (element: LegReconocimiento, index) => {
-              formData.append(
-                'legReconocimiento[' + index + '].nLegRecCodigo',
-                element.nLegRecCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecInstitucion',
-                element.cLegRecInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecOtraInst',
-                element.cLegRecOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecPais',
-                element.cLegRecPais.toString() ?? '',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].nLegRecDocumento',
-                element.nLegRecDocumento.toString() ?? '0',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].nValorDocumento',
-                element.nValorDocumento.toString() ?? '0',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].nLegRecTipo',
-                element.nLegRecTipo.toString() ?? '0',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].nValorTipo',
-                element.nValorTipo.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegRecFecha,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].dLegRecFecha',
-                fecha,
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cFile',
-                element.cLegRecArchivo,
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecArchivo',
-                '',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecValida',
-                'false',
-              )
-              formData.append(
-                'legReconocimiento[' + index + '].cLegRecEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lcapacitaciones.forEach(
-            (element: LegCapacitaciones, index) => {
-              formData.append(
-                'legCapacitaciones[' + index + '].nLegCapCodigo',
-                element.nLegCapCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapInstitucion',
-                element.cLegCapInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapOtraInst',
-                element.cLegCapOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapPais',
-                element.cLegCapPais.toString() ?? '',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapNombre',
-                element.cLegCapNombre.toString() ?? '',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].nLegCapTipo',
-                element.nLegCapTipo.toString() ?? '0',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].nValorTipo',
-                element.nValorTipo.toString() ?? '0',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].nLegCapTipoEsp',
-                element.nLegCapTipoEsp.toString() ?? '0',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].nValorTipoEsp',
-                element.nValorTipoEsp.toString() ?? '0',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].nLegCapHoras',
-                element.nLegCapHoras.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegCapFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].dLegCapFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegCapFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].dLegCapFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cFile',
-                element.cLegCapArchivo,
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapArchivo',
-                '',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapValida',
-                'false',
-              )
-              formData.append(
-                'legCapacitaciones[' + index + '].cLegCapEstado',
-                'true',
-              )
-            },
-          )
-
-          this.lstserv.lProyeccionSoc.forEach(
-            (element: LegProyeccionSocial, index) => {
-              formData.append(
-                'legProyeccionSocial[' + index + '].nLegProyCodigo',
-                element.nLegProyCodigo.toString() ?? '0',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyInstitucion',
-                element.cLegProyInstitucion.toString() ?? '',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyOtraInst',
-                element.cLegProyOtraInst.toString() ?? '',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyPais',
-                element.cLegProyPais.toString() ?? '',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyDescripcion',
-                element.cLegProyDescripcion.toString() ?? '',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].nLegProyTipo',
-                element.nLegProyTipo.toString() ?? '0',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].nValorTipo',
-                element.nValorTipo.toString() ?? '0',
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegProyFechaInicio,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].dLegProyFechaInicio',
-                fecha,
-              )
-              fecha = this.configserv.datepipe.transform(
-                element.dLegProyFechaFin,
-                'yyyy-MM-dd',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].dLegProyFechaFin',
-                fecha,
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cFile',
-                element.cLegProyArchivo,
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyArchivo',
-                '',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyValida',
-                'false',
-              )
-              formData.append(
-                'legProyeccionSocial[' + index + '].cLegProyEstado',
-                'true',
-              )
-            },
-          )
-
-
-
-          // ===== LICENCIAS PROFESIONALES =====
-          this.lstserv.lLegLicenciaProfesional.forEach(
-            (element: LegLicenciaProfesional, index) => {
-
-              let fechaobt: any = this.configserv.datepipe.transform(
-                element.dLegLicFechaEmision,
-                'yyyy-MM-dd',
-              )
-
-              let fechaobt2: any = this.configserv.datepipe.transform(
-                element.dLegLicFechaExpiracion,
-                'yyyy-MM-dd',
-              )
-
-              formData.append(
-                `legLicenciaProfesional[${index}].nLegLicCodigo`,
-                element.nLegLicCodigo?.toString() ?? '0'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].nLegLicDatCodigo`,
-                this.regLegDatosGenerales.nLegDatCodigo.toString()
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].nLegLicPais`,
-                element.nLegLicPais?.toString() ?? '0'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].nClasePais`,
-                element.nClasePais?.toString() ?? '0'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].cLegLicInstitucion`,
-                element.cLegLicInstitucion ?? ''
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].cLegLicOtraInst`,
-                element.cLegLicOtraInst.toString() ?? ''
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].nLegLicCondicion`,
-                element.nLegLicCondicion?.toString() ?? '0'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].nClaseCondicion`,
-                element.nClaseCondicion?.toString() ?? '0'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].cLegLicNroRegistro`,
-                element.cLegLicNroRegistro.toString() ?? ''
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].dLegLicFechaEmision`,
-                fechaobt
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].dLegLicFechaExpiracion`,
-                fechaobt2
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].cLegLicValida`,
-                'false'
-              );
-              formData.append(
-                `legLicenciaProfesional[${index}].cLegLicEstado`,
-                'true'
-              );
-            }
-          );
-
-
-
-          dataCV = await this.regserv.registroFile('Registro de Legajos', 'legajo', formData, false)
-        }
-        else {
-          dataCV = await this.regserv.actualizarFile('Registro de Legajos', 'legajo/put/' + this.regLegDatosGenerales.nLegDatCodigo, formData, false)
-        }
-
-        console.log("CV guardado con éxito:", dataCV);
-
-        // Ahora guardamos DJ
-        let dataDJ = await this.guardarDJ();
-        console.log("DJ guardado con éxito:", dataDJ);
-        this.spinner.hide();
-
-        if (dataCV && dataDJ) {
-          Swal.fire("Registro de Legajos", "Datos guardados correctamente.", "success");
-        }
-        else if (dataCV) {
-          Swal.fire("Registro de Legajos", "Datos Legajo guardados correctamente.", "success");
-        }
-        else if (dataDJ) {
-          Swal.fire("Registro de Legajos", "Datos Declaraciones Juradas guardadas correctamente.", "success");
-        }
-        else {
-          Swal.fire("Advertencia", "Algunos datos no se guardaron correctamente.", "warning");
-        }
-
-      } catch (e) {
-        this.spinner.hide()
-        console.error("Error al guardar: " + e);
-      }
-    }
-  }
-
   async guardarDJ() {
 
     if (this.regLegDatosGenerales.nLegDatCodigo == 0) {
@@ -5594,4 +4383,664 @@ export class DgeneralComponent implements OnInit {
   irAlPaso1(): void {
     this.stepper.selectedIndex = 0;
   }
+
+   async guardarTodo() {
+    const aceptado = await this.confirmarTerminos();
+    if (!aceptado) return;
+
+    if (!this.validarFormulario()) return;
+    
+    try {
+      this.spinner.show();
+ 
+      const formData = this.construirFormDataDatosGenerales();
+      this.agregarColeccionesAlFormData(formData);
+ 
+      const dataCV = await this.persistirLegajo(formData);
+      const dataDJ = await this.guardarDJ();
+ 
+      this.mostrarResultadoGuardado(dataCV, dataDJ);
+    } catch (e) {
+      console.error('Error al guardar:', e);
+    } finally {
+      this.spinner.hide();
+    }
+  }
+
+   // ─── PASO 1: Confirmación de términos ────────────────────────
+  private async confirmarTerminos(): Promise<boolean> {
+    const yaAceptado = this.regLegDatosGenerales.nLegDatAceptaTerminos || false;
+    if (yaAceptado) return true;
+ 
+    const result = await Swal.fire({
+      title: 'PROTECCIÓN DE DATOS PERSONALES',
+      html: `Al hacer clic en "ENVIAR", aceptas enviar tu información a la UNIVERSIDAD SEÑOR DE SIPAN,
+             que usará conforme a la LEY N°29733. Debes aceptar los términos y condiciones para continuar.<br>
+             <div id="downloadLink" style="color: blue; text-decoration: underline; cursor: pointer;">
+               Leer términos y condiciones
+             </div>`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      heightAuto: false,
+      input: 'checkbox',
+      inputValue: 0,
+      inputPlaceholder: 'Acepto los términos y condiciones',
+      inputValidator: (value) => value ? null : 'Debe aceptar los términos y condiciones',
+      didOpen: () => {
+        const link = Swal.getHtmlContainer()?.querySelector('#downloadLink');
+        link?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.descargarArchivo('PROTECCION_DE_DATOS_PERSONALES.pdf');
+        });
+      },
+    });
+ 
+    if (result.isConfirmed && result.value) {
+      this.regLegDatosGenerales.nLegDatAceptaTerminos = true;
+      return true;
+    }
+ 
+    return false;
+  }
+
+  private validarFormulario(): boolean {
+    if (this.FormGroup1.invalid) {
+      this.stepper.selectedIndex = 0;
+      const campos = this.obtenerCamposInvalidos(this.FormGroup1);
+      this.valserv.mensaje_info('Los siguientes campos son obligatorios:\n• ' + campos.join('\n• '));
+      return false;
+    }
+ 
+    if (this.date.invalid) {
+      this.valserv.mensaje_info('Ingrese una fecha de nacimiento válida.');
+      return false;
+    }
+ 
+    if (this.dateCeseControl.invalid) {
+      this.valserv.mensaje_info('Ingrese una fecha de Cese válida.');
+      return false;
+    }
+ 
+    if (!this.validarDocumentosRequeridos()) return false;
+    if (!this.validarColegiatura()) return false;
+    if (!this.validarLugarNacimiento()) return false;
+ 
+    return true;
+  }
+
+   private validarDocumentosRequeridos(): boolean {
+    const tipo = this.segserv.usuarioreg.nTipo;
+    if (tipo !== 1 && tipo !== 2) return true;
+ 
+    const dj = this.lstserv.LegDeclaracionJurada;
+    const reg = this.regLegDatosGenerales;
+ 
+    if (!dj.cLegDjanexo1 && reg.nValorAfiliado === 2) {
+      this.valserv.mensaje_info('Adjunte archivo de Anexo 1.\nEn: Documentos para Contratación -> Documentos para Subir');
+      return false;
+    }
+    if (!dj.cLegDjNumCta && reg.nValorHaberes === 1) {
+      this.valserv.mensaje_info('Adjunte archivo de Nº de Cuenta (voucher o captura).\nEn: Documentos para Contratación -> Documentos para Subir');
+      return false;
+    }
+    if (!dj.cLegDjConsJubilacion && reg.nValorAfiliado === 3) {
+      this.valserv.mensaje_info('Adjunte archivo de Constancia de Jubilación.\nEn: Documentos para Contratación -> Documentos para Subir');
+      return false;
+    }
+    if (!dj.cLegDjConsAfiliacionOnpAfp && reg.nValorAfiliado === 1) {
+      this.valserv.mensaje_info('Adjunte archivo de Constancia de Afiliación de ONP o AFP.\nEn: Documento para Contratación -> Documentos para Subir');
+      return false;
+    }
+ 
+    return true;
+  }
+
+  private validarColegiatura(): boolean {
+    this.regLegDatosGenerales.cLegDatColegioProf ??= '';
+    if (!this.regLegDatosGenerales.cLegDatColegioProf) return true;
+ 
+    if (!this.FormGroup2.get('colegionroControl')?.value || this.regLegDatosGenerales.nLegDatCondicionColeg?.toString() === '0') {
+      this.stepper.selectedIndex = 2;
+      this.valserv.mensaje_info('Complete los datos de colegiatura.');
+      return false;
+    }
+    if (this.dateFEmi.invalid) {
+      this.valserv.mensaje_info('Ingrese fecha de emisión válida.');
+      return false;
+    }
+    if (this.dateFExp.invalid) {
+      this.valserv.mensaje_info('Ingrese fecha de expiración válida.');
+      return false;
+    }
+    if (this.dateFEmi.value > this.dateFExp.value) {
+      this.valserv.mensaje_info('Fecha de emisión no puede ser posterior a fecha de expiración.');
+      return false;
+    }
+ 
+    return true;
+  }
+
+   private validarLugarNacimiento(): boolean {
+    const reg = this.regLegDatosGenerales;
+    const esPropioCodigo = reg.cPerCodigo.toString() === this.segserv.usuarioreg.cPerCodigo;
+ 
+    if (reg.nLegDatCodigo > 0 && esPropioCodigo) {
+      if (!reg.nLetDatNacimiento || reg.nLetDatNacimiento === 0) {
+        this.stepper.selectedIndex = 0;
+        this.valserv.mensaje_info('Seleccione lugar de nacimiento.');
+        return false;
+      }
+    }
+ 
+    return true;
+  }
+ 
+  private construirFormDataDatosGenerales(): FormData {
+    const formData = new FormData();
+    const reg = this.regLegDatosGenerales;
+    const fecha = this.configserv.datepipe.transform(new Date());
+    const fechanac = this.configserv.datepipe.transform(reg.dLegDatFechaNacimiento, 'yyyy-MM-dd') ?? '';
+    const fg1 = this.FormGroup1;
+ 
+    // Identificación
+    formData.append('cPerCodigo',              reg.cPerCodigo.toString());
+    formData.append('nLegDatCodigo',           reg.nLegDatCodigo.toString() ?? '');
+    formData.append('nLegDatTipoDoc',          reg.nLegDatTipoDoc.toString() ?? '');
+    formData.append('nClaseTipoDoc',           reg.nClaseTipoDoc.toString() ?? '');
+    formData.append('cLegDatNroDoc',           fg1.get('nrodocumentoControl')?.value);
+    formData.append('cLegDatApellidoPaterno',  fg1.get('apellidopaternoControl')?.value);
+    formData.append('cLegDatApellidoMaterno',  fg1.get('apellidomaternoControl')?.value);
+    formData.append('cLegDatNombres',          fg1.get('nombresControl')?.value);
+    formData.append('dLegDatFechaNacimiento',  fechanac);
+    formData.append('nLegDatSexo',             reg.nLegDatSexo.toString() ?? '');
+    formData.append('nClaseSexo',              reg.nClaseSexo.toString() ?? '');
+    formData.append('nLegDatEstadoCivil',      reg.nLegDatEstadoCivil.toString() ?? '');
+    formData.append('nClaseEstadoCivil',       reg.nClaseEstadoCivil.toString() ?? '');
+    formData.append('declaracionjuradaflag',   reg.declaracionjuradaflag.toString() ?? '');
+ 
+    // Datos pensionarios y cuenta haberes
+    formData.append('nLegDatRegPenAfiliado',        reg.nLegDatRegPenAfiliado?.toString() ?? '');
+    formData.append('nValorAfiliado',               reg.nValorAfiliado?.toString() ?? '');
+    formData.append('nLegDatRegPenEntidad',         reg.nLegDatRegPenEntidad?.toString() ?? '');
+    formData.append('nValorEntidad',                reg.nValorEntidad?.toString() ?? '');
+    formData.append('nLegDatCtaHabHaberes',         reg.nLegDatCtaHabHaberes?.toString() ?? '');
+    formData.append('nValorHaberes',                reg.nValorHaberes?.toString() ?? '');
+    formData.append('nLegDatCtaHabBanco',           reg.nLegDatCtaHabBanco?.toString() ?? '');
+    formData.append('nValorBanco',                  reg.nValorBanco?.toString() ?? '');
+    formData.append('nLegDatCtaHabBancoAperturar',  reg.nLegDatCtaHabBancoAperturar?.toString() ?? '');
+    formData.append('nValorBancoAperturar',         reg.nValorBancoAperturar?.toString() ?? '');
+    formData.append('cLegDatCtaHabNumCta',          fg1.get('numCuentaControl')?.value ?? '');
+    formData.append('cLegDatCtaHabNumCtaCci',       fg1.get('numCuentaCciControl')?.value ?? '');
+ 
+    // Grado académico e institución
+    formData.append('cLegDatMencionEnMayGradAcad',      fg1.get('mencionEnMayGradAcadControl')?.value ?? '');
+    formData.append('cLegDatInstitucionMayGradAcad',    reg.cLegDatInstitucionMayGradAcad ?? '');
+    formData.append('nLegDatAceptaTerminos',            (reg.nLegDatAceptaTerminos ?? true).toString());
+ 
+    // Archivos / firma
+    formData.append('cFileFirma', this.fileDataCert);
+    this.agregarArchivoSiCambio(formData, 'cFileSunedu',    reg.cLegDatSunedu,       reg.cFileSunedu);
+    this.agregarArchivoSiCambio(formData, 'cFileBuenaSalud', reg.cLegDatBuenaSalud,  reg.cFileBuenaSalud);
+    this.agregarArchivoSiCambio(formData, 'cFilePolicial',  reg.cLegDatPolicial,     reg.cFilePolicial);
+    this.agregarArchivoSiCambio(formData, 'cFileJudicial',  reg.cLegDatJudicial,     reg.cFileJudicial);
+    this.agregarArchivoSiCambio(formData, 'cFileConadis',   reg.cLegDatArchivoConadis, reg.cFileConadis);
+ 
+    // Contacto y domicilio
+    formData.append('cLegDatFoto',          '');
+    formData.append('cLegDatEmail',         fg1.get('emailControl')?.value ?? '');
+    formData.append('cLegDatTelefono',      fg1.get('telefonoControl')?.value ?? '');
+    formData.append('cLegDatMovil',         fg1.get('movilControl')?.value ?? '');
+    formData.append('nLegDatGradoAcad',     reg.nLegDatGradoAcad.toString() ?? '');
+    formData.append('nClaseGradoAcad',      reg.nClaseGradoAcad.toString() ?? '');
+    formData.append('nLegDatPais',          reg.nLegDatPais.toString() ?? '');
+    formData.append('nClasePais',           reg.nClasePais.toString() ?? '');
+    formData.append('cLegDatAcerca',        this.EndFormGroup.get('acercaControl')?.value ?? '');
+    formData.append('nLegDatTipoDomicilio', reg.nLegDatTipoDomicilio.toString() ?? '');
+    formData.append('nValorTipoDomicilio',  reg.nValorTipoDomicilio.toString() ?? '');
+    formData.append('nLegDatZona',          reg.nLegDatZona.toString() ?? '');
+    formData.append('nValorZona',           reg.nValorZona.toString() ?? '');
+    formData.append('cLegDatCalleDomicilio', fg1.get('direccionControl')?.value ?? '');
+    formData.append('cLegDatNroDomicilio',  fg1.get('numeroControl')?.value ?? '');
+    formData.append('cLegDatMzaDomicilio',  fg1.get('mzaControl')?.value ?? '');
+    formData.append('cLegDatLtDomicilio',   fg1.get('lteControl')?.value ?? '');
+    formData.append('cLegDatDptoDomicilio', fg1.get('dptoControl')?.value ?? '');
+    formData.append('cLegDatReferencia',    fg1.get('referenciaControl')?.value ?? '');
+    formData.append('nLetDatUbigeo',        reg.nLetDatUbigeo.toString() ?? '');
+    formData.append('nClaseUbigeo',         reg.nClaseUbigeo.toString() ?? '');
+    formData.append('nLetDatNacimiento',    reg.nLetDatNacimiento.toString() ?? '');
+    formData.append('nClaseNacimiento',     reg.nClaseNacimiento.toString() ?? '');
+ 
+    // Otros datos
+    formData.append('nLegIdiomaNativo',         reg.nLegIdiomaNativo ? reg.nLegIdiomaNativo.toString() : '0');
+    formData.append('nLegDatDiscapacidad',      reg.nLegDatDiscapacidad ? reg.nLegDatDiscapacidad.toString() : '');
+    formData.append('nLegDatTipoDiscapacidad',  reg.nLegDatTipoDiscapacidad ? reg.nLegDatTipoDiscapacidad.toString() : '');
+    formData.append('cLegDatOtraDiscapcidad',   this.FormGroupAD.get('cLegDatOtraDiscapcidad')?.value ?? '');
+    formData.append('declaracionjuradaflag',    'true');
+    formData.append('CLegDatEstado',            'true');
+    formData.append('dFechaRegistro',           fecha ?? ''); 
+    formData.append('dFechaModifica',           fecha ?? ''); 
+ 
+    // Colegiatura (solo si aplica)
+    if (reg.cLegDatColegioProf) {
+      formData.append('dLegDatosFechaEmisionColeg', this.configserv.datepipe.transform(this.dateFEmi.value ?? new Date(), 'yyyy-MM-dd') ?? '');
+      formData.append('dLegDatosFechaExpiraColeg',  this.configserv.datepipe.transform(this.dateFExp.value ?? new Date(), 'yyyy-MM-dd') ?? '');
+      formData.append('nLegDatCondicionColeg',      reg.nLegDatCondicionColeg?.toString() ?? '');
+      formData.append('nValorCondicionColeg',       reg.nValorCondicionColeg?.toString() ?? '');
+      formData.append('cLegDatColegioProf',         reg.cLegDatColegioProf.toString() ?? '');
+      formData.append('cLegDatNroColegiatura',      this.FormGroup2.get('colegionroControl')?.value ?? '');
+    }
+ 
+    // Declaración Jurada (solo en nuevo registro)
+    if (reg.nLegDatCodigo === 0) {
+      this.agregarDeclaracionJuradaAlFormData(formData);
+    }
+ 
+    return formData;
+  }
+
+   private agregarArchivoSiCambio(formData: FormData, campo: string, valorActual: any, valorOriginal: any): void {
+    if (valorActual !== valorOriginal) {
+      formData.append(campo, valorActual);
+    }
+  }
+ 
+  private agregarDeclaracionJuradaAlFormData(formData: FormData): void {
+    const dj = this.lstserv.LegDeclaracionJurada;
+    const pre = 'legDeclaracionJurada[0]';
+ 
+    formData.append(`${pre}.nLegDjcodigo`,              dj.nLegDjcodigo.toString() ?? '0');
+    formData.append(`${pre}.cFileDjanexo1`,             dj.cLegDjanexo1);
+    formData.append(`${pre}.cFileDjanexo2_2`,           dj.cLegDjanexo2_2);
+    formData.append(`${pre}.cFileDjanexo3`,             dj.cLegDjanexo3);
+    formData.append(`${pre}.cFileDjanexo4`,             dj.cLegDjanexo4);
+    formData.append(`${pre}.cFileDjanexo5`,             dj.cLegDjanexo5);
+    formData.append(`${pre}.cFileDjanexo6_2`,           dj.cLegDjanexo6_2);
+    formData.append(`${pre}.cFileDjDNI`,                dj.cLegDjDNI);
+    formData.append(`${pre}.cFileDjDNI_DH`,             dj.cLegDjDNI_DH);
+    formData.append(`${pre}.cFileDjFotoCarnet`,         dj.cLegDjFotoCarnet);
+    formData.append(`${pre}.cFileDjNumCta`,             dj.cLegDjNumCta);
+    formData.append(`${pre}.cFileDjConsJubilacion`,     dj.cLegDjConsJubilacion);
+    formData.append(`${pre}.cFileDjConsAfiliacionOnpAfp`, dj.cLegDjConsAfiliacionOnpAfp);
+ 
+    // Rutas vacías (las llena el servidor)
+    ['cLegDjanexo1','cLegDjanexo2_2','cLegDjanexo3','cLegDjanexo4','cLegDjanexo5',
+     'cLegDjanexo6_2','cLegDjDNI','cLegDjDNI_DH','cLegDjFotoCarnet',
+     'cLegDjNumCta','cLegDjConsJubilacion','cLegDjConsAfiliacionOnpAfp'
+    ].forEach(campo => formData.append(`${pre}.${campo}`, ''));
+ 
+    formData.append(`${pre}.bLegDjestado`, 'true');
+  }
+ 
+  // ─── PASO 3b: FormData — colecciones ─────────────────────────
+  private agregarColeccionesAlFormData(formData: FormData): void {
+    // Solo se envían colecciones en nuevo registro
+    if (this.regLegDatosGenerales.nLegDatCodigo !== 0) return;
+ 
+    this.agregarGradoTitulo(formData);
+    this.agregarDocenciaUniv(formData);
+    this.agregarCategoriaDocente(formData);
+    this.agregarRegimenDedicacion(formData);
+    this.agregarProfesNoDocente(formData);
+    this.agregarIdiomaOfimatica(formData);
+    this.agregarInvestigador(formData);
+    this.agregarTesisAseJur(formData);
+    this.agregarProduccionCiencia(formData);
+    this.agregarParticipacion(formData);
+    this.agregarAdminitrativaCarga(formData);
+    this.agregarReconocimiento(formData);
+    this.agregarCapacitaciones(formData);
+    this.agregarProyeccionSocial(formData);
+    this.agregarLicenciasProfesionales(formData);
+  }
+ 
+  private agregarGradoTitulo(formData: FormData): void {
+    this.lstserv.lLegGradoTitulo.forEach((el: LegGradoTitulo, i) => {
+      const pre = `legGradoTitulo[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegGraFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegGraCodigo`,       el.nLegGraCodigo.toString() ?? '0');
+      formData.append(`${pre}.nLegGraGradoAcad`,    el.nLegGraGradoAcad.toString() ?? '0');
+      formData.append(`${pre}.nClaseGradoAcad`,     el.nClaseGradoAcad.toString() ?? '0');
+      formData.append(`${pre}.cLegGraCarreraProf`,  el.cLegGraCarreraProf.toString() ?? '');
+      formData.append(`${pre}.cLegGraInstitucion`,  el.cLegGraInstitucion.toString() ?? '0');
+      formData.append(`${pre}.cLegGraOtraInst`,     el.cLegGraOtraInst.toString() ?? '0');
+      formData.append(`${pre}.nLegGraPais`,         el.nLegGraPais.toString() ?? '0');
+      formData.append(`${pre}.nClasePais`,          el.nClasePais.toString() ?? '0');
+      formData.append(`${pre}.dLegGraFecha`,        fecha);
+      formData.append(`${pre}.cFile`,               el.cLegGraArchivo);
+      formData.append(`${pre}.cLegGraArchivo`,      '');
+      formData.append(`${pre}.cLegGraValida`,       'false');
+      formData.append(`${pre}.cLegGraEstado`,       'true');
+    });
+  }
+ 
+  private agregarDocenciaUniv(formData: FormData): void {
+    this.lstserv.lLegDocenciaUniv.forEach((el: LegDocenciaUniv, i) => {
+      const pre = `legDocenciaUniv[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegDocFechaInicio, 'yyyy-MM-dd') ?? ''; 
+      const fFin = this.configserv.datepipe.transform(el.dLegDocFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegDocCodigo`,      el.nLegDocCodigo.toString() ?? '0');
+      formData.append(`${pre}.nLegDocRegimen`,     el.nLegDocRegimen.toString() ?? '0');
+      formData.append(`${pre}.nValorRegimen`,      el.nValorRegimen.toString() ?? '0');
+      formData.append(`${pre}.nLegDocCategoria`,   el.nLegDocCategoria.toString() ?? '0');
+      formData.append(`${pre}.nValorCategoria`,    el.nValorCategoria.toString() ?? '0');
+      formData.append(`${pre}.cLegDocUniversidad`, el.cLegDocUniversidad.toString() ?? '');
+      formData.append(`${pre}.cLegDocOtraInst`,    el.cLegDocOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegDocPais`,        el.cLegDocPais.toString() ?? '');
+      formData.append(`${pre}.dLegDocFechaInicio`, fIni);
+      formData.append(`${pre}.dLegDocFechaFin`,    fFin);
+      formData.append(`${pre}.cFile`,              el.cLegDocArchivo);
+      formData.append(`${pre}.cLegGraArchivo`,     '');
+      formData.append(`${pre}.cLegDocValida`,      'false');
+      formData.append(`${pre}.cLegDocEstado`,      'true');
+    });
+  }
+ 
+  private agregarCategoriaDocente(formData: FormData): void {
+    this.lstserv.lCategoriaDocente.forEach((el: LegCategoriaDocente, i) => {
+      const pre = `legCategoriaDocente[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegCatFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegCatFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegCatCodigo`,     el.nLegCatCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegCatInstitucion`, el.cLegCatInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegCatOtraInst`,   el.cLegCatOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegCatPais`,       el.cLegCatPais.toString() ?? '');
+      formData.append(`${pre}.nLegCatCategoria`,  el.nLegCatCategoria.toString() ?? '0');
+      formData.append(`${pre}.nValorCategoria`,   el.nValorCategoria.toString() ?? '0');
+      formData.append(`${pre}.dLegCatFechaInicio`, fIni);
+      formData.append(`${pre}.dLegCatFechaFin`,   fFin);
+      formData.append(`${pre}.cFile`,             el.cLegCatArchivo);
+      formData.append(`${pre}.cLegGraArchivo`,    '');
+      formData.append(`${pre}.cLegCatValida`,     'false');
+      formData.append(`${pre}.cLegCatEstado`,     'true');
+    });
+  }
+ 
+  private agregarRegimenDedicacion(formData: FormData): void {
+    this.lstserv.lRegimenDedic.forEach((el: LegRegimenDedicacion, i) => {
+      const pre = `legRegimenDedicacion[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegRegFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegRegFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegRegCodigo`,      el.nLegRegCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegCatInstitucion`, el.cLegCatInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegRegOtraInst`,    el.cLegRegOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegRegPais`,        el.cLegRegPais.toString() ?? '');
+      formData.append(`${pre}.nLegRegDedicacion`,  el.nLegRegDedicacion.toString() ?? '0');
+      formData.append(`${pre}.nValorDedicacion`,   el.nValorDedicacion.toString() ?? '0');
+      formData.append(`${pre}.dLegRegFechaInicio`, fIni ?? '');
+      formData.append(`${pre}.dLegRegFechaFin`,    fFin ?? '');
+      formData.append(`${pre}.cFile`,              el.cLegRegArchivo);
+      formData.append(`${pre}.cLegRegArchivo`,     '');
+      formData.append(`${pre}.cLegRegValida`,      'false');
+      formData.append(`${pre}.cLegRegEstado`,      'true');
+    });
+  }
+ 
+  private agregarProfesNoDocente(formData: FormData): void {
+    this.lstserv.lProfesNoDocente.forEach((el: LegProfesNoDocente, i) => {
+      const pre = `legProfesNoDocente[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegProFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegProFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegProCodigo`,      el.nLegProCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegProInstitucion`, el.cLegProInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegProOtraInst`,    el.cLegProOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegProPais`,        el.cLegProPais.toString() ?? '');
+      formData.append(`${pre}.nLegProCargo`,       el.nLegProCargo.toString() ?? '0');
+      formData.append(`${pre}.cLegProCargoProf`,   el.cLegProCargoProf.toString() ?? '');
+      formData.append(`${pre}.nValorCargo`,        el.nValorCargo.toString() ?? '0');
+      formData.append(`${pre}.dLegProFechaInicio`, fIni ?? '');
+      formData.append(`${pre}.dLegProFechaFin`,    fFin ?? '');
+      formData.append(`${pre}.cFile`,              el.cLegProArchivo);
+      formData.append(`${pre}.cLegProArchivo`,     '');
+      formData.append(`${pre}.cLegProValida`,      'false');
+      formData.append(`${pre}.cLegProEstado`,      'true');
+    });
+  }
+ 
+  private agregarIdiomaOfimatica(formData: FormData): void {
+    this.lstserv.lidiomasofimatica.forEach((el: LegIdiomaOfimatica, i) => {
+      const pre = `legIdiomaOfimatica[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegIdOfFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegIdOfCodigo`,      el.nLegIdOfCodigo.toString() ?? '0');
+      formData.append(`${pre}.nLegIdOfCodigoDesc`,  el.nLegIdOfCodigoDesc.toString() ?? '');
+      formData.append(`${pre}.nValorDesc`,          el.nValorDesc.toString() ?? '0');
+      formData.append(`${pre}.nLegIdOfNivel`,       el.nLegIdOfNivel.toString() ?? '0');
+      formData.append(`${pre}.nValorNivel`,         el.nValorNivel.toString() ?? '0');
+      formData.append(`${pre}.cLegIdOfTipo`,        el.cLegIdOfTipo.toString() ?? '');
+      formData.append(`${pre}.dLegIdOfFecha`,       fecha ?? '');
+      formData.append(`${pre}.cFile`,               el.cLegIdOfArchivo);
+      formData.append(`${pre}.cLegIdOfArchivo`,     '');
+      formData.append(`${pre}.cLegIdOfValida`,      'false');
+      formData.append(`${pre}.cLegIdOfEstado`,      'true');
+    });
+  }
+ 
+  private agregarInvestigador(formData: FormData): void {
+    this.lstserv.linvestigador.forEach((el: LegInvestigador, i) => {
+      const pre = `legInvestigador[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegInvFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegInvFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegInvCodigo`,          el.nLegInvCodigo.toString() ?? '0');
+      formData.append(`${pre}.nLegInvCentroRegistro`,  el.nLegInvCentroRegistro.toString() ?? '');
+      formData.append(`${pre}.nValorCentroRegistro`,   el.nValorCentroRegistro.toString() ?? '0');
+      formData.append(`${pre}.cLegInvNroRegistro`,     el.cLegInvNroRegistro.toString() ?? '0');
+      formData.append(`${pre}.dLegInvFechaInicio`,     fIni ?? '');
+      formData.append(`${pre}.dLegInvFechaFin`,        fFin ?? '');
+      formData.append(`${pre}.cFile`,                  el.cLegInvArchivo);
+      formData.append(`${pre}.cLegInvArchivo`,         '');
+      formData.append(`${pre}.cLegInvValida`,          'false');
+      formData.append(`${pre}.cLegInvEstado`,          'true');
+    });
+  }
+ 
+  private agregarTesisAseJur(formData: FormData): void {
+    this.lstserv.lTesisAsesJur.forEach((el: LegTesisAseJur, i) => {
+      const pre = `legTesisAseJur[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegTesFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegTesCodigo`,       el.nLegTesCodigo.toString() ?? '0');
+      formData.append(`${pre}.nLegTesTipo`,         el.nLegTesTipo.toString() ?? '0');
+      formData.append(`${pre}.nValorTipo`,          el.nValorTipo.toString() ?? '0');
+      formData.append(`${pre}.nLegTesNivel`,        el.nLegTesNivel.toString() ?? '0');
+      formData.append(`${pre}.nValorNivel`,         el.nValorNivel.toString() ?? '0');
+      formData.append(`${pre}.cLegTesNroResolucion`, el.cLegTesNroResolucion.toString() ?? '');
+      formData.append(`legTesis[${i}].cLegTesInstitucion`, el.cLegTesInstitucion.toString() ?? '0');
+      formData.append(`legTesis[${i}].cLegTesOtraInst`,    el.cLegTesOtraInst.toString() ?? '0');
+      formData.append(`legTesis[${i}].nLegTesPais`,        el.nLegTesPais.toString() ?? '0');
+      formData.append(`legTesis[${i}].nClasePais`,         el.nClasePais.toString() ?? '0');
+      formData.append(`${pre}.dLegTesFecha`,        fecha ?? '');
+      formData.append(`${pre}.cFile`,               el.cLegTesArchivo);
+      formData.append(`${pre}.cLegTesArchivo`,      '');
+      formData.append(`${pre}.cLegTesValida`,       'false');
+      formData.append(`${pre}.cLegTesEstado`,       'true');
+    });
+  }
+ 
+  private agregarProduccionCiencia(formData: FormData): void {
+    this.lstserv.lProduccionCiencia.forEach((el: LegProduccionCiencia, i) => {
+      const pre = `legProduccionCiencia[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegProdFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegProdCodigo`,        el.nLegProdCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegProdNroResolucion`, el.cLegProdNroResolucion.toString() ?? '');
+      formData.append(`${pre}.cLegProdTitulo`,        el.cLegProdTitulo.toString() ?? '');
+      formData.append(`${pre}.nLegProdTipo`,          el.nLegProdTipo.toString() ?? '0');
+      formData.append(`${pre}.nValorTipo`,            el.nValorTipo.toString() ?? '0');
+      formData.append(`${pre}.dLegProdFecha`,         fecha ?? '');
+      formData.append(`${pre}.cFile`,                 el.cLegProdArchivo);
+      formData.append(`${pre}.cLegProdArchivo`,       '');
+      formData.append(`${pre}.cLegProdValida`,        'false');
+      formData.append(`${pre}.cLegProdEstado`,        'true');
+    });
+  }
+ 
+  private agregarParticipacion(formData: FormData): void {
+    this.lstserv.lParticipacion.forEach((el: LegParticipacionCongSem, i) => {
+      const pre = `legParticipacionCongSem[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegParFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegParCodigo`,      el.nLegParCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegParInstitucion`, el.cLegParInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegParOtraInst`,    el.cLegParOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegParPais`,        el.cLegParPais.toString() ?? '');
+      formData.append(`${pre}.cLegParNombre`,      el.cLegParNombre.toString() ?? '');
+      formData.append(`${pre}.nLegParRol`,         el.nLegParRol.toString() ?? '0');
+      formData.append(`${pre}.nValorRol`,          el.nValorRol.toString() ?? '0');
+      formData.append(`${pre}.nLegParAmbito`,      el.nLegParAmbito.toString() ?? '0');
+      formData.append(`${pre}.nValorAmbito`,       el.nValorAmbito.toString() ?? '0');
+      formData.append(`${pre}.dLegParFecha`,       fecha ?? '');
+      formData.append(`${pre}.cFile`,              el.cLegParArchivo);
+      formData.append(`${pre}.cLegParArchivo`,     '');
+      formData.append(`${pre}.cLegParValida`,      'false');
+      formData.append(`${pre}.cLegParEstado`,      'true');
+    });
+  }
+ 
+  private agregarAdminitrativaCarga(formData: FormData): void {
+    this.lstserv.lAdminitrativaCarga.forEach((el: LegAdminitrativaCarga, i) => {
+      const pre = `legAdminitrativaCarga[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegAdmFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegAdmFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegAdmCodigo`,      el.nLegAdmCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegAdmInstitucion`, el.cLegAdmInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegAdmOtraInst`,    el.cLegAdmOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegAdmPais`,        el.cLegAdmPais.toString() ?? '');
+      formData.append(`${pre}.cLegAdmDocumento`,   el.cLegAdmDocumento.toString() ?? '');
+      formData.append(`${pre}.nLegAdmCargo`,       el.nLegAdmCargo.toString() ?? '0');
+      formData.append(`${pre}.nClaseCargo`,        el.nClaseCargo.toString() ?? '0');
+      formData.append(`${pre}.dLegAdmFechaInicio`, fIni);
+      formData.append(`${pre}.dLegAdmFechaFin`,    fFin);
+      formData.append(`${pre}.cFile`,              el.cLegAdmArchivo);
+      formData.append(`${pre}.cLegAdmArchivo`,     '');
+      formData.append(`${pre}.cLegAdmValida`,      'false');
+      formData.append(`${pre}.cLegAdmEstado`,      'true');
+    });
+  }
+ 
+  private agregarReconocimiento(formData: FormData): void {
+    this.lstserv.lReconocimiento.forEach((el: LegReconocimiento, i) => {
+      const pre = `legReconocimiento[${i}]`;
+      const fecha = this.configserv.datepipe.transform(el.dLegRecFecha, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegRecCodigo`,      el.nLegRecCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegRecInstitucion`, el.cLegRecInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegRecOtraInst`,    el.cLegRecOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegRecPais`,        el.cLegRecPais.toString() ?? '');
+      formData.append(`${pre}.nLegRecDocumento`,   el.nLegRecDocumento.toString() ?? '0');
+      formData.append(`${pre}.nValorDocumento`,    el.nValorDocumento.toString() ?? '0');
+      formData.append(`${pre}.nLegRecTipo`,        el.nLegRecTipo.toString() ?? '0');
+      formData.append(`${pre}.nValorTipo`,         el.nValorTipo.toString() ?? '0');
+      formData.append(`${pre}.dLegRecFecha`,       fecha);
+      formData.append(`${pre}.cFile`,              el.cLegRecArchivo);
+      formData.append(`${pre}.cLegRecArchivo`,     '');
+      formData.append(`${pre}.cLegRecValida`,      'false');
+      formData.append(`${pre}.cLegRecEstado`,      'true');
+    });
+  }
+ 
+  private agregarCapacitaciones(formData: FormData): void {
+    this.lstserv.lcapacitaciones.forEach((el: LegCapacitaciones, i) => {
+      const pre = `legCapacitaciones[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegCapFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegCapFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegCapCodigo`,      el.nLegCapCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegCapInstitucion`, el.cLegCapInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegCapOtraInst`,    el.cLegCapOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegCapPais`,        el.cLegCapPais.toString() ?? '');
+      formData.append(`${pre}.cLegCapNombre`,      el.cLegCapNombre.toString() ?? '');
+      formData.append(`${pre}.nLegCapTipo`,        el.nLegCapTipo.toString() ?? '0');
+      formData.append(`${pre}.nValorTipo`,         el.nValorTipo.toString() ?? '0');
+      formData.append(`${pre}.nLegCapTipoEsp`,     el.nLegCapTipoEsp.toString() ?? '0');
+      formData.append(`${pre}.nValorTipoEsp`,      el.nValorTipoEsp.toString() ?? '0');
+      formData.append(`${pre}.nLegCapHoras`,       el.nLegCapHoras.toString() ?? '0');
+      formData.append(`${pre}.dLegCapFechaInicio`, fIni);
+      formData.append(`${pre}.dLegCapFechaFin`,    fFin);
+      formData.append(`${pre}.cFile`,              el.cLegCapArchivo);
+      formData.append(`${pre}.cLegCapArchivo`,     '');
+      formData.append(`${pre}.cLegCapValida`,      'false');
+      formData.append(`${pre}.cLegCapEstado`,      'true');
+    });
+  }
+ 
+  private agregarProyeccionSocial(formData: FormData): void {
+    this.lstserv.lProyeccionSoc.forEach((el: LegProyeccionSocial, i) => {
+      const pre = `legProyeccionSocial[${i}]`;
+      const fIni = this.configserv.datepipe.transform(el.dLegProyFechaInicio, 'yyyy-MM-dd') ?? '';
+      const fFin = this.configserv.datepipe.transform(el.dLegProyFechaFin, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegProyCodigo`,      el.nLegProyCodigo.toString() ?? '0');
+      formData.append(`${pre}.cLegProyInstitucion`, el.cLegProyInstitucion.toString() ?? '');
+      formData.append(`${pre}.cLegProyOtraInst`,    el.cLegProyOtraInst.toString() ?? '');
+      formData.append(`${pre}.cLegProyPais`,        el.cLegProyPais.toString() ?? '');
+      formData.append(`${pre}.cLegProyDescripcion`, el.cLegProyDescripcion.toString() ?? '');
+      formData.append(`${pre}.nLegProyTipo`,        el.nLegProyTipo.toString() ?? '0');
+      formData.append(`${pre}.nValorTipo`,          el.nValorTipo.toString() ?? '0');
+      formData.append(`${pre}.dLegProyFechaInicio`, fIni);
+      formData.append(`${pre}.dLegProyFechaFin`,    fFin);
+      formData.append(`${pre}.cFile`,               el.cLegProyArchivo);
+      formData.append(`${pre}.cLegProyArchivo`,     '');
+      formData.append(`${pre}.cLegProyValida`,      'false');
+      formData.append(`${pre}.cLegProyEstado`,      'true');
+    });
+  }
+ 
+  private agregarLicenciasProfesionales(formData: FormData): void {
+    this.lstserv.lLegLicenciaProfesional.forEach((el: LegLicenciaProfesional, i) => {
+      const pre = `legLicenciaProfesional[${i}]`;
+      const fEmi = this.configserv.datepipe.transform(el.dLegLicFechaEmision, 'yyyy-MM-dd') ?? '';
+      const fExp = this.configserv.datepipe.transform(el.dLegLicFechaExpiracion, 'yyyy-MM-dd') ?? '';
+      formData.append(`${pre}.nLegLicCodigo`,        el.nLegLicCodigo?.toString() ?? '0');
+      formData.append(`${pre}.nLegLicDatCodigo`,     this.regLegDatosGenerales.nLegDatCodigo.toString());
+      formData.append(`${pre}.nLegLicPais`,          el.nLegLicPais?.toString() ?? '0');
+      formData.append(`${pre}.nClasePais`,           el.nClasePais?.toString() ?? '0');
+      formData.append(`${pre}.cLegLicInstitucion`,   el.cLegLicInstitucion ?? '');
+      formData.append(`${pre}.cLegLicOtraInst`,      el.cLegLicOtraInst.toString() ?? '');
+      formData.append(`${pre}.nLegLicCondicion`,     el.nLegLicCondicion?.toString() ?? '0');
+      formData.append(`${pre}.nClaseCondicion`,      el.nClaseCondicion?.toString() ?? '0');
+      formData.append(`${pre}.cLegLicNroRegistro`,   el.cLegLicNroRegistro.toString() ?? '');
+      formData.append(`${pre}.dLegLicFechaEmision`,  fEmi);
+      formData.append(`${pre}.dLegLicFechaExpiracion`, el.dLegLicFechaExpiracion ? fExp : '');
+      formData.append(`${pre}.cLegLicValida`,        'false');
+      formData.append(`${pre}.cLegLicEstado`,        'true');
+    });
+  }
+ 
+  // ─── PASO 4: Persistir (POST o PUT) ──────────────────────────
+  private async persistirLegajo(formData: FormData): Promise<any> {
+  const esNuevo = this.regLegDatosGenerales.nLegDatCodigo === 0;
+
+  formData.append(
+    'dLegDatRegPenFechaCese',
+    this.dateCeseControl.value
+      ? new Date(this.dateCeseControl.value).toISOString()
+      : ''
+  );
+
+  // Ver contenido del FormData
+  console.log('=== FormData enviado ===');
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
+
+  if (esNuevo) {
+    return this.regserv.registroFile('Registro de Legajos', 'legajo', formData, false);
+  }
+
+  return this.regserv.actualizarFile(
+    'Registro de Legajos',
+    `legajo/put/${this.regLegDatosGenerales.nLegDatCodigo}`,
+    formData,
+    false
+  );
+}
+ 
+  // ─── PASO 5: Mostrar resultado ───────────────────────────────
+  private mostrarResultadoGuardado(dataCV: any, dataDJ: any): void {
+    if (dataCV && dataDJ) {
+      Swal.fire('Registro de Legajos', 'Datos guardados correctamente.', 'success');
+    } else if (dataCV) {
+      Swal.fire('Registro de Legajos', 'Datos Legajo guardados correctamente.', 'success');
+    } else if (dataDJ) {
+      Swal.fire('Registro de Legajos', 'Datos Declaraciones Juradas guardadas correctamente.', 'success');
+    } else {
+      Swal.fire('Advertencia', 'Algunos datos no se guardaron correctamente.', 'warning');
+    }
+  }
+ 
 }
